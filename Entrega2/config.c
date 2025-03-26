@@ -18,10 +18,10 @@ Config leerConfi(char *nombrefichero) {
             if (strncmp(clave, "nombreBD", 8)==0) //el numero es las letras que tiene la palabra nombreBD, y esa linea dice que si la variable campo tiene nombreBD
             {
                 strcpy(con.nombreBD, valor); //copia el valor y lo mete en valor
-            }else if (strncmp(clave, "administrador", 5)==0)
+            }else if (strncmp(clave, "administrador", 13)==0)
             {
                 strcpy(con.administrador, valor);
-            }else if (strncmp(clave, "contrasena", 3)==0)
+            }else if (strncmp(clave, "contrasena", 10)==0)
             {
                 strcpy(con.contrasena, valor);
             }
