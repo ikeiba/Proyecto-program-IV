@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include "menu.h"
 #include "sqlite3.h"
+#include "baseDatos.h"
 
 int main(){
-    administracion();
+    crearBD();
+    //administracion();
 
 
     
