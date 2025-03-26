@@ -26,8 +26,8 @@ Config leerConfi(char *nombrefichero) {
                 strcpy(con.contrasena, valor);
             }
         }
-        
+        fclose(punterofichero);
     }
-    
+    return con;
     
 }
