@@ -6,8 +6,9 @@
 
 int main(){
     crearBD();
-    //administracion();
-
+    printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
+    administracion();
+    
 
     
     return 0;

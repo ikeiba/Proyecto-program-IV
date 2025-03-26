@@ -57,6 +57,7 @@ void inicioSesion(void){
 
     fgets(strEmail, sizeof(strEmail), stdin);
     fgets(strContr, sizeof(strContr), stdin);
+    printf("La contraseña es: %s", strContr);
 
 
     if (/*Mirar si esta en la BD (Por implementar)*/porImplementar) {  
