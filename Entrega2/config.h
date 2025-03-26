@@ -4,8 +4,8 @@
 typedef struct 
 {
     char nombreBD[TAM];
-    char admin[TAM];
-    char con[TAM];
+    char administrador[TAM];
+    char contrasena[TAM];
 }Config;
-Config leerConfiguracion(char *nombrefichero);
+Config leerConfig(char *nombrefichero);
 #endif
