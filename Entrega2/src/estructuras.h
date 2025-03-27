@@ -16,20 +16,19 @@ typedef struct
     int id;
     char* nombre;
     char* fCreacion;
-    Usuario creador;
+    Usuario* creador;
     char* descripcion;
-
+    Usuario** miembros;
 }Grupo;
 
 typedef struct
 {
     int id;
     char* fecha;
-    int hora[2];
+    char* hora;
     char* contenido;
-    Usuario emisor;
-    Grupo grupo;
-    Usuario* miembros;
+    Usuario* emisor;
+    Grupo* grupo;
 }Mensaje;
 
 #endif

@@ -73,15 +73,35 @@ void liberarUsuarios(Usuario* usuarios, int cantidad){
     free(usuarios);
 }
 
-/**Mensaje* leerCsvMensajes(){
-    FILE *file = fopen("C:/Proyecto-program-IV/Entrega2/src/data/mensajes.csv", "r");
+Usuario* obtenerUsuarioPorId(int id, Usuario* usuarios, int tamanyo){
+    Usuario* u;
+    for(int i = 0; i<tamanyo; i++){
+        if(usuarios[i].id == id){
+            u = &usuarios[i];
+        }
+    }
+    return u;
+}
+
+Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo){
+    Grupo* g;
+    for(int i = 0; i<tamanyo; i++){
+        if(grupos[i].id == id){
+            g = &grupos[i];
+        }
+    }
+    return g;
+}
+
+Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
+    FILE *file = fopen("src/data/mensajes.csv", "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return NULL;
     }
 
-    Usuario* usuarios = (Usuario*) malloc(50 * sizeof(Usuario));
-    if (!usuarios) {
+    Mensaje* mensajes = (Mensaje*) malloc(530 * sizeof(Mensaje));
+    if (!mensajes) {
         perror("Error al asignar memoria para usuarios");
         fclose(file);
         return NULL;
@@ -89,7 +109,7 @@ void liberarUsuarios(Usuario* usuarios, int cantidad){
 
     char linea[1024];
     int i = 0;
-    while (fgets(linea, 1024, file) && i < 50) {
+    while (fgets(linea, 1024, file) && i < 530) {
         linea[strcspn(linea, "\n")] = 0;
 
         char *campo = strtok(linea, ",");
@@ -105,23 +125,25 @@ void liberarUsuarios(Usuario* usuarios, int cantidad){
 
             switch (j) {
                 case 0:
-                    usuarios[i].id = atoi(campo);
+                    mensajes[i].id = atoi(campo);
                     free(campoM);
                     break;
                 case 1:
-                    usuarios[i].nombre = campoM;
+                    mensajes[i].fecha = campoM;
                     break;
                 case 2:
-                    usuarios[i].email = campoM;
+                    mensajes[i].hora = campoM;
                     break;
                 case 3:
-                    usuarios[i].telefono = campoM;
+                    mensajes[i].contenido = campoM;
                     break;
                 case 4:
-                    usuarios[i].fNacimiento = campoM;
+                    Usuario* u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
+                    mensajes[i].emisor = u;
                     break;
                 default:
-                    usuarios[i].contra = campoM;
+                    Grupo* g = obtenerUsuarioPorId(atoi(campo),grupos,50);
+                    mensajes[i].grupo = g;
             }
             campo = strtok(NULL, ",");
             j++;
@@ -130,4 +152,13 @@ void liberarUsuarios(Usuario* usuarios, int cantidad){
     }
     fclose(file);
     return usuarios;
-}**/
+}
+
+void liberarMensajes(Mensaje* mensajes, int cantidad){
+    for(int i = 0; i<cantidad;i++){
+        free(mensajes[i].fecha);
+        free(mensajes[i].hora);
+        free(mensajes[i].contenido);
+    }
+    free(mensajes);
+}
