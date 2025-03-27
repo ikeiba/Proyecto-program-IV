@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "menu.h"
-#include "sqlite3.h"
-#include "baseDatos.h"
-#include "config.h"
+#include "menu\menu.h"
+#include "baseDatos\sqlite3.h"
+#include "baseDatos\baseDatos.h"
+#include "utils\config.h"
+
 //#include "logger.h"
 int main(){
     crearBD();
