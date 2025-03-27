@@ -116,6 +116,50 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
         int j = 0;
         while (campo) {
             char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
+            Usuario* u;
+            if (!campoM) {
+                perror("Error al asignar memoria para un campo");
+                fclose(file);
+                return NULL;
+            }
+            strcpy(campoM, campo);
+
+            switch (j) {
+                case 0:
+                    grupos[i].id = atoi(campo);
+                    free(campoM);
+                    break;
+                case 1:
+                    grupos[i].nombre = campoM;
+                    break;
+                case 2:
+                    grupos[i].fCreacion = campoM;
+                    break;
+                case 3:
+                    u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
+                    grupos[i].creador = u;
+                    break;
+                default:
+                    grupos[i].descripcion = campoM;
+            }
+            campo = strtok(NULL, ",");
+            j++;
+        }
+        i++;
+    }
+    fclose(file);
+
+    file = fopen("src/data/conversaciones.csv", "r");
+
+    /**char linea[1024];
+    int i = 0;
+    while (fgets(linea, 1024, file) && i < 227) {
+        linea[strcspn(linea, "\n")] = 0;
+
+        char *campo = strtok(linea, ",");
+        int j = 0;
+        while (campo) {
+            char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
             if (!campoM) {
                 perror("Error al asignar memoria para un campo");
                 fclose(file);
@@ -145,9 +189,9 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
             j++;
         }
         i++;
-    }
-    fclose(file);
-    return usuarios;
+    }**/
+
+    return grupos;
 }
 
 Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
@@ -173,6 +217,8 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
         int j = 0;
         while (campo) {
             char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
+            Usuario* u;
+            Grupo* g;
             if (!campoM) {
                 perror("Error al asignar memoria para un campo");
                 fclose(file);
@@ -195,12 +241,12 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
                     mensajes[i].contenido = campoM;
                     break;
                 case 4:
-                    Usuario* u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
+                    u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
                     mensajes[i].emisor = u;
                     free(campoM);
                     break;
                 default:
-                    Grupo* g = obtenerUsuarioPorId(atoi(campo),grupos,50);
+                    g = obtenerGrupoPorId(atoi(campo),grupos,50);
                     mensajes[i].grupo = g;
                     free(campoM);
             }
@@ -210,7 +256,7 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
         i++;
     }
     fclose(file);
-    return usuarios;
+    return mensajes;
 }
 
 void liberarMensajes(Mensaje* mensajes, int cantidad){

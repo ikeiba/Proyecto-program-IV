@@ -8,7 +8,7 @@ Usuario* leerCsvUsuarios();
 
 void liberarUsuarios(Usuario* usuarios, int cantidad);
 
-Grupo* leerCsvGrupos();
+Grupo* leerCsvGrupos(Usuario* Usuarios);
 
 Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo);
 
