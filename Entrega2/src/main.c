@@ -5,6 +5,7 @@
 #include "baseDatos\sqlite3.h"
 #include "baseDatos\baseDatos.h"
 #include "utils\config.h"
+#include "estructuras.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
