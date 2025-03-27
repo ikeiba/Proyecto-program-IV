@@ -5,8 +5,11 @@
 #include "baseDatos\sqlite3.h"
 #include "baseDatos\baseDatos.h"
 #include "utils\config.h"
-
 //#include "logger.h"
+
+// COMANDO PARA COMPILAR: 
+//gcc -I src -I src/baseDatos -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\utils\*.c src\menu\*.c -o main.exe
+
 int main(){
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
