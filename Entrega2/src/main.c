@@ -53,6 +53,19 @@ int main(){
                 grupos[i].size);
     }
 
+    for (int i = 0; i < 10; i++) {
+        printf("Mensajes %d: %d, %s, %s, %s, %s, %s\n",
+                i + 1,
+                mensajes[i].id,
+                mensajes[i].contenido,
+                mensajes[i].emisor->nombre,
+                mensajes[i].fecha,
+                mensajes[i].grupo->descripcion,
+                mensajes[i].hora);
+    }
+
+    printf("Usuario grupo: %s", grupos[4].miembros[0]->nombre);
+
     liberarMensajes(mensajes, 530);
 
     liberarGrupos(grupos, 67);

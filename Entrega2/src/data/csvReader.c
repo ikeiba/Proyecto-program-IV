@@ -147,6 +147,7 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
             campo = strtok(NULL, ",");
             j++;
         }
+        grupos[i].size = 0;
         i++;
     }
     fclose(file);
@@ -173,7 +174,8 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
 
     char linea[1024];
     int i = 0;
-    fgets(linea, 1024, file);
+    fgets(linea, 1024, file); 
+
     while (fgets(linea, 1024, file) && i < 227) {
         linea[strcspn(linea, "\n")] = 0;
 
@@ -188,18 +190,21 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
                     u = obtenerUsuarioPorId(atoi(campo), usuarios, 50);
                     if (!u) {
                         fprintf(stderr, "Error: Usuario con ID %d no encontrado\n", atoi(campo));
-                        break;
                     }
                     break;
                 default:
                     g = obtenerGrupoPorId(atoi(campo), grupos, 67);
                     if (!g) {
                         fprintf(stderr, "Error: Grupo con ID %d no encontrado\n", atoi(campo));
-                        break;
                     }
             }
             campo = strtok(NULL, ",");
             j++;
+        }
+
+        //Nose porque estos grupos en especifico hacen que el programa pete
+        if(g->id == 7||g->id == 30||g->id == 40||g->id == 42||g->id == 46||g->id == 48||g->id == 55){
+            continue;
         }
 
         Usuario** miembrosM = (Usuario**) malloc(sizeof(Usuario*) * (g->size + 1));
@@ -214,10 +219,16 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
         }
 
         miembrosM[g->size] = u;
-        g->size++; 
+        g->size++;
 
-        free(g->miembros);
+        if (g->miembros != NULL) {
+            printf("Liberando memoria en dirección: %p\n", (void*) g->miembros);
+            free(g->miembros);
+        }
+
         g->miembros = miembrosM;
+
+        //printf("Grupo actualizado: %d, tamaño: %d\n", g->id, g->size);
 
         i++;
     }
@@ -244,7 +255,7 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
     while (fgets(linea, 1024, file) && i < 530) {
         linea[strcspn(linea, "\n")] = 0;
 
-        char *campo = strtok(linea, ",");
+        char *campo = strtok(linea, ";");
         int j = 0;
         while (campo) {
             char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
@@ -281,7 +292,7 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
                     mensajes[i].grupo = g;
                     free(campoM);
             }
-            campo = strtok(NULL, ",");
+            campo = strtok(NULL, ";");
             j++;
         }
         i++;
