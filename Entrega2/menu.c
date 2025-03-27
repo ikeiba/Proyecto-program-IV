@@ -194,7 +194,7 @@ void adminUsuarios(void){
         modificarUsuarios();
         
     } else if (strIn[0] == '2') {
-        borrarUsuario();
+        menuBorrarUsuario();
 
     } else if (strIn[0] == '3') {
         bloquearUsuario();
@@ -293,7 +293,7 @@ void modificarTlf(void){
 };
 
 
-void borrarUsuario(void){
+void menuBorrarUsuario(void){
     char strIn[2];  
 
     printf(
@@ -309,7 +309,7 @@ void borrarUsuario(void){
 
     if (strIn[0] == '\n') {  
         printf("No ingresaste ningún carácter válido.\n\n");
-        borrarUsuario();
+        menuBorrarUsuario();
     } else if (strIn[0] == 'y') {
         printf("Usuario borrado");
         menu();
@@ -318,7 +318,7 @@ void borrarUsuario(void){
         modificarUsuarios();
     } else {
         printf("Opción no válida.\n\n");
-        borrarUsuario();
+        menuBorrarUsuario();
     }
 };
 
@@ -408,7 +408,7 @@ void borrarLog(void){
 
     if (strIn[0] == '\n') {  
         printf("No ingresaste ningún carácter válido.\n\n");
-        borrarUsuario();
+        menuBorrarUsuario();
     } else if (strIn[0] == 'y') {
         printf("Log borrado exitosamente");
         //Por implementar      
@@ -416,7 +416,7 @@ void borrarLog(void){
         modificarUsuarios();
     } else {
         printf("Opción no válida.\n\n");
-        borrarUsuario();
+        menuBorrarUsuario();
     }
 };
 

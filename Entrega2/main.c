@@ -5,12 +5,17 @@
 #include "sqlite3.h"
 #include "baseDatos.h"
 #include "config.h"
-#include "logger.h"
+//#include "logger.h"
 int main(){
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
+    printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
+    printf("\n\n%d\n",insertarUsuario("Chaff", "chaff@em.com","89491849","11-11-11","0987"));
+    printf("\n\n%d\n",borrarUsuario("chaff@em.com"));
+
     administracion();
-    
+
+    /*
     Config configData;
     char usuario[TAM], clave[TAM];
 
@@ -25,14 +30,14 @@ int main(){
 
         if (strcmp(clave, configData.contrasena) == 0) {
             printf("Acceso concedido\n");
-            writeLog("Autenticación exitosa");
+            //writeLog("Autenticación exitosa");
         } else {
             printf("Clave incorrecta\n");
-            writeLog("Error de autenticación: clave incorrecta");
+            //writeLog("Error de autenticación: clave incorrecta");
         }
     } else {
         printf("Usuario no reconocido\n");
-        writeLog("Error de autenticación: usuario incorrecto");
-    }
+        //writeLog("Error de autenticación: usuario incorrecto");
+    }*/
     return 0;
 } 

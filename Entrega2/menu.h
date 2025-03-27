@@ -24,7 +24,7 @@ void modificarNombre(void);
 
 void modificarTlf(void);
 
-void borrarUsuario(void);
+void menuBorrarUsuario(void);
 
 void bloquearUsuario(void);
 
