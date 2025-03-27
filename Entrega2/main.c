@@ -11,6 +11,8 @@ int main(){
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
     printf("\n\n%d\n",insertarUsuario("Chaff", "chaff@em.com","89491849","11-11-11","0987"));
+    printf("\n\n%d\n",cambiarTelefonoUsuario("chaff@em.com", "123456789"));
+    printf("\n\n%d\n",cambiarNombreUsuario("chaff@em.com", "ChaffBobo"));
     printf("\n\n%d\n",borrarUsuario("chaff@em.com"));
 
     administracion();

@@ -3,7 +3,7 @@
 
 #define FICHERO_LOG "log.txt"
 
-void registrarMensaje(char *texto);
+void registrarMensaje(const char *formato, ...);
 void mostrarMensaje(char *texto);
 
 #endif

@@ -1,5 +1,6 @@
 #include "sqlite3.h"
 #include "baseDatos.h"
+#include "logger.h"
 #include <stdio.h>
 
 // Constante con el nombre de la base de datos (A CAMBIAR: deberia estar en el .config)
@@ -17,6 +18,7 @@ sqlite3 *open_database(const char *db_name)
     else
     {
         printf("Opened database successfully\n");
+        registrarMensaje("Opened database successfully\n");
     }
     return db;
 }
@@ -33,12 +35,16 @@ void ejecutarTablas(sqlite3 *db, const char *sql)
     else
     {
         printf("Table created successfully\n");
+        registrarMensaje("Table created successfully\n");
     }
 }
 
 int crearBD()
 {
     sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
 
     // SQL statements to create tables
     const char *sql_usuario = "CREATE TABLE IF NOT EXISTS Usuario ("
@@ -95,12 +101,16 @@ int crearBD()
 
     // Close database
     sqlite3_close(db);
+    registrarMensaje("Base de datos cerrada\n");
     return 0;
 }
 
 int comprobarCredenciales(char *email, char *contrasena)
 {
     sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
 
     sqlite3_stmt *stmt;
     const char *sql = "SELECT COUNT(*) FROM Administrador WHERE email_admin = ? AND contrasena_admin = ?";
@@ -121,6 +131,7 @@ int comprobarCredenciales(char *email, char *contrasena)
 
     // Close database
     sqlite3_close(db);
+    registrarMensaje("Base de datos cerrada\n");
 
     return exists;
 }
@@ -152,15 +163,19 @@ int insertarAdministrador(const char *nombre, const char *email, const char *tel
         {
             resultado = 1; // Éxito al insertar
             printf("Administrador insertado correctamente.\n");
+            registrarMensaje("Administrador insertado correctamente.\n");
+
         }
         else
         {
             fprintf(stderr, "Error al insertar administrador: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al insertar administrador: %s\n", sqlite3_errmsg(db));
         }
     }
     else
     {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -195,15 +210,18 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
         {
             resultado = 1; // Éxito al insertar
             printf("Usuario insertado correctamente.\n");
+            registrarMensaje("Usuario insertado correctamente.\n");
         }
         else
         {
             fprintf(stderr, "Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
         }
     }
     else
     {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -228,15 +246,92 @@ int borrarUsuario(const char *email) {
         if (sqlite3_step(stmt) == SQLITE_DONE) {
             resultado = 1; // Éxito al borrar
             printf("Usuario con email %s eliminado correctamente.\n", email);
+            registrarMensaje("Usuario con email %s eliminado correctamente.\n", email);
         } else {
             fprintf(stderr, "Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
         }
     } else {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     
     return resultado;
+}
+
+
+// Metodo para modificar el numero de telefono de un usuario desde su email
+int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
+    
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "UPDATE Usuario SET telefono_usuario = ? WHERE email_usuario = ?";
+    sqlite3_stmt *stmt;
+    int rc;
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, new_phone, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Phone number updated successfully for %s to %s.\n", email, new_phone);
+        registrarMensaje("Phone number updated successfully for %s to %s.\n", email, new_phone);
+        return 1;
+    } else {
+        fprintf(stderr, "Failed to update phone number: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to update phone number: %s\n", sqlite3_errmsg(db));
+
+        return 0;
+    }
+}
+
+// Metodo para modificar el nombre de un usuario desde su email
+int cambiarNombreUsuario(const char *email, const char *new_name) {
+    
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "UPDATE Usuario SET nombre_usuario = ? WHERE email_usuario = ?";
+    sqlite3_stmt *stmt;
+    int rc;
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, new_name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("User name updated successfully for %s to %s.\n", email, new_name);
+        registrarMensaje("User name updated successfully for %s to %s.\n", email, new_name);
+        return 1;
+    } else {
+        fprintf(stderr, "Failed to update user name: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to update user name: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
 }

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-Config leerConfi(char *nombrefichero) {
+Config leerConfig(char *nombrefichero) {
     FILE *punterofichero;
     Config con;
 

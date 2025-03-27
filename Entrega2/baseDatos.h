@@ -25,5 +25,10 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
 // Metodo para Borrar Usuario
 int borrarUsuario(const char *email);
 
+// Metodo para modificar el numero de telefono de un usuario desde su email
+int cambiarTelefonoUsuario(const char *email, const char *new_phone);
+
+// Metodo para modificar el nombre de un usuario desde su email
+int cambiarNombreUsuario(const char *email, const char *new_name);
 
 #endif
