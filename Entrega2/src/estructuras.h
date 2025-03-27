@@ -19,6 +19,7 @@ typedef struct
     Usuario* creador;
     char* descripcion;
     Usuario** miembros;
+    int size;
 }Grupo;
 
 typedef struct
