@@ -12,7 +12,7 @@ Grupo* leerCsvGrupos();
 
 Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo);
 
-Mensaje* leerCsvMensajes();
+Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos);
 
 void liberarMensajes(Mensaje* mensajes, int cantidad);
 

@@ -93,6 +93,63 @@ Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo){
     return g;
 }
 
+Grupo* leerCsvGrupos(Usuario* usuarios){
+    FILE *file = fopen("src/data/grupos.csv", "r");
+    if (!file) {
+        perror("Error al abrir el archivo");
+        return NULL;
+    }
+
+    Grupo* grupos = (Grupo*) malloc(530 * sizeof(Grupo));
+    if (!grupos) {
+        perror("Error al asignar memoria para usuarios");
+        fclose(file);
+        return NULL;
+    }
+
+    char linea[1024];
+    int i = 0;
+    while (fgets(linea, 1024, file) && i < 67) {
+        linea[strcspn(linea, "\n")] = 0;
+
+        char *campo = strtok(linea, ",");
+        int j = 0;
+        while (campo) {
+            char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
+            if (!campoM) {
+                perror("Error al asignar memoria para un campo");
+                fclose(file);
+                return NULL;
+            }
+            strcpy(campoM, campo);
+
+            switch (j) {
+                case 0:
+                    grupos[i].id = atoi(campo);
+                    free(campoM);
+                    break;
+                case 1:
+                    grupos[i].nombre = campoM;
+                    break;
+                case 2:
+                    grupos[i].fCreacion = campoM;
+                    break;
+                case 3:
+                    Usuario* u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
+                    grupos[i].creador = u;
+                    break;
+                default:
+                    grupos[i].descripcion = campoM;
+            }
+            campo = strtok(NULL, ",");
+            j++;
+        }
+        i++;
+    }
+    fclose(file);
+    return usuarios;
+}
+
 Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
     FILE *file = fopen("src/data/mensajes.csv", "r");
     if (!file) {
@@ -140,10 +197,12 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
                 case 4:
                     Usuario* u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
                     mensajes[i].emisor = u;
+                    free(campoM);
                     break;
                 default:
                     Grupo* g = obtenerUsuarioPorId(atoi(campo),grupos,50);
                     mensajes[i].grupo = g;
+                    free(campoM);
             }
             campo = strtok(NULL, ",");
             j++;
