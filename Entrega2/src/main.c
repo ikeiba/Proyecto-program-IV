@@ -6,6 +6,7 @@
 #include "baseDatos\baseDatos.h"
 #include "utils\config.h"
 #include "estructuras.h"
+#include "csvReader.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
@@ -20,7 +21,21 @@ int main(){
     printf("\n\n%d\n",cambiarNombreUsuario("chaff@em.com", "ChaffBobo"));
     printf("\n\n%d\n",borrarUsuario("chaff@em.com"));
 
-    administracion();
+    Usuario* usuarios = leerCsvUsuarios();
+
+    for (int i = 0; i < 50; i++) {
+        printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
+                i + 1,
+                usuarios[i].id,
+                usuarios[i].nombre,
+                usuarios[i].email,
+                usuarios[i].telefono,
+                usuarios[i].fNacimiento,
+                usuarios[i].contra);
+    }
+    liberarUsuarios(usuarios, 50);
+
+    //administracion();
 
     /*
     Config configData;

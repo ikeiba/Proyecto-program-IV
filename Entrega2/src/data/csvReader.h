@@ -2,6 +2,12 @@
 #define _CSV_READER_
 #include "estructuras.h"
 
-Usuario leerCsvUsuarios();
+Usuario* leerCsvUsuarios();
+
+void liberarUsuarios(Usuario* usuarios, int cantidad);
+
+Grupo* leerCsvGrupos();
+
+Mensaje* leerCsvMensajes();
 
 #endif
