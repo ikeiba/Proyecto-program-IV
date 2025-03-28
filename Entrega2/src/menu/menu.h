@@ -32,7 +32,7 @@ void bloquearUsuario(void);
 // Logs
 void logs(void);
 
-void borrarLog(void);
+void menuMorrarLog(void);
 
 
 // SQL

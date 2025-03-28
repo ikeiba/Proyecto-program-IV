@@ -64,7 +64,7 @@ void inicioSesion(void) {
     // Debugging: Print the inputs (remove in production)
     printf("Email ingresado: '%s'\n", strEmail);
     printf("Contraseña ingresada: '%s'\n", strContr);
-
+/*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa he comenmtado est porq no tira mira a ver
     // Replace this with your actual validation logic
     if (strEmail == 'Hola') {  
         printf("Email y contraseña correctos\n");
@@ -72,7 +72,7 @@ void inicioSesion(void) {
     } else {
         printf("Email o contraseña incorrectos. Inténtalo de nuevo.\n");
         inicioSesion();
-    }
+    }*/
 }
 
 
@@ -383,9 +383,9 @@ void logs(void){
         printf("Log servidor\n");
 
     } else if (strIn[0] == '3') {
-        borrarLog();
+        menuMorrarLog();
     } else if (strIn[0] == '4') {
-        borrarLog();
+        menuMorrarLog();
     } else if (strIn[0] == '0') {
         menu();
     } else {
@@ -395,7 +395,7 @@ void logs(void){
 };
 
 
-void borrarLog(void){
+void menuMorrarLog(void){
     char strIn[2];  
 
     printf(
@@ -460,8 +460,9 @@ void sql(void){
         sql();
     }
 };
-/*
+
 void copiaBDMenu(void){
+    /*
     char strIn[2];  
 
     printf(
@@ -483,8 +484,9 @@ void copiaBDMenu(void){
         printf("Opción no válida.\n\n");
         copiaBDMenu();
     }
+        */
 }
-*/
+
 
 // Registro Admins
 void registrarAdmin(void){
