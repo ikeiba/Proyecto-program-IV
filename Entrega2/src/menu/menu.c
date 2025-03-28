@@ -460,7 +460,7 @@ void sql(void){
         sql();
     }
 };
-
+/*
 void copiaBDMenu(void){
     char strIn[2];  
 
@@ -484,7 +484,7 @@ void copiaBDMenu(void){
         copiaBDMenu();
     }
 }
-
+*/
 
 // Registro Admins
 void registrarAdmin(void){
