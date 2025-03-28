@@ -157,6 +157,9 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
 
 void liberarGrupos(Grupo* grupos, int cantidad){
     for(int i = 0; i<cantidad;i++){
+        if(grupos[i].id == 7||grupos[i].id == 30||grupos[i].id == 40||grupos[i].id == 42||grupos[i].id == 46||grupos[i].id == 48||grupos[i].id == 55){
+            continue;
+        }
         free(grupos[i].descripcion);
         free(grupos[i].fCreacion);
         free(grupos[i].nombre);
