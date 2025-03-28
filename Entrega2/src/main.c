@@ -6,7 +6,7 @@
 #include "baseDatos\baseDatos.h"
 #include "utils\config.h"
 #include "estructuras.h"
-#include "csvReader.h"
+#include "data\csvReader.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
