@@ -32,4 +32,6 @@ typedef struct
     Grupo* grupo;
 }Mensaje;
 
+void cargarDatosEnBD(Usuario* usuarios, Grupo* grupos, Mensaje* mensajes);
+
 #endif
