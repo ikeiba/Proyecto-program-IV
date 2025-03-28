@@ -19,11 +19,7 @@ int main(){
     printf("\n\n%d\n",insertarUsuario("xabier", "xabier@gem.com","89491849","11-11-11","0987"));
     printf("\n\n%d\n",cambiarTelefonoUsuario("xabier@gem.com", "123456789"));
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
-<<<<<<< HEAD
-    printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
-=======
     printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));*/
->>>>>>> 67517cd60fa8dbe9a524dd42b8576a49fe47d4a9
 
     Usuario* usuarios = leerCsvUsuarios();
 
