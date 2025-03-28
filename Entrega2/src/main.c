@@ -6,7 +6,7 @@
 #include "baseDatos\baseDatos.h"
 #include "utils\config.h"
 #include "estructuras.h"
-//#include "csvReader.h"
+#include "csvReader.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
@@ -20,7 +20,7 @@ int main(){
     printf("\n\n%d\n",cambiarTelefonoUsuario("xabier@gem.com", "123456789"));
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
     printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
-/*
+
     Usuario* usuarios = leerCsvUsuarios();
 
     for (int i = 0; i < 50; i++) {
@@ -34,7 +34,7 @@ int main(){
                 usuarios[i].contra);
     }
     liberarUsuarios(usuarios, 50);
-    */
+    
     //administracion();
 
     /*
