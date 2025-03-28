@@ -38,3 +38,12 @@ void mostrarMensaje(char *texto) {
     fechaStr = ctime(&momentoActual);
     printf("%s - %s\n", fechaStr, texto);
 }
+
+void borrarLog() {
+    FILE *archivo;
+    archivo = fopen(FICHERO_LOG, "w"); //sobreescribe
+    if (archivo != NULL) {
+        fclose(archivo);
+    }
+    
+}

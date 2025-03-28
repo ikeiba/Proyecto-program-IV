@@ -5,5 +5,5 @@
 
 void registrarMensaje(const char *formato, ...);
 void mostrarMensaje(char *texto);
-
+void borrarLog();
 #endif

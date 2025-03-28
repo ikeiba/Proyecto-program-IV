@@ -73,7 +73,7 @@ int main(){
     liberarGrupos(grupos, 67);
 
     liberarUsuarios(usuarios, 50);
-    
+    borrarLog();
     //administracion();
 
     /*
