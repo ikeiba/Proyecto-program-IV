@@ -16,9 +16,10 @@ Usuario* leerCsvUsuarios() {
         fclose(file);
         return NULL;
     }
-
+    
     char linea[1024];
     int i = 0;
+    fgets(linea, 1024, file);
     while (fgets(linea, 1024, file) && i < 50) {
         linea[strcspn(linea, "\n")] = 0;
 
@@ -100,7 +101,7 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
         return NULL;
     }
 
-    Grupo* grupos = (Grupo*) malloc(530 * sizeof(Grupo));
+    Grupo* grupos = (Grupo*) malloc(67 * sizeof(Grupo));
     if (!grupos) {
         perror("Error al asignar memoria para usuarios");
         fclose(file);
@@ -109,6 +110,7 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
 
     char linea[1024];
     int i = 0;
+    fgets(linea, 1024, file);
     while (fgets(linea, 1024, file) && i < 67) {
         linea[strcspn(linea, "\n")] = 0;
 
@@ -145,53 +147,92 @@ Grupo* leerCsvGrupos(Usuario* usuarios){
             campo = strtok(NULL, ",");
             j++;
         }
+        grupos[i].size = 0;
         i++;
     }
     fclose(file);
 
-    file = fopen("src/data/conversaciones.csv", "r");
+    return grupos;
+}
 
-    /**char linea[1024];
+void liberarGrupos(Grupo* grupos, int cantidad){
+    for(int i = 0; i<cantidad;i++){
+        free(grupos[i].descripcion);
+        free(grupos[i].fCreacion);
+        free(grupos[i].nombre);
+        free(grupos[i].miembros);
+    }
+    free(grupos);
+}
+
+void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
+    FILE* file = fopen("src/data/conversaciones.csv", "r");
+    if (!file) {
+        perror("Error al abrir el archivo");
+        return;
+    }
+
+    char linea[1024];
     int i = 0;
+    fgets(linea, 1024, file); 
+
     while (fgets(linea, 1024, file) && i < 227) {
         linea[strcspn(linea, "\n")] = 0;
 
         char *campo = strtok(linea, ",");
         int j = 0;
-        while (campo) {
-            char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
-            if (!campoM) {
-                perror("Error al asignar memoria para un campo");
-                fclose(file);
-                return NULL;
-            }
-            strcpy(campoM, campo);
+        Usuario* u = NULL;
+        Grupo* g = NULL;
 
+        while (campo) {
             switch (j) {
                 case 0:
-                    grupos[i].id = atoi(campo);
-                    free(campoM);
-                    break;
-                case 1:
-                    grupos[i].nombre = campoM;
-                    break;
-                case 2:
-                    grupos[i].fCreacion = campoM;
-                    break;
-                case 3:
-                    Usuario* u = obtenerUsuarioPorId(atoi(campo),usuarios,50);
-                    grupos[i].creador = u;
+                    u = obtenerUsuarioPorId(atoi(campo), usuarios, 50);
+                    if (!u) {
+                        fprintf(stderr, "Error: Usuario con ID %d no encontrado\n", atoi(campo));
+                    }
                     break;
                 default:
-                    grupos[i].descripcion = campoM;
+                    g = obtenerGrupoPorId(atoi(campo), grupos, 67);
+                    if (!g) {
+                        fprintf(stderr, "Error: Grupo con ID %d no encontrado\n", atoi(campo));
+                    }
             }
             campo = strtok(NULL, ",");
             j++;
         }
-        i++;
-    }**/
 
-    return grupos;
+        //Nose porque estos grupos en especifico hacen que el programa pete
+        if(g->id == 7||g->id == 30||g->id == 40||g->id == 42||g->id == 46||g->id == 48||g->id == 55){
+            continue;
+        }
+
+        Usuario** miembrosM = (Usuario**) malloc(sizeof(Usuario*) * (g->size + 1));
+        if (!miembrosM) {
+            fprintf(stderr, "Error: No se pudo asignar memoria para miembros\n");
+            fclose(file);
+            return;
+        }
+
+        for (int z = 0; z < g->size; z++) {
+            miembrosM[z] = g->miembros[z];
+        }
+
+        miembrosM[g->size] = u;
+        g->size++;
+
+        if (g->miembros != NULL) {
+            printf("Liberando memoria en dirección: %p\n", (void*) g->miembros);
+            free(g->miembros);
+        }
+
+        g->miembros = miembrosM;
+
+        //printf("Grupo actualizado: %d, tamaño: %d\n", g->id, g->size);
+
+        i++;
+    }
+    fclose(file);
 }
 
 Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
@@ -210,10 +251,11 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
 
     char linea[1024];
     int i = 0;
+    fgets(linea, 1024, file);
     while (fgets(linea, 1024, file) && i < 530) {
         linea[strcspn(linea, "\n")] = 0;
 
-        char *campo = strtok(linea, ",");
+        char *campo = strtok(linea, ";");
         int j = 0;
         while (campo) {
             char* campoM = (char*) malloc((strlen(campo) + 1) * sizeof(char));
@@ -246,11 +288,11 @@ Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
                     free(campoM);
                     break;
                 default:
-                    g = obtenerGrupoPorId(atoi(campo),grupos,50);
+                    g = obtenerGrupoPorId(atoi(campo),grupos,67);
                     mensajes[i].grupo = g;
                     free(campoM);
             }
-            campo = strtok(NULL, ",");
+            campo = strtok(NULL, ";");
             j++;
         }
         i++;

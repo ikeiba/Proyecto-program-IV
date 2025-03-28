@@ -10,7 +10,11 @@ void liberarUsuarios(Usuario* usuarios, int cantidad);
 
 Grupo* leerCsvGrupos(Usuario* Usuarios);
 
+void liberarGrupos(Grupo* grupos, int cantidad);
+
 Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo);
+
+void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos);
 
 Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos);
 

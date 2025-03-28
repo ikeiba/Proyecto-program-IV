@@ -336,6 +336,7 @@ Thu Mar 27 21:43:53 2025 - Opened database successfully
 
 Thu Mar 27 21:43:53 2025 - Usuario con email xabier@gem.com eliminado correctamente.
 
+<<<<<<< HEAD
 Thu Mar 27 21:50:58 2025 - Opened database successfully
 
 Thu Mar 27 21:50:58 2025 - Table created successfully
@@ -373,4 +374,43 @@ Thu Mar 27 21:50:58 2025 - User name updated successfully for xabier@gem.com to 
 Thu Mar 27 21:50:58 2025 - Opened database successfully
 
 Thu Mar 27 21:50:58 2025 - Usuario con email xabier@gem.com eliminado correctamente.
+=======
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Table created successfully
+
+Thu Mar 27 23:06:16 2025 - Table created successfully
+
+Thu Mar 27 23:06:16 2025 - Table created successfully
+
+Thu Mar 27 23:06:16 2025 - Table created successfully
+
+Thu Mar 27 23:06:16 2025 - Table created successfully
+
+Thu Mar 27 23:06:16 2025 - Base de datos cerrada
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Base de datos cerrada
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Error al insertar administrador: UNIQUE constraint failed: Administrador.email_admin
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Usuario insertado correctamente.
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Phone number updated successfully for xabier@gem.com to 123456789.
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - User name updated successfully for xabier@gem.com to xabi.
+
+Thu Mar 27 23:06:16 2025 - Opened database successfully
+
+Thu Mar 27 23:06:16 2025 - Usuario con email xabier@gem.com eliminado correctamente.
+>>>>>>> 67517cd60fa8dbe9a524dd42b8576a49fe47d4a9
 

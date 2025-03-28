@@ -13,15 +13,25 @@
 //gcc -I src -I src/baseDatos -I src/data -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\data\*.c src\utils\*.c src\menu\*.c -o main.exe
 
 int main(){
-    crearBD();
+    /*crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
     printf("\n\n%d\n",insertarUsuario("xabier", "xabier@gem.com","89491849","11-11-11","0987"));
     printf("\n\n%d\n",cambiarTelefonoUsuario("xabier@gem.com", "123456789"));
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
+<<<<<<< HEAD
     printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
+=======
+    printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));*/
+>>>>>>> 67517cd60fa8dbe9a524dd42b8576a49fe47d4a9
 
     Usuario* usuarios = leerCsvUsuarios();
+
+    Grupo* grupos = leerCsvGrupos(usuarios);
+
+    Mensaje* mensajes = leerCsvMensajes(usuarios, grupos);
+
+    leerCsvConversaciones(usuarios, grupos);
 
     for (int i = 0; i < 50; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
@@ -33,8 +43,45 @@ int main(){
                 usuarios[i].fNacimiento,
                 usuarios[i].contra);
     }
-    liberarUsuarios(usuarios, 50);
+
     
+
+    for (int i = 0; i < 10; i++) {
+        printf("Grupos %d: %d, %s, %s, %s, %s, %d\n",
+                i + 1,
+                grupos[i].id,
+                grupos[i].creador->nombre,
+                grupos[i].fCreacion,
+                grupos[i].descripcion,
+                grupos[i].nombre,
+                grupos[i].size);
+    }
+
+    for (int i = 0; i < 10; i++) {
+        printf("Mensajes %d: %d, %s, %s, %s, %s, %s\n",
+                i + 1,
+                mensajes[i].id,
+                mensajes[i].contenido,
+                mensajes[i].emisor->nombre,
+                mensajes[i].fecha,
+                mensajes[i].grupo->descripcion,
+                mensajes[i].hora);
+    }
+
+    printf("Usuario grupo: %s", grupos[4].miembros[0]->nombre);
+
+    liberarMensajes(mensajes, 530);
+
+    liberarGrupos(grupos, 67);
+
+    liberarUsuarios(usuarios, 50);
+<<<<<<< HEAD
+    
+=======
+
+
+
+>>>>>>> 67517cd60fa8dbe9a524dd42b8576a49fe47d4a9
     //administracion();
 
     /*
