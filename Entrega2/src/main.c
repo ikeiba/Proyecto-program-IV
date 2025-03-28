@@ -75,13 +75,7 @@ int main(){
     liberarGrupos(grupos, 67);
 
     liberarUsuarios(usuarios, 50);
-<<<<<<< HEAD
     
-=======
-
-
-
->>>>>>> 67517cd60fa8dbe9a524dd42b8576a49fe47d4a9
     //administracion();
 
     /*
