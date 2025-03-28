@@ -43,34 +43,34 @@ void administracion(void){
 }
 
 
-void inicioSesion(void){
+void inicioSesion(void) {
     char strEmail[50];  
     char strContr[50];
-    bool porImplementar =true;
+    bool isValid = false; // Replace with your actual validation logic
 
-    printf(
-        "\n-----------INICIO DE SESION----------\n"
-        "Email: 1\n"
-        "Contraseña: 0\n"
-        "--------------------------------------\n\n"
-    );
+    printf("\n-----------INICIO DE SESION----------\n");
 
+    // Input email
+    printf("Email: ");
+    clearInputBuffer(); // Clear any leftover input
     fgets(strEmail, sizeof(strEmail), stdin);
+    strEmail[strcspn(strEmail, "\n")] = 0; // Remove newline character
+
+    // Input password
+    printf("Contraseña: ");
     fgets(strContr, sizeof(strContr), stdin);
-    printf("La contraseña es: %s", strContr);
+    strContr[strcspn(strContr, "\n")] = 0; // Remove newline character
 
+    // Debugging: Print the inputs (remove in production)
+    printf("Email ingresado: '%s'\n", strEmail);
+    printf("Contraseña ingresada: '%s'\n", strContr);
 
-    if (/*Mirar si esta en la BD (Por implementar)*/porImplementar) {  
+    // Replace this with your actual validation logic
+    if (strEmail == 'Hola') {  
         printf("Email y contraseña correctos\n");
         menu();
-    } else if (/*Mirar si esta en la BD (Por implementar)*/porImplementar) {
-        printf("Email incorrecto\n");
-        inicioSesion();
-    } else if (/*Mirar si esta en la BD (Por implementar)*/porImplementar) {
-        printf("Contraseña incorrecta\n");
-        inicioSesion();
     } else {
-        printf("Opción no válida.\n\n");
+        printf("Email o contraseña incorrectos. Inténtalo de nuevo.\n");
         inicioSesion();
     }
 }
@@ -85,7 +85,8 @@ void menu(void){
         "Reiniciar servidor: 2\n"
         "Ver logs: 3\n"
         "Ejecucion SQL: 4\n"
-        "Registrar administradores: 5\n"
+        " Hacer copia de seguridad de BD en CSV: 5\n"
+        "Registrar administradores: 6\n"
         "Salir: 0\n"
         "--------------------------------------\n\n"
     );
@@ -104,7 +105,9 @@ void menu(void){
     } else if (strIn[0] == '4') {
         sql();
     } else if (strIn[0] == '5') {
-        registrarAdmin();       
+        copiaBDMenu();  
+    } else if (strIn[0] == '6') {
+        registrarAdmin();        
     } else if (strIn[0] == '0') {
         printf("Saliendo...\n\n");
     } else {
@@ -152,7 +155,7 @@ void eleccionUsuario(void){
 
     printf(
         "\n--------ELECCION DE USUARIOS--------\n"
-        "Insertar nombre de usuario: (0 para volver)\n"
+        "Insertar email del usuario: (0 para volver)\n"
         "--------------------------------------\n\n");
 
 
@@ -458,6 +461,29 @@ void sql(void){
     }
 };
 
+void copiaBDMenu(void){
+    char strIn[2];  
+
+    printf(
+        "\n---------COPIA DE SEGURIDAD---------\n"
+        "¿Estas seguro de que quieres hacer una copia de seguridad de la base de datos?\n"
+        "Si: y\n"
+        "No: n\n"
+        "--------------------------------------\n\n"
+    );
+    if (strIn[0] == '\n') {  
+        printf("No ingresaste ningún carácter válido.\n\n");
+        copiaBDMenu();
+    } else if (strIn[0] == 'y') {
+        printf("Copia creada exitosamente");
+        //Por implementar      
+    } else if (strIn[0] == 'n') {
+        menu();
+    } else {
+        printf("Opción no válida.\n\n");
+        copiaBDMenu();
+    }
+}
 
 
 // Registro Admins

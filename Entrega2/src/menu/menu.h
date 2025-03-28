@@ -38,6 +38,7 @@ void borrarLog(void);
 // SQL
 void sql(void);
 
+void copiaBDMenu(void);
 
 // Registro Admins
 void registrarAdmin(void);

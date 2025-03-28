@@ -10,7 +10,9 @@
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
-//gcc -I src -I src/baseDatos -I src/data -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\data\*.c src\utils\*.c src\menu\*.c -o main.exe
+// WINDOWS:
+// gcc -I src -I src/baseDatos -I src/data -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\data\*.c src\utils\*.c src\menu\*.c -o main.exe
+
 
 int main(){
     crearBD();
