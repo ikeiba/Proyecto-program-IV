@@ -86,7 +86,7 @@ int main(){
     
     //menuMorrarLog();
 
-    //administracion();
+    administracion();
 
     /*
     Config configData;
