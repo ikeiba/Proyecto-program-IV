@@ -16,34 +16,31 @@ void reinicioServer(void);
 // Usuarios
 void eleccionUsuario(void);
 
-void adminUsuarios(void);
+void adminUsuarios(char *email);
 
-void modificarUsuarios(void);
+void modificarUsuarios(char *email);
 
-void modificarNombre(void);
+void modificarNombre(char *email);
 
-void modificarTlf(void);
+void modificarTlf(char *email);
 
-void menuBorrarUsuario(void);
+void menuBorrarUsuario(char *email);
 
-void bloquearUsuario(void);
+void bloquearUsuario(char *email);
 
 
 // Logs
 void logs(void);
 
-void menuMorrarLog(void);
+void menuBorrarLog(void);
 
 
-// SQL
-void sql(void);
-
+// BD
 void copiaBDMenu(void);
 
 // Registro Admins
 void registrarAdmin(void);
 
-void confirmarAdmin(void);
 
 
 
