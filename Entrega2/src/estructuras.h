@@ -15,6 +15,17 @@ typedef struct
 {
     int id;
     char* nombre;
+    char* email;
+    char* telefono;
+    char* fNacimiento;
+    char* contra;
+    int nivel;
+}Administrador;
+
+typedef struct
+{
+    int id;
+    char* nombre;
     char* fCreacion;
     Usuario* creador;
     char* descripcion;

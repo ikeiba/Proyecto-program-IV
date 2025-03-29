@@ -1,7 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "sqlite3.h"
 #include "baseDatos.h"
 #include "..\utils\logger.h"
-#include <stdio.h>
+#include "..\estructuras.h"
 
 // Constante con el nombre de la base de datos (A CAMBIAR: deberia estar en el .config)
 const char *nombreBaseDatos = "src\\baseDatos\\deustoMessenger.db";
@@ -332,3 +334,180 @@ int cambiarNombreUsuario(const char *email, const char *new_name) {
         return 0;
     }
 }
+
+int obtenerUsuarios(Usuario **usuarios, int *numUsuarios) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0;
+    }
+
+    const char *sql = "SELECT * FROM Usuario;";
+    sqlite3_stmt *stmt;
+
+    // Preparar la sentencia SQL
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Contar el número de filas
+    *numUsuarios = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numUsuarios)++;
+    }
+
+    // Reservar memoria para almacenar los resultados
+    *usuarios = (Usuario *)malloc(sizeof(Usuario) * (*numUsuarios));
+    if (*usuarios == NULL) {
+        fprintf(stderr, "Error al reservar memoria para usuarios\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Volver al principio de la sentencia
+    sqlite3_reset(stmt);
+
+    // Obtener los resultados y almacenarlos en la estructura
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*usuarios)[index].id = sqlite3_column_int(stmt, 0);
+        const char *nombre = (const char *)sqlite3_column_text(stmt, 1);
+        const char *email = (const char *)sqlite3_column_text(stmt, 2);
+        const char *telefono = (const char *)sqlite3_column_text(stmt, 3);
+        const char *f_nacimiento = (const char *)sqlite3_column_text(stmt, 4);
+        const char *contrasena = (const char *)sqlite3_column_text(stmt, 5);
+
+        snprintf((*usuarios)[index].nombre, sizeof((*usuarios)[index].nombre), "%s", nombre);
+        snprintf((*usuarios)[index].email, sizeof((*usuarios)[index].email), "%s", email);
+        snprintf((*usuarios)[index].telefono, sizeof((*usuarios)[index].telefono), "%s", telefono);
+        snprintf((*usuarios)[index].fNacimiento, sizeof((*usuarios)[index].fNacimiento), "%s", f_nacimiento);
+        snprintf((*usuarios)[index].contra, sizeof((*usuarios)[index].contra), "%s", contrasena);
+
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+
+int obtenerAdministradores(Administrador **administradores, int *numAdministradores) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0;
+    }
+
+    const char *sql = "SELECT * FROM Administrador;";
+    sqlite3_stmt *stmt;
+
+    // Preparar la sentencia SQL
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Contar el número de filas
+    *numAdministradores = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numAdministradores)++;
+    }
+
+    // Reservar memoria para almacenar los resultados
+    *administradores = (Administrador *)malloc(sizeof(Administrador) * (*numAdministradores));
+    if (*administradores == NULL) {
+        fprintf(stderr, "Error al reservar memoria para administradores\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Volver al principio de la sentencia
+    sqlite3_reset(stmt);
+
+    // Obtener los resultados y almacenarlos en la estructura
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*administradores)[index].id = sqlite3_column_int(stmt, 0);
+        const char *nombre = (const char *)sqlite3_column_text(stmt, 1);
+        const char *email = (const char *)sqlite3_column_text(stmt, 2);
+        const char *telefono = (const char *)sqlite3_column_text(stmt, 3);
+        const char *f_nacimiento = (const char *)sqlite3_column_text(stmt, 4);
+        (*administradores)[index].nivel = sqlite3_column_int(stmt, 5);
+        const char *contrasena = (const char *)sqlite3_column_text(stmt, 6);
+
+        snprintf((*administradores)[index].nombre, sizeof((*administradores)[index].nombre), "%s", nombre);
+        snprintf((*administradores)[index].email, sizeof((*administradores)[index].email), "%s", email);
+        snprintf((*administradores)[index].telefono, sizeof((*administradores)[index].telefono), "%s", telefono);
+        snprintf((*administradores)[index].fNacimiento, sizeof((*administradores)[index].fNacimiento), "%s", f_nacimiento);
+        snprintf((*administradores)[index].contra, sizeof((*administradores)[index].contra), "%s", contrasena);
+
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+
+/*
+int obtenerGrupos(Grupo **grupos, int *numGrupos) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return 0;
+    }
+
+    const char *sql = "SELECT * FROM Grupo;";
+    sqlite3_stmt *stmt;
+
+    // Preparar la sentencia SQL
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Contar el número de filas
+    *numGrupos = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numGrupos)++;
+    }
+
+    // Reservar memoria para almacenar los resultados
+    *grupos = (Grupo *)malloc(sizeof(Grupo) * (*numGrupos));
+    if (*grupos == NULL) {
+        fprintf(stderr, "Error al reservar memoria para grupos\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    // Volver al principio de la sentencia
+    sqlite3_reset(stmt);
+
+    // Obtener los resultados y almacenarlos en la estructura
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*grupos)[index].id= sqlite3_column_int(stmt, 0);
+        const char *nombre_grupo = (const char *)sqlite3_column_text(stmt, 1);
+        const char *fecha_creacion = (const char *)sqlite3_column_text(stmt, 2);
+        (*grupos)[index].creador = sqlite3_column_int(stmt, 3);
+        const char *descripcion = (const char *)sqlite3_column_text(stmt, 4);
+
+        snprintf((*grupos)[index].nombre, sizeof((*grupos)[index].nombre), "%s", nombre_grupo);
+        snprintf((*grupos)[index].fCreacion, sizeof((*grupos)[index].fCreacion), "%s", fecha_creacion);
+        snprintf((*grupos)[index].descripcion, sizeof((*grupos)[index].descripcion), "%s", descripcion);
+
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+*/
