@@ -332,3 +332,105 @@ int cambiarNombreUsuario(const char *email, const char *new_name) {
         return 0;
     }
 }
+
+// Metodo para sacar el id de un usuario desde su email
+int get_user_id(sqlite3 *db, const char *email) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_usuario FROM Usuario WHERE email_usuario = ?";
+    int user_id = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            user_id = sqlite3_column_int(stmt, 0);
+        }
+    }
+    
+    sqlite3_finalize(stmt);
+    return user_id;
+}
+
+// Metodo para insertar Grupo en la base de datos
+int insert_group(Grupo *group) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (!db) return 0;
+
+    // Get creator's user ID from email
+    int creator_id = get_user_id(db, group->creador->email);
+    if (creator_id == -1) {
+        fprintf(stderr, "Error: No user found with email %s\n", group->creador->email);
+        registrarMensaje("Error: No user found with email %s\n", group->creador->email);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    const char *sql = "INSERT INTO Grupo (nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo) VALUES (?, ?, ?, ?)";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, group->nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, group->fCreacion, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, creator_id);
+    sqlite3_bind_text(stmt, 4, group->descripcion, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Group '%s' created successfully.\n", group->nombre);
+        registrarMensaje("Group '%s' created successfully.\n", group->nombre);
+    } else {
+        fprintf(stderr, "Failed to create group: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to create group: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+
+int insert_mensaje(Mensaje *mensaje) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (!db) return 0;
+    
+    const char *sql = "INSERT INTO Mensaje (fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo) "
+                      "VALUES (?, ?, ?, ?, ?);";
+    
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    // Bind values to the SQL statement
+    sqlite3_bind_text(stmt, 1, mensaje->fecha, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, mensaje->hora, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, mensaje->contenido, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, mensaje->emisor->id);
+    sqlite3_bind_int(stmt, 5, mensaje->grupo->id);
+
+    // Execute the statement
+    rc = sqlite3_step(stmt);
+    
+    if (rc != SQLITE_DONE) {
+        fprintf(stderr, "Failed to insert mensaje: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Failed to insert mensaje: %s\n", sqlite3_errmsg(db));
+    } else {
+        printf("Mensaje inserted successfully\n");
+        registrarMensaje("Mensaje inserted successfully\n");
+    }
+
+    // Clean up
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}

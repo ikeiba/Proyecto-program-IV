@@ -23,15 +23,25 @@ int main(){
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
     printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
 
+
+    //! INICIO USUARIOS (carga desde csv e insercion en la base de datos) 
+    // Carga los usuarios del csv a un array de usuarios
     Usuario* usuarios = leerCsvUsuarios();
 
+    //! INICIO GRUPOS (carga desde csv e insercion en la base de datos)
+    // Carga los grupos del csv a un array de grupos
     Grupo* grupos = leerCsvGrupos(usuarios);
 
+    //! INICIO MENSAJES (carga desde csv e insercion en la base de datos)
     Mensaje* mensajes = leerCsvMensajes(usuarios, grupos);
 
+    // TODO (No se que hay que hacer con esto)
     leerCsvConversaciones(usuarios, grupos);
 
-    for (int i = 0; i < 50; i++) {
+    //! CARGA DATOS A BASE DE DATOS
+    cargarDatosCsvEnBD(usuarios, grupos, mensajes);
+
+    for (int i = 0; i < 5; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
                 i + 1,
                 usuarios[i].id,
@@ -44,7 +54,7 @@ int main(){
 
     
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
         printf("Grupos %d: %d, %s, %s, %s, %s, %d\n",
                 i + 1,
                 grupos[i].id,
@@ -55,7 +65,7 @@ int main(){
                 grupos[i].size);
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
         printf("Mensajes %d: %d, %s, %s, %s, %s, %s\n",
                 i + 1,
                 mensajes[i].id,
@@ -73,7 +83,9 @@ int main(){
     liberarGrupos(grupos, 67);
 
     liberarUsuarios(usuarios, 50);
-    menuMorrarLog();
+    
+    //menuMorrarLog();
+
     //administracion();
 
     /*
