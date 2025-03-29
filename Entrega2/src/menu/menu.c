@@ -157,9 +157,9 @@ void eleccionUsuario(void){
 
     if (strIn[0] == '0') {
         menu();
-    } else if (strIn[0] == '1'/*metodo de checkeo por implementar*/) {
-        printf("Email correcto\n");
-        adminUsuarios(strIn);        
+    } else if (strIn[0] == '1') {
+        printf("Nombre correcto\n");
+        adminUsuarios();        
     } else {
         printf("Este email no corresponde a ningun usuario\n");
         eleccionUsuario();
