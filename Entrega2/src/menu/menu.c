@@ -5,7 +5,7 @@
 
 #include "menu.h"
 #include "..\baseDatos\baseDatos.h"
-
+#include "..\utils\logger.h"
 
 
 void clearInputBuffer() {
@@ -68,7 +68,7 @@ void inicioSesion(void) {
     } else {
         printf("Email o contraseña incorrectos. Inténtalo de nuevo.\n");
         inicioSesion();
-    }*/
+    }
 }
 
 
@@ -157,9 +157,9 @@ void eleccionUsuario(void){
 
     if (strIn[0] == '0') {
         menu();
-    } else if (strIn[0] == '1') {
-        printf("Nombre correcto\n");
-        adminUsuarios();        
+    } else if (getExisteEmail(strIn)) {
+        printf("Email correcto\n");
+        adminUsuarios(strIn);        
     } else {
         printf("Este email no corresponde a ningun usuario\n");
         eleccionUsuario();
@@ -185,7 +185,7 @@ void adminUsuarios(char *email){
 
     if (strIn[0] == '\n') {  
         printf("No ingresaste ningún carácter válido.\n\n");
-        adminUsuarios();
+        adminUsuarios(email);
     } else if (strIn[0] == '1') {
         modificarUsuarios(email);
         
@@ -256,13 +256,13 @@ void modificarNombre(char *email){
     fgets(strNombre, sizeof(strNombre), stdin);
 
     if (strNombre[0] == '\n') {  
-        modificarUsuarios();
+        modificarUsuarios(email);
     } else {
-        if (cambiarNombreUsuario(const char *email, strNombre))
+        if (cambiarNombreUsuario(email, strNombre))
         {
             printf("Nombre modificado con exito\n\n");
-            modificarUsuarios(email)
-        } else ´{
+            modificarUsuarios(email);
+        } else {
             printf("No se pudo modificar el nombre\n");
             menu();
         }
@@ -283,13 +283,13 @@ void modificarTlf(char *email){
     fgets(strTlf, sizeof(strTlf), stdin);
 
     if (strTlf[0] == '\n') {  
-        modificarUsuarios();
+        modificarUsuarios(email);
     } else {
         if (cambiarTelefonoUsuario(email, strTlf))
         {
             printf("Telefono modificado con exito\n\n");
-            modificarUsuarios(email)
-        } else ´{
+            modificarUsuarios(email);
+        } else {
             printf("No se pudo modificar el telefono\n");
             menu();
         }
@@ -315,12 +315,12 @@ void menuBorrarUsuario(char *email){
         printf("No ingresaste ningún carácter válido.\n\n");
         menuBorrarUsuario(email);
     } else if (strIn[0] == 'y') {
-        if (borrarUsuario(email);)
+        if (borrarUsuario(email))
         {
             printf("Usuario borrado\n");
             menu();
         } else {
-            printf("No se pudo borrar el usuario\n")
+            printf("No se pudo borrar el usuario\n");
             menu();
         }     
     } else if (strIn[0] == 'n') {
@@ -347,16 +347,16 @@ void bloquearUsuario(char *email){
 
     if (strIn[0] == '\n') {  
         printf("No ingresaste ningún carácter válido.\n\n");
-        bloquearUsuario();
+        bloquearUsuario(email);
     } else if (strIn[0] == 'y') {
         printf("Usuario bloqueado");
         menu();
         //Por implementar      
     } else if (strIn[0] == 'n') {
-        modificarUsuarios();
+        modificarUsuarios(email);
     } else {
         printf("Opción no válida.\n\n");
-        bloquearUsuario();
+        bloquearUsuario(email);
     }
 };
 
@@ -387,12 +387,12 @@ void logs(void){
         // Por implementar
 
     } else if (strIn[0] == '2') {
-        printf("Por implementar")
+        printf("Por implementar");
         logs();
     } else if (strIn[0] == '3') {
         menuBorrarLog();
     } else if (strIn[0] == '4') {
-        printf("Por implementar")
+        printf("Por implementar");
         logs();
     } else if (strIn[0] == '0') {
         menu();
@@ -423,6 +423,7 @@ void menuBorrarLog(void){
     } else if (strIn[0] == 'y') {
         borrarLog();
         printf("Log borrado exitosamente");   
+        logs();
     } else if (strIn[0] == 'n') {
         logs();
     } else {
@@ -467,7 +468,7 @@ void registrarAdmin(void){
     char *strContr;
     char *strTlf;
     char *strFechaNacimiento;
-    int strNivel;
+
     char *strNombre;
 
     
@@ -496,12 +497,7 @@ void registrarAdmin(void){
     fgets(strTlf, sizeof(strTlf), stdin);
     strTlf[strcspn(strTlf, "\n")] = 0;
 
-
-    // Input nivel
-    printf("\nNivel: ");
-    clearInputBuffer(); 
-    fgets(strNivel, sizeof(strNivel), stdin);
-    strNivel[strcspn(strNivel, "\n")] = 0; 
+    // Input nivel NO PUESTO
 
     // Input fecha
     printf("\nFecha nacimiento: ");
@@ -513,7 +509,7 @@ void registrarAdmin(void){
 
 
 
-    if (insertarAdministrador(strNombre, strEmail, strTlf,strFechaNacimiento, strNivel, strContr);) {  
+    if (insertarAdministrador(strNombre, strEmail, strTlf,strFechaNacimiento, 1, strContr)) {  
         printf("Datos introducidos con exito\n");
         menu();
     } else {
