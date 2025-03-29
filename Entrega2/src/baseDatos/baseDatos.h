@@ -1,6 +1,7 @@
 #ifndef baseDatos_H_
 #define baseDatos_H_
 #include "sqlite3.h"
+#include "..\estructuras.h"
 
 // Metodo para abrir la base de datos
 sqlite3 *open_database(const char *db_name);
@@ -22,7 +23,7 @@ int insertarAdministrador(const char *nombre, const char *email, const char *tel
 int insertarUsuario(const char *nombre, const char *email, const char *telefono,
                     const char *fecha_nacimiento, const char *contrasena);
 
-// Metodo para Borrar Usuario
+// Metodo para Borrar Usuario en la base de datos
 int borrarUsuario(const char *email);
 
 // Metodo para modificar el numero de telefono de un usuario desde su email
@@ -30,5 +31,16 @@ int cambiarTelefonoUsuario(const char *email, const char *new_phone);
 
 // Metodo para modificar el nombre de un usuario desde su email
 int cambiarNombreUsuario(const char *email, const char *new_name);
+
+// Metodo para sacar el id de un usuario desde su email (este metodo recibe la base de datos ya abierta, porque se usa como
+// metodo de "apoyo" en otros metodos)
+int get_user_id(sqlite3 *db, const char *email);
+
+// Metodo para insertar Grupo en la base de datos
+int insert_group(Grupo *group);
+
+// Metodo para insertar Mensaje en la base de datos
+int insert_mensaje(Mensaje *mensaje);
+
 
 #endif
