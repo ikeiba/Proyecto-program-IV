@@ -556,6 +556,33 @@ int obtenerAdministradores(Administrador **administradores, int *numAdministrado
     return 1;
 }
 
+int getExisteEmail(const char* email) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT COUNT(*) FROM Usuario WHERE email_usuario = ? "
+                      "UNION ALL "
+                      "SELECT COUNT(*) FROM Administrador WHERE email_admin = ?";
+
+    int existe = 0;
+    
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            existe += sqlite3_column_int(stmt, 0);  // Sumar los valores obtenidos
+        }
+    } else {
+        printf("Error al ejecutar la consulta: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return existe > 0;  // Retorna 1 si el email existe en alguna de las tablas, 0 si no existe
+}
+
+
 /*
 int obtenerGrupos(Grupo **grupos, int *numGrupos) {
     sqlite3 *db = open_database(nombreBaseDatos);

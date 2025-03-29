@@ -42,5 +42,13 @@ int insert_group(Grupo *group);
 // Metodo para insertar Mensaje en la base de datos
 int insert_mensaje(Mensaje *mensaje);
 
+//metodo si existe email
+int getExisteEmail(const char* email) ;
+
+//select de administradores
+int obtenerAdministradores(Administrador **administradores, int *numAdministradores);
+
+//select de administradores
+int obtenerUsuarios(Usuario **usuarios, int *numUsuarios);
 
 #endif
