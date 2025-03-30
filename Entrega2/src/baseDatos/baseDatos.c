@@ -393,6 +393,42 @@ int insert_group(Grupo *group) {
         registrarMensaje("Failed to create group: %s\n", sqlite3_errmsg(db));
     }
 
+    for(int i = 0; i<group->size;i++){
+        int miembro_id = get_user_id(db, group->miembros[i]->email);
+        if (miembro_id == -1) {
+            fprintf(stderr, "Error: No user found with email %s\n", group->miembros[i]->email);
+            registrarMensaje("Error: No user found with email %s\n", group->miembros[i]->email);
+            sqlite3_close(db);
+            return 0;
+        }
+
+        const char *sqlc = "INSERT INTO Conversacion (id_usuario, id_grupo) VALUES (?, ?)";
+
+        sqlite3_stmt *stmtc;
+        rc = sqlite3_prepare_v2(db, sqlc, -1, &stmtc, 0);
+
+        if (rc != SQLITE_OK) {
+            fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+            sqlite3_close(db);
+            return 0;
+        }
+
+        sqlite3_bind_int(stmtc, 1, miembro_id);
+        sqlite3_bind_int(stmtc, 2, group->id);
+
+        rc = sqlite3_step(stmtc);
+        sqlite3_finalize(stmtc);
+
+        if (rc == SQLITE_DONE) {
+            printf("Member '%s' inserted successfully.\n", group->miembros[i]->nombre);
+            registrarMensaje("Member '%s' inserted successfully.\n", group->miembros[i]->nombre);
+        } else {
+            fprintf(stderr, "Failed to insert member: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Failed to insert member: %s\n", sqlite3_errmsg(db));
+        }
+    }
+
     sqlite3_close(db);
     return (rc == SQLITE_DONE);
 }
