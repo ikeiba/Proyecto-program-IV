@@ -40,7 +40,7 @@ int main(){
     leerCsvConversaciones(usuarios, grupos);
 
     //! CARGA DATOS A BASE DE DATOS
-    cargarDatosCsvEnBD(usuarios, grupos, mensajes);
+    //cargarDatosCsvEnBD(usuarios, grupos, mensajes);
 
     for (int i = 0; i < 5; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
