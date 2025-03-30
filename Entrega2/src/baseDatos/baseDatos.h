@@ -12,6 +12,12 @@ void ejecutarTablas(sqlite3 *db, const char *sql);
 // Metodo para crear la base de datos
 int crearBD();
 
+//Metodo para borrar todos los datos
+void limpiarBaseDatos();
+
+//Metodo para borrar las tablas
+void borrarTablas();
+
 // Metodo para comprobar inicio de sesion
 int comprobarCredenciales(char *email, char *contrasena);
 

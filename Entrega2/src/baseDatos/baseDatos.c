@@ -104,6 +104,52 @@ int crearBD()
     return 0;
 }
 
+void limpiarBaseDatos() {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return; // Error al abrir la base de datos
+    }
+    const char *sql_delete = 
+        "DELETE FROM Mensaje;"
+        "DELETE FROM Conversacion;"
+        "DELETE FROM Grupo;"
+        "DELETE FROM Usuario;"
+        "DELETE FROM Administrador;";
+
+    char *errMsg = 0;
+    int rc = sqlite3_exec(db, sql_delete, 0, 0, &errMsg);
+    
+    if (rc != SQLITE_OK) {
+        printf("Error al limpiar la base de datos: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    } else {
+        printf("Base de datos limpiada correctamente.\n");
+    }
+}
+
+void borrarTablas() {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    if (db == NULL) {
+        return; // Error al abrir la base de datos
+    }
+    const char *sql_drop = 
+        "DROP TABLE IF EXISTS Mensaje;"
+        "DROP TABLE IF EXISTS Conversacion;"
+        "DROP TABLE IF EXISTS Grupo;"
+        "DROP TABLE IF EXISTS Usuario;"
+        "DROP TABLE IF EXISTS Administrador;";
+
+    char *errMsg = 0;
+    int rc = sqlite3_exec(db, sql_drop, 0, 0, &errMsg);
+    
+    if (rc != SQLITE_OK) {
+        printf("Error al borrar las tablas: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    } else {
+        printf("Tablas eliminadas correctamente.\n");
+    }
+}
+
 int comprobarCredenciales(char *email, char *contrasena)
 {
     sqlite3 *db = open_database(nombreBaseDatos);

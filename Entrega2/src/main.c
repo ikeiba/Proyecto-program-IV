@@ -15,13 +15,14 @@
 
 
 int main(){
-    /*crearBD();
+    //borrarTablas();
+    crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
     printf("\n\n%d\n",insertarUsuario("xabier", "xabier@gem.com","89491849","11-11-11","0987"));
     printf("\n\n%d\n",cambiarTelefonoUsuario("xabier@gem.com", "123456789"));
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
-    printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));*/
+    printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
 
 
     //! INICIO USUARIOS (carga desde csv e insercion en la base de datos) 
