@@ -529,13 +529,16 @@ int insert_mensaje(Mensaje *mensaje) {
 }
 
 int obtenerUsuarios(Usuario **usuarios, int *numUsuarios) {
+<<<<<<< Updated upstream
     sqlite3 *db = open_database(nombreBaseDatos);
+=======
     sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         return 0;
     }
 
     const char *sql = "SELECT * FROM Usuario;";
+>>>>>>> Stashed changes
     sqlite3_stmt *stmt;
     const char *sql = "SELECT * FROM Usuario;";
 
@@ -580,10 +583,13 @@ int obtenerUsuarios(Usuario **usuarios, int *numUsuarios) {
 
 
 int obtenerAdministradores(Administrador **administradores, int *numAdministradores) {
+<<<<<<< Updated upstream
     printf("Entrando en obtenerAdministradores...\n");
     sqlite3 *db = open_database(nombreBaseDatos);
     
+=======
     sqlite3 *db = open_database(config.nombreBD);
+>>>>>>> Stashed changes
     if (db == NULL) {
         printf("Error: No se pudo abrir la base de datos.\n");
         return 0;
