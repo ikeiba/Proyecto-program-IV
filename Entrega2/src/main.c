@@ -15,7 +15,7 @@
 
 // Usuario y constraseña: admin
 int main(){
-    //borrarTablas();
+    borrarTablas();
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
@@ -43,7 +43,7 @@ int main(){
 
     //! CARGA DATOS A BASE DE DATOS
     cargarDatosCsvEnBD(usuarios, grupos, mensajes);
-
+    
     for (int i = 0; i < 5; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
                 i + 1,
