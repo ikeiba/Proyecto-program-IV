@@ -205,6 +205,11 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
             j++;
         }
 
+        if (!g || !u) {
+            fprintf(stderr, "Error: Grupo o Usuario no válido\n");
+            continue;
+        }
+
         Usuario** miembrosM = (Usuario**) malloc(sizeof(Usuario*) * (g->size + 1));
         if (!miembrosM) {
             fprintf(stderr, "Error: No se pudo asignar memoria para miembros\n");
@@ -218,12 +223,9 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
 
         miembrosM[g->size] = u;
 
-        //Nose porque estos grupos en especifico hacen que el programa pete
-        if((g->id != 7 && g->id != 30 && g->id != 40 && g->id != 42 && g->id != 46 && g->id != 48 && g->id != 55) 
-        || g->size != 0){
+        if (g->miembros) {
             free(g->miembros);
         }
-
         g->miembros = miembrosM;
 
         g->size++;
