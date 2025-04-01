@@ -52,7 +52,7 @@ int crearBD()
         "nombre_usuario TEXT NOT NULL, "
         "email_usuario TEXT UNIQUE NOT NULL, "
         "telefono_usuario TEXT, "
-        "f_nacimiento_usuario TEXT, "
+        "f_nacimiento_usuario DATE, "
         "contrasena_usuario TEXT NOT NULL"
         ");";
     ejecutarTablas(db, sql_usuario);
@@ -60,7 +60,7 @@ int crearBD()
     const char *sql_grupo = "CREATE TABLE IF NOT EXISTS Grupo ("
         "id_grupo INTEGER PRIMARY KEY AUTOINCREMENT, "
         "nombre_grupo TEXT NOT NULL, "
-        "fecha_creacion_grupo TEXT NOT NULL, "
+        "fecha_creacion_grupo DATE NOT NULL, "
         "id_creador INTEGER, "
         "descripcion_grupo TEXT, "
         "FOREIGN KEY (id_creador) REFERENCES Usuario(id_usuario) ON DELETE SET NULL"
@@ -78,7 +78,7 @@ int crearBD()
 
     const char *sql_mensaje = "CREATE TABLE IF NOT EXISTS Mensaje ("
         "id_mensaje INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "fecha_mensaje TEXT NOT NULL, "
+        "fecha_mensaje DATE NOT NULL, "
         "hora_mensaje TEXT NOT NULL, "
         "contenido_mensaje TEXT NOT NULL, "
         "id_emisor INTEGER, "
@@ -93,7 +93,7 @@ int crearBD()
         "nombre_admin TEXT NOT NULL, "
         "email_admin TEXT UNIQUE NOT NULL, "
         "telefono_admin TEXT, "
-        "f_nacimiento_admin TEXT, "
+        "f_nacimiento_admin DATE, "
         "Nivel INTEGER NOT NULL, "
         "contrasena_admin TEXT NOT NULL"
         ");";
