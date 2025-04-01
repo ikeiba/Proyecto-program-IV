@@ -9,7 +9,6 @@ typedef struct
     char cleanBBDD[TAM];
     char createBBDD[TAM];
     char deleteBBDD[TAM];
-    char copiaBBDD[TAM];
     char loggerBD[TAM];
     char CSVconversaciones[TAM];
     char CSVgrupos[TAM];
