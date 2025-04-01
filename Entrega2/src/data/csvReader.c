@@ -223,7 +223,7 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
 
         miembrosM[g->size] = u;
 
-        if (g->miembros) {
+        if (g->size != 0) {
             free(g->miembros);
         }
         g->miembros = miembrosM;
