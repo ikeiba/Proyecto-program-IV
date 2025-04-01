@@ -3,7 +3,10 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include "config.h"
 
+
+extern Config config;
 
 void registrarMensaje(const char *formato, ...) {
     FILE *archivo;
@@ -11,7 +14,7 @@ void registrarMensaje(const char *formato, ...) {
     char *fechaStr;
     char mensaje[512];  // Buffer para el mensaje formateado
 
-    archivo = fopen(FICHERO_LOG, "a"); // modo añadir al final
+    archivo = fopen(config.loggerBD, "a"); // modo añadir al final
     if (archivo != NULL) {
         // Obtener la fecha y hora actual
         momentoActual = time(NULL);
@@ -36,7 +39,7 @@ void mostrarMensaje(int n) {
     int countadorLineas = 0;
 
     //leer el archivo línea por linea 
-    archivo = fopen(FICHERO_LOG, "r");
+    archivo = fopen(config.loggerBD, "r");
     if (archivo == NULL) {
         perror("Error al abrir el archivo de log");
         return;

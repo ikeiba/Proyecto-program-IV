@@ -36,6 +36,21 @@ void leerConfig() {
             }else if (strncmp(clave, "copiaBBDD", 9)==0)
             {
                 strcpy(con.copiaBBDD, valor);
+            }else if (strncmp(clave, "loggerBD", 8)==0)
+            {
+                strcpy(con.loggerBD, valor);
+            }else if (strncmp(clave, "CSVconversaciones", 17)==0)
+            {
+                strcpy(con.CSVconversaciones, valor);
+            }else if (strncmp(clave, "CSVgrupos", 9)==0)
+            {
+                strcpy(con.CSVgrupos, valor);
+            }else if (strncmp(clave, "CSVmensajes", 11)==0)
+            {
+                strcpy(con.CSVmensajes, valor);
+            }else if (strncmp(clave, "CSVusuarios", 11)==0)
+            {
+                strcpy(con.CSVusuarios, valor);
             }
         }
         fclose(punterofichero);

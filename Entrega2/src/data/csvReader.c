@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "../utils/config.h"
+
+extern Config config;
 
 Usuario* leerCsvUsuarios() {
-    FILE *file = fopen("src/data/usuarios.csv", "r");
+    FILE *file = fopen(config.CSVusuarios, "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return NULL;
@@ -95,7 +98,7 @@ Grupo* obtenerGrupoPorId(int id, Grupo* grupos, int tamanyo){
 }
 
 Grupo* leerCsvGrupos(Usuario* usuarios){
-    FILE *file = fopen("src/data/grupos.csv", "r");
+    FILE *file = fopen(config.CSVgrupos, "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return NULL;
@@ -166,7 +169,7 @@ void liberarGrupos(Grupo* grupos, int cantidad){
 }
 
 void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
-    FILE* file = fopen("src/data/conversaciones.csv", "r");
+    FILE* file = fopen(config.CSVconversaciones, "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return;
@@ -235,7 +238,7 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
 }
 
 Mensaje* leerCsvMensajes(Usuario* usuarios, Grupo* grupos){
-    FILE *file = fopen("src/data/mensajes.csv", "r");
+    FILE *file = fopen(config.CSVmensajes, "r");
     if (!file) {
         perror("Error al abrir el archivo");
         return NULL;
