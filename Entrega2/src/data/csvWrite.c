@@ -6,8 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "config.h"
+
+extern Config config;
 
 void exportarBD_CSV() {
+    if(atoi(config.copiaBBDD)){
+        return;
+    }
     FILE *file;
     
     // Exportar Administradores

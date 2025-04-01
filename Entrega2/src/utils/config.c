@@ -33,6 +33,9 @@ void leerConfig() {
             }else if (strncmp(clave, "loadCSV", 7)==0)
             {
                 strcpy(con.loadCSV, valor);
+            }else if (strncmp(clave, "copiaBBDD", 9)==0)
+            {
+                strcpy(con.copiaBBDD, valor);
             }
         }
         fclose(punterofichero);

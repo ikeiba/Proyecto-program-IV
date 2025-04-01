@@ -8,6 +8,7 @@ typedef struct
     char cleanBBDD[TAM];
     char createBBDD[TAM];
     char deleteBBDD[TAM];
+    char copiaBBDD[TAM];
 }Config;
 void leerConfig();
 #endif
