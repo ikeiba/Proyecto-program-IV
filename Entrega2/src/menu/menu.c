@@ -568,16 +568,32 @@ void registrarAdmin(void) {
     // Input email
     printf("\nEmail: ");
     fgets(strEmail, sizeof(strEmail), stdin);
+    while (sizeof(strEmail) < 1) 
+    {
+       printf("No se ha introducido ningun email, introduzcalo de nuevo: ");
+       fgets(strEmail, sizeof(strEmail), stdin);
+    }
+    
     strEmail[strcspn(strEmail, "\n")] = 0; 
 
     // Input contraseña
     printf("\nContrasena: ");
     fgets(strContr, sizeof(strContr), stdin);
+    while (sizeof(strContr) < 1) 
+    {
+       printf("No se ha introducido ninguna contraseña, introduzcalo de nuevo: ");
+       fgets(strContr, sizeof(strContr), stdin);
+    }
     strContr[strcspn(strContr, "\n")] = 0;
 
     // Input Nombre
     printf("\nNombre: ");
     fgets(strNombre, sizeof(strNombre), stdin);
+    while (sizeof(strNombre) < 1) 
+    {
+       printf("No se ha introducido ningun nombre, introduzcalo de nuevo: ");
+       fgets(strNombre, sizeof(strNombre), stdin);
+    }
     strNombre[strcspn(strNombre, "\n")] = 0; 
 
     // Input tlf
