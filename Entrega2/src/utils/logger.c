@@ -72,7 +72,4 @@ void borrarLog() {
     } else {
         perror("Error al borrar el archivo");
     }
-
-    return 0;
-    
 }
