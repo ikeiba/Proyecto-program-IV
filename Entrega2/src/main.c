@@ -36,43 +36,6 @@ int main(){
 
     //! CARGA DATOS A BASE DE DATOS
     cargarDatosCsvEnBD(usuarios, grupos, mensajes);
-    
-    for (int i = 0; i < 5; i++) {
-        printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
-                i + 1,
-                usuarios[i].id,
-                usuarios[i].nombre,
-                usuarios[i].email,
-                usuarios[i].telefono,
-                usuarios[i].fNacimiento,
-                usuarios[i].contra);
-    }
-
-    
-
-    for (int i = 0; i < 5; i++) {
-        printf("Grupos %d: %d, %s, %s, %s, %s, %d\n",
-                i + 1,
-                grupos[i].id,
-                grupos[i].creador->nombre,
-                grupos[i].fCreacion,
-                grupos[i].descripcion,
-                grupos[i].nombre,
-                grupos[i].size);
-    }
-
-    for (int i = 0; i < 5; i++) {
-        printf("Mensajes %d: %d, %s, %s, %s, %s, %s\n",
-                i + 1,
-                mensajes[i].id,
-                mensajes[i].contenido,
-                mensajes[i].emisor->nombre,
-                mensajes[i].fecha,
-                mensajes[i].grupo->descripcion,
-                mensajes[i].hora);
-    }
-
-    printf("Usuario grupo: %s", grupos[4].miembros[0]->nombre);
 
     liberarMensajes(mensajes, 530);
 
