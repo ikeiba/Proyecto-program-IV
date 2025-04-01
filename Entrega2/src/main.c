@@ -39,11 +39,11 @@ int main(){
     Mensaje* mensajes = leerCsvMensajes(usuarios, grupos);
 
     // TODO (No se que hay que hacer con esto)
-    leerCsvConversaciones(usuarios, grupos);
+    //leerCsvConversaciones(usuarios, grupos);
 
     //! CARGA DATOS A BASE DE DATOS
     cargarDatosCsvEnBD(usuarios, grupos, mensajes);
-
+    /*
     for (int i = 0; i < 5; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
                 i + 1,
@@ -86,7 +86,7 @@ int main(){
     liberarGrupos(grupos, 67);
 
     liberarUsuarios(usuarios, 50);
-    
+    */
     //menuMorrarLog();
 
     administracion();
