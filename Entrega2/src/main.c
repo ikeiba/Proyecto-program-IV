@@ -7,6 +7,7 @@
 #include "utils/config.h"
 #include "estructuras.h"
 #include "data/csvReader.h"
+#include "data/csvWrite.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
@@ -15,7 +16,7 @@
 
 // Usuario y constraseña: admin
 int main(){
-    borrarTablas();
+    //borrarTablas();
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
@@ -26,7 +27,7 @@ int main(){
     printf("\n\n%d\n",cambiarNombreUsuario("xabier@gem.com", "xabi"));
     printf("\n\n%d\n",borrarUsuario("xabier@gem.com"));
 
-
+    exportarBD_CSV();
     //! INICIO USUARIOS (carga desde csv e insercion en la base de datos) 
     // Carga los usuarios del csv a un array de usuarios
     Usuario* usuarios = leerCsvUsuarios();
