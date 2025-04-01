@@ -15,7 +15,7 @@
 
 // Usuario y constraseña: admin
 int main(){
-    //borrarTablas();
+    borrarTablas();
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
@@ -39,11 +39,11 @@ int main(){
     Mensaje* mensajes = leerCsvMensajes(usuarios, grupos);
 
     // TODO (No se que hay que hacer con esto)
-    //leerCsvConversaciones(usuarios, grupos);
+    leerCsvConversaciones(usuarios, grupos);
 
     //! CARGA DATOS A BASE DE DATOS
     cargarDatosCsvEnBD(usuarios, grupos, mensajes);
-    /*
+    
     for (int i = 0; i < 5; i++) {
         printf("Usuario %d: %d, %s, %s, %s, %s, %s\n",
                 i + 1,
@@ -86,7 +86,7 @@ int main(){
     liberarGrupos(grupos, 67);
 
     liberarUsuarios(usuarios, 50);
-    */
+    
     //menuMorrarLog();
 
     administracion();
