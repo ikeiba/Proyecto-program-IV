@@ -1,5 +1,6 @@
 #ifndef MENU_H_
 #define MENU_H_
+#include <stdbool.h>
 
 // Menu
 void administracion(void);
@@ -34,6 +35,8 @@ void logs(void);
 
 void menuBorrarLog(void);
 
+void verLogMenu(void);
+
 
 // BD
 void copiaBDMenu(void);
@@ -42,6 +45,10 @@ void copiaBDMenu(void);
 void registrarAdmin(void);
 
 
+// Validaciones
+bool tlfInvalido(char *tlf);
+
+bool fechaInvalida(char *fecha);
 
 
 

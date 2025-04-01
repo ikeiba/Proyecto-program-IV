@@ -2,18 +2,70 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #include "menu.h"
 #include "../baseDatos/baseDatos.h"
 #include "../utils/logger.h"
-
+#include "../data/csvWrite.h"
 
 void clearInputBuffer() {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF); // Limpia hasta el final de la línea
 }
 
 
+bool tlfInvalido(char *tlf) {
+    // Verificar que la longitud sea exactamente 9
+    if (strlen(tlf) != 9) {
+        return true;
+    }
+    // Verificar que todos los caracteres sean dígitos
+    for (int i = 0; i < 9; i++) {
+        if (!isdigit(tlf[i])) {
+            return true;
+        }
+    }
+    return false; // Teléfono válido
+}
+
+bool fechaInvalida(char *fecha) {
+    if (strlen(fecha) != 10) {
+        return true;
+    }
+    // Verificar formato YYYY-MM-DD
+    for (int i = 0; i < 10; i++) {
+        if ((i == 4 || i == 7) && fecha[i] != '-') {
+            return true;
+        } else if ((i != 4 && i != 7) && !isdigit(fecha[i])) {
+            return true;
+        }
+    }
+
+    // Extraer año, mes y día
+    int year = atoi(fecha);
+    int month = atoi(fecha + 5);
+    int day = atoi(fecha + 8);
+
+    // Validar rango de mes y día
+    if (month < 1 || month > 12 || day < 1 || day > 31) {
+        return true;
+    }
+
+    // Validar días según el mes
+    if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+        return true;
+    }
+    if (month == 2) {
+        // Verificar años bisiestos
+        bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        if (day > (isLeap ? 29 : 28)) {
+            return true;
+        }
+    }
+
+    return false; // Fecha válida
+}
 
 // Menu
 void administracion(void) {
@@ -107,7 +159,7 @@ void menu(void) {
             printf("Opción no válida. Inténtalo de nuevo.\n\n");
         }
     }
-};
+}
 
 
 
@@ -167,7 +219,7 @@ void eleccionUsuario(void) {
             printf("Este email no corresponde a ningun usuario\n");
         }
     }
-};
+}
 
 
 void adminUsuarios(char *email) {
@@ -202,7 +254,7 @@ void adminUsuarios(char *email) {
             printf("Opción no válida. Inténtalo de nuevo.\n\n");
         }
     }
-};
+}
 
 
 void modificarUsuarios(char *email) {
@@ -233,7 +285,7 @@ void modificarUsuarios(char *email) {
             printf("Opción no válida. Inténtalo de nuevo.\n\n");
         }
     }
-};
+}
 
 
 void modificarNombre(char *email) {
@@ -264,7 +316,8 @@ void modificarNombre(char *email) {
             }
         }
     }
-};
+}
+
 
 
 void modificarTlf(char *email) {
@@ -272,20 +325,28 @@ void modificarTlf(char *email) {
 
     while (1) {
         printf(
-            "\n---------MODIFICAR TELEFONO---------\n"
+            "\n\n---------MODIFICAR TELEFONO---------\n"
             "Insertar nuevo telefono: (dejar vacio para salir)\n"
             "--------------------------------------\n\n"
         );
 
         fgets(strTlf, sizeof(strTlf), stdin);
         strTlf[strcspn(strTlf, "\n")] = 0;
+        if (tlfInvalido(strTlf))
+        {
+            printf("\nEl telefono introducido es invalido, introduzcalo de nuevo.");
+            printf("\nTelefono: ");
+            clearInputBuffer();
+            fgets(strTlf, sizeof(strTlf), stdin);
+            strTlf[strcspn(strTlf, "\n")] = 0;
+        }
 
         if (strlen(strTlf) == 0) {
             modificarUsuarios(email);
             break;
         } else {
             if (cambiarTelefonoUsuario(email, strTlf)) {
-                printf("Telefono modificado con exito\n\n");
+                printf("Telefono modificado con exito\n");
                 modificarUsuarios(email);
                 break;
             } else {
@@ -295,7 +356,9 @@ void modificarTlf(char *email) {
             }
         }
     }
-};
+}
+
+
 
 
 void menuBorrarUsuario(char *email) {
@@ -328,7 +391,7 @@ void menuBorrarUsuario(char *email) {
             printf("Opción no válida. Inténtalo de nuevo.\n\n");
         }
     }
-};
+}
 
 
 void bloquearUsuario(char *email) {
@@ -357,7 +420,7 @@ void bloquearUsuario(char *email) {
             printf("Opción no válida. Inténtalo de nuevo.\n\n");
         }
     }
-};
+}
 
 
 
@@ -382,8 +445,7 @@ void logs(void) {
         printf("No ingresaste ningún carácter válido.\n\n");
         logs();
     } else if (strIn[0] == '1') {
-        printf("Log base de datos\n\n");
-        // Por implementar
+        verLogMenu();
     } else if (strIn[0] == '2') {
         printf("Por implementar\n");
         logs();
@@ -429,14 +491,42 @@ void menuBorrarLog(void) {
     }
 }
 
+void verLogMenu(void) {
+    char strIn[10]; 
+    int numLines;   
+
+    while (1) {
+        printf(
+            "\n-------------VER LOGS---------------\n"
+            "¿Cuantas lineas de Log quieres ver?: \n"
+            "--------------------------------------\n\n"
+        );
+        clearInputBuffer();
+        fgets(strIn, sizeof(strIn), stdin);
+        strIn[strcspn(strIn, "\n")] = 0; 
+
+        if (strIn[0] == '\0') {  
+            printf("No ingresaste ningún carácter válido.\n\n");
+            continue; 
+        }
+
+       
+        numLines = atoi(strIn);
+
+        if (numLines > 0) {
+            mostrarMensaje(numLines); 
+            logs(); 
+            break;
+        } else {
+            printf("Por favor, introduce un número válido mayor que 0.\n\n");
+        }
+    }
+}
 
 
 // BD
 void copiaBDMenu(void){
-    //POR IMPLEMENTAR
-    menu();
-    /*
-    char strIn[2];  
+    char strIn[10];  
 
     printf(
         "\n---------COPIA DE SEGURIDAD---------\n"
@@ -445,76 +535,81 @@ void copiaBDMenu(void){
         "No: n\n"
         "--------------------------------------\n\n"
     );
+    fgets(strIn, sizeof(strIn), stdin);
     if (strIn[0] == '\n') {  
         printf("No ingresaste ningún carácter válido.\n\n");
         copiaBDMenu();
     } else if (strIn[0] == 'y') {
-        printf("Copia creada exitosamente");
-        //Por implementar      
+        exportarBD_CSV();
+        printf("Copia de seguridad realizada\n\n");
+        menu();
     } else if (strIn[0] == 'n') {
         menu();
     } else {
         printf("Opción no válida.\n\n");
         copiaBDMenu();
     }
-        */
 }
 
 
+
 // Registro Admins
-void registrarAdmin(void){
+void registrarAdmin(void) {
+    bool tlfValido = true;
+    bool fechaValido = true;
     char strEmail[100];  
     char strContr[100];
     char strTlf[20];
     char strFechaNacimiento[20];
     char strNombre[100];
 
-    
-
-    printf("\n------REGISTRAR ADMINISTRADOR-------\n");
+    printf("\n\n------REGISTRAR ADMINISTRADOR-------\n");
 
     // Input email
     printf("\nEmail: ");
-    clearInputBuffer(); 
     fgets(strEmail, sizeof(strEmail), stdin);
     strEmail[strcspn(strEmail, "\n")] = 0; 
 
-    // Input contra
+    // Input contraseña
     printf("\nContrasena: ");
     fgets(strContr, sizeof(strContr), stdin);
     strContr[strcspn(strContr, "\n")] = 0;
 
     // Input Nombre
     printf("\nNombre: ");
-    clearInputBuffer(); 
     fgets(strNombre, sizeof(strNombre), stdin);
     strNombre[strcspn(strNombre, "\n")] = 0; 
 
     // Input tlf
-    printf("\nTelefono: ");
-    fgets(strTlf, sizeof(strTlf), stdin);
-    strTlf[strcspn(strTlf, "\n")] = 0;
-
-    // Input nivel NO PUESTO
+    do {
+        printf("\nTelefono (9 digitos): ");
+        fgets(strTlf, sizeof(strTlf), stdin);
+        strTlf[strcspn(strTlf, "\n")] = 0; // Eliminar salto de línea
+        tlfValido = tlfInvalido(strTlf);
+        if (tlfValido) {
+            printf("\nEl telefono introducido es invalido, introduzcalo de nuevo.");
+        }
+    } while (tlfValido);
 
     // Input fecha
-    printf("\nFecha nacimiento: ");
-    fgets(strFechaNacimiento, sizeof(strFechaNacimiento), stdin);
-    strFechaNacimiento[strcspn(strFechaNacimiento, "\n")] = 0; 
-
+    do {
+        printf("\nFecha nacimiento (YYYY-MM-DD): ");
+        fgets(strFechaNacimiento, sizeof(strFechaNacimiento), stdin);
+        strFechaNacimiento[strcspn(strFechaNacimiento, "\n")] = 0; 
+        fechaValido = fechaInvalida(strFechaNacimiento);
+        if (fechaValido) {
+            printf("\nLa fecha introducida es invalida, introduzcala de nuevo.");
+        }
+    } while (fechaValido);
 
     printf("\n--------------------------------------\n\n");
 
-
-
-    if (insertarAdministrador(strNombre, strEmail, strTlf,strFechaNacimiento, 1, strContr)) {  
+    if (insertarAdministrador(strNombre, strEmail, strTlf, strFechaNacimiento, 1, strContr)) {  
         printf("Datos introducidos con exito\n");
+        clearInputBuffer(); 
         menu();
     } else {
-        printf("Opción no válida.\n\n");
+        printf("No se pudo insertar el administrador. Inténtalo de nuevo.\n");
         registrarAdmin();
     }
-};
-
-
-
+}
