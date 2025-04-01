@@ -6,7 +6,7 @@
 #include "../estructuras.h"
 
 // Constante con el nombre de la base de datos (A CAMBIAR: deberia estar en el .config)
-const char *nombreBaseDatos = "src\\baseDatos\\deustoMessenger.db";
+const char *nombreBaseDatos = "src/baseDatos/deustoMessenger.db";
 
 sqlite3 *open_database(const char *db_name)
 {
