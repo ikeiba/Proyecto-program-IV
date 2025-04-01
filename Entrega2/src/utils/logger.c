@@ -38,6 +38,9 @@ void mostrarMensaje(int n) {
     char lineas[1000][512]; 
     int countadorLineas = 0;
 
+    // Al haber espacios entre cada linea del .log, hay que decirle que muestre el doble de lineas
+    n = 2 * n;
+
     //leer el archivo línea por linea 
     archivo = fopen(config.loggerBD, "r");
     if (archivo == NULL) {

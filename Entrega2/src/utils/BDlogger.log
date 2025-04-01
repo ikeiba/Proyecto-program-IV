@@ -67900,3 +67900,11 @@ Tue Apr 01 19:46:40 2025 - Opened database successfully
 
 Tue Apr 01 19:46:40 2025 - Mensaje insertado correctamente
 
+Tue Apr 01 19:59:57 2025 - Opened database successfully
+
+Tue Apr 01 19:59:57 2025 - Error al insertar administrador: UNIQUE constraint failed: Administrador.email_admin
+
+Tue Apr 01 20:02:34 2025 - Opened database successfully
+
+Tue Apr 01 20:02:34 2025 - Error al insertar administrador: UNIQUE constraint failed: Administrador.email_admin
+
