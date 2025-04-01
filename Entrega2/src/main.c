@@ -10,7 +10,7 @@
 #include "estructuras.h"
 #include "data/csvReader.h"
 #include "data/csvWrite.h"
-//#include "logger.h"
+#include "utils/logger.h"
 
 // COMANDO PARA COMPILAR WINDOWS: 
 // gcc -I src -I src/baseDatos -I src/data -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\data\*.c src\utils\*.c src\menu\*.c -o main.exe

@@ -67,10 +67,9 @@ void mostrarMensaje(int n) {
     
 
 
-void borrarLog() {
-    const char *filename = "BDlogger.log"; 
-
-    if (remove(filename) == 0) {
+void borrarLog() 
+{
+    if (remove(config.loggerBD) == 0) {
         printf("Archivo borrado con exito\n");
     } else {
         perror("Error al borrar el archivo");
