@@ -57,4 +57,13 @@ int obtenerAdministradores(Administrador **administradores, int *numAdministrado
 //select de administradores
 int obtenerUsuarios(Usuario **usuarios, int *numUsuarios);
 
+//select de grupos
+int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos);
+
+//select de conversaciones
+int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones);
+
+//select de mensajes
+int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes);
+
 #endif

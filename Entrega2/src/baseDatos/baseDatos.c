@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sqlite3.h"
 #include "baseDatos.h"
 #include "../utils/logger.h"
@@ -665,55 +666,37 @@ int getExisteEmail(const char* email) {
 }
 
 
-/*
-int obtenerGrupos(Grupo **grupos, int *numGrupos) {
+int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos) {
     sqlite3 *db = open_database(nombreBaseDatos);
-    if (db == NULL) {
-        return 0;
-    }
-
-    const char *sql = "SELECT * FROM Grupo;";
     sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_grupo, nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo FROM Grupo";
 
-    // Preparar la sentencia SQL
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
-        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        sqlite3_finalize(stmt);
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener los grupos: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
 
-    // Contar el número de filas
     *numGrupos = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         (*numGrupos)++;
     }
 
-    // Reservar memoria para almacenar los resultados
-    *grupos = (Grupo *)malloc(sizeof(Grupo) * (*numGrupos));
-    if (*grupos == NULL) {
-        fprintf(stderr, "Error al reservar memoria para grupos\n");
-        sqlite3_finalize(stmt);
-        sqlite3_close(db);
-        return 0;
-    }
+    *ids = (int*)malloc(sizeof(int) * (*numGrupos));
+    *nombres = (char**)malloc(sizeof(char*) * (*numGrupos));
+    *fechas = (char**)malloc(sizeof(char*) * (*numGrupos));
+    *idCreador = (int*)malloc(sizeof(int) * (*numGrupos));
+    *descripciones = (char**)malloc(sizeof(char*) * (*numGrupos));
 
-    // Volver al principio de la sentencia
     sqlite3_reset(stmt);
-
-    // Obtener los resultados y almacenarlos en la estructura
     int index = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        (*grupos)[index].id= sqlite3_column_int(stmt, 0);
-        const char *nombre_grupo = (const char *)sqlite3_column_text(stmt, 1);
-        const char *fecha_creacion = (const char *)sqlite3_column_text(stmt, 2);
-        (*grupos)[index].creador = sqlite3_column_int(stmt, 3);
-        const char *descripcion = (const char *)sqlite3_column_text(stmt, 4);
-
-        snprintf((*grupos)[index].nombre, sizeof((*grupos)[index].nombre), "%s", nombre_grupo);
-        snprintf((*grupos)[index].fCreacion, sizeof((*grupos)[index].fCreacion), "%s", fecha_creacion);
-        snprintf((*grupos)[index].descripcion, sizeof((*grupos)[index].descripcion), "%s", descripcion);
-
+        (*ids)[index] = sqlite3_column_int(stmt, 0);
+        (*nombres)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*idCreador)[index] = sqlite3_column_int(stmt, 3);
+        (*descripciones)[index] = strdup((const char*)sqlite3_column_text(stmt, 4));
         index++;
     }
 
@@ -721,5 +704,80 @@ int obtenerGrupos(Grupo **grupos, int *numGrupos) {
     sqlite3_close(db);
     return 1;
 }
-*/
+
+int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_usuario, id_grupo FROM Conversacion";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener conversaciones: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numConversaciones = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numConversaciones)++;
+    }
+
+    *idUsuarios = (int*)malloc(sizeof(int) * (*numConversaciones));
+    *idGrupos = (int*)malloc(sizeof(int) * (*numConversaciones));
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*idUsuarios)[index] = sqlite3_column_int(stmt, 0);
+        (*idGrupos)[index] = sqlite3_column_int(stmt, 1);
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+
+
+
+int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes) {
+    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_mensaje, fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo FROM Mensaje";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener los mensajes: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numMensajes = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numMensajes)++;
+    }
+
+    *ids = (int*)malloc(sizeof(int) * (*numMensajes));
+    *fechas = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *horas = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *contenidos = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *idEmisores = (int*)malloc(sizeof(int) * (*numMensajes));
+    *idGrupos = (int*)malloc(sizeof(int) * (*numMensajes));
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*ids)[index] = sqlite3_column_int(stmt, 0);
+        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*horas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*contenidos)[index] = strdup((const char*)sqlite3_column_text(stmt, 3));
+        (*idEmisores)[index] = sqlite3_column_int(stmt, 4);
+        (*idGrupos)[index] = sqlite3_column_int(stmt, 5);
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
 
