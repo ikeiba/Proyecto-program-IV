@@ -40,10 +40,14 @@ void mostrarMensaje(char *texto) {
 }
 
 void borrarLog() {
-    FILE *archivo;
-    archivo = fopen(FICHERO_LOG, "w"); //sobreescribe
-    if (archivo != NULL) {
-        fclose(archivo);
+    const char *filename = "BDlogger.log"; 
+
+    if (remove(filename) == 0) {
+        printf("Archivo borrado con exito.\n");
+    } else {
+        perror("Error al borrar el archivo");
     }
+
+    return 0;
     
 }
