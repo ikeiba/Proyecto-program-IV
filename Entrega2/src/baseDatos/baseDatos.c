@@ -5,9 +5,9 @@
 #include "baseDatos.h"
 #include "../utils/logger.h"
 #include "../estructuras.h"
+#include "config.h"
 
-// Constante con el nombre de la base de datos (A CAMBIAR: deberia estar en el .config)
-const char *nombreBaseDatos = "src/baseDatos/deustoMessenger.db";
+extern Config config;
 
 sqlite3 *open_database(const char *db_name)
 {
@@ -44,116 +44,124 @@ void ejecutarTablas(sqlite3 *db, const char *sql)
 
 int crearBD()
 {
-    sqlite3 *db = open_database(nombreBaseDatos);
-    if (db == NULL) {
-        return 0; // Error al abrir la base de datos
+    if(atoi(config.createBBDD)){
+        sqlite3 *db = open_database(config.nombreBD);
+        if (db == NULL) {
+            return 0; // Error al abrir la base de datos
+        }
+        const char *sql_usuario = "CREATE TABLE IF NOT EXISTS Usuario ("
+            "id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "nombre_usuario TEXT NOT NULL, "
+            "email_usuario TEXT UNIQUE NOT NULL, "
+            "telefono_usuario TEXT, "
+            "f_nacimiento_usuario DATE, "
+            "contrasena_usuario TEXT NOT NULL"
+            ");";
+        ejecutarTablas(db, sql_usuario);
+
+        const char *sql_grupo = "CREATE TABLE IF NOT EXISTS Grupo ("
+            "id_grupo INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "nombre_grupo TEXT NOT NULL, "
+            "fecha_creacion_grupo DATE NOT NULL, "
+            "id_creador INTEGER, "
+            "descripcion_grupo TEXT, "
+            "FOREIGN KEY (id_creador) REFERENCES Usuario(id_usuario) ON DELETE SET NULL"
+            ");";
+        ejecutarTablas(db, sql_grupo);
+
+        const char *sql_conversacion = "CREATE TABLE IF NOT EXISTS Conversacion ("
+            "id_usuario INTEGER, "
+            "id_grupo INTEGER, "
+            "PRIMARY KEY (id_usuario, id_grupo), "
+            "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE, "
+            "FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)"
+            ");";
+        ejecutarTablas(db, sql_conversacion);
+
+        const char *sql_mensaje = "CREATE TABLE IF NOT EXISTS Mensaje ("
+            "id_mensaje INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "fecha_mensaje DATE NOT NULL, "
+            "hora_mensaje TEXT NOT NULL, "
+            "contenido_mensaje TEXT NOT NULL, "
+            "id_emisor INTEGER, "
+            "id_grupo INTEGER, "
+            "FOREIGN KEY (id_emisor) REFERENCES Usuario(id_usuario) ON DELETE CASCADE, "
+            "FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)"
+            ");";
+        ejecutarTablas(db, sql_mensaje);
+
+        const char *sql_admin = "CREATE TABLE IF NOT EXISTS Administrador ("
+            "id_admin INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "nombre_admin TEXT NOT NULL, "
+            "email_admin TEXT UNIQUE NOT NULL, "
+            "telefono_admin TEXT, "
+            "f_nacimiento_admin DATE, "
+            "Nivel INTEGER NOT NULL, "
+            "contrasena_admin TEXT NOT NULL"
+            ");";
+        ejecutarTablas(db, sql_admin);
+        // Close database
+        sqlite3_close(db);
+        registrarMensaje("Base de datos cerrada\n");
+        return 0;
+    }else{
+        return 0;
     }
-    const char *sql_usuario = "CREATE TABLE IF NOT EXISTS Usuario ("
-        "id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "nombre_usuario TEXT NOT NULL, "
-        "email_usuario TEXT UNIQUE NOT NULL, "
-        "telefono_usuario TEXT, "
-        "f_nacimiento_usuario DATE, "
-        "contrasena_usuario TEXT NOT NULL"
-        ");";
-    ejecutarTablas(db, sql_usuario);
-
-    const char *sql_grupo = "CREATE TABLE IF NOT EXISTS Grupo ("
-        "id_grupo INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "nombre_grupo TEXT NOT NULL, "
-        "fecha_creacion_grupo DATE NOT NULL, "
-        "id_creador INTEGER, "
-        "descripcion_grupo TEXT, "
-        "FOREIGN KEY (id_creador) REFERENCES Usuario(id_usuario) ON DELETE SET NULL"
-        ");";
-    ejecutarTablas(db, sql_grupo);
-
-    const char *sql_conversacion = "CREATE TABLE IF NOT EXISTS Conversacion ("
-        "id_usuario INTEGER, "
-        "id_grupo INTEGER, "
-        "PRIMARY KEY (id_usuario, id_grupo), "
-        "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE, "
-        "FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)"
-        ");";
-    ejecutarTablas(db, sql_conversacion);
-
-    const char *sql_mensaje = "CREATE TABLE IF NOT EXISTS Mensaje ("
-        "id_mensaje INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "fecha_mensaje DATE NOT NULL, "
-        "hora_mensaje TEXT NOT NULL, "
-        "contenido_mensaje TEXT NOT NULL, "
-        "id_emisor INTEGER, "
-        "id_grupo INTEGER, "
-        "FOREIGN KEY (id_emisor) REFERENCES Usuario(id_usuario) ON DELETE CASCADE, "
-        "FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)"
-        ");";
-    ejecutarTablas(db, sql_mensaje);
-
-    const char *sql_admin = "CREATE TABLE IF NOT EXISTS Administrador ("
-        "id_admin INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "nombre_admin TEXT NOT NULL, "
-        "email_admin TEXT UNIQUE NOT NULL, "
-        "telefono_admin TEXT, "
-        "f_nacimiento_admin DATE, "
-        "Nivel INTEGER NOT NULL, "
-        "contrasena_admin TEXT NOT NULL"
-        ");";
-    ejecutarTablas(db, sql_admin);
-    // Close database
-    sqlite3_close(db);
-    registrarMensaje("Base de datos cerrada\n");
-    return 0;
 }
 
 void limpiarBaseDatos() {
-    sqlite3 *db = open_database(nombreBaseDatos);
-    if (db == NULL) {
-        return; // Error al abrir la base de datos
-    }
-    const char *sql_delete = 
-        "DELETE FROM Mensaje;"
-        "DELETE FROM Conversacion;"
-        "DELETE FROM Grupo;"
-        "DELETE FROM Usuario;"
-        "DELETE FROM Administrador;";
+    if(atoi(config.cleanBBDD)){
+        sqlite3 *db = open_database(config.nombreBD);
+        if (db == NULL) {
+            return; // Error al abrir la base de datos
+        }
+        const char *sql_delete = 
+            "DELETE FROM Mensaje;"
+            "DELETE FROM Conversacion;"
+            "DELETE FROM Grupo;"
+            "DELETE FROM Usuario;"
+            "DELETE FROM Administrador;";
 
-    char *errMsg = 0;
-    int rc = sqlite3_exec(db, sql_delete, 0, 0, &errMsg);
-    
-    if (rc != SQLITE_OK) {
-        printf("Error al limpiar la base de datos: %s\n", errMsg);
-        sqlite3_free(errMsg);
-    } else {
-        printf("Base de datos limpiada correctamente.\n");
+        char *errMsg = 0;
+        int rc = sqlite3_exec(db, sql_delete, 0, 0, &errMsg);
+        
+        if (rc != SQLITE_OK) {
+            printf("Error al limpiar la base de datos: %s\n", errMsg);
+            sqlite3_free(errMsg);
+        } else {
+            printf("Base de datos limpiada correctamente.\n");
+        }
     }
 }
 
 void borrarTablas() {
-    sqlite3 *db = open_database(nombreBaseDatos);
-    if (db == NULL) {
-        return; // Error al abrir la base de datos
-    }
-    const char *sql_drop = 
-        "DROP TABLE IF EXISTS Mensaje;"
-        "DROP TABLE IF EXISTS Conversacion;"
-        "DROP TABLE IF EXISTS Grupo;"
-        "DROP TABLE IF EXISTS Usuario;"
-        "DROP TABLE IF EXISTS Administrador;";
+    if(atoi(config.deleteBBDD)){
+        sqlite3 *db = open_database(config.nombreBD);
+        if (db == NULL) {
+            return; // Error al abrir la base de datos
+        }
+        const char *sql_drop = 
+            "DROP TABLE IF EXISTS Mensaje;"
+            "DROP TABLE IF EXISTS Conversacion;"
+            "DROP TABLE IF EXISTS Grupo;"
+            "DROP TABLE IF EXISTS Usuario;"
+            "DROP TABLE IF EXISTS Administrador;";
 
-    char *errMsg = 0;
-    int rc = sqlite3_exec(db, sql_drop, 0, 0, &errMsg);
-    
-    if (rc != SQLITE_OK) {
-        printf("Error al borrar las tablas: %s\n", errMsg);
-        sqlite3_free(errMsg);
-    } else {
-        printf("Tablas eliminadas correctamente.\n");
+        char *errMsg = 0;
+        int rc = sqlite3_exec(db, sql_drop, 0, 0, &errMsg);
+        
+        if (rc != SQLITE_OK) {
+            printf("Error al borrar las tablas: %s\n", errMsg);
+            sqlite3_free(errMsg);
+        } else {
+            printf("Tablas eliminadas correctamente.\n");
+        }
     }
 }
 
 int comprobarCredenciales(char *email, char *contrasena)
 {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         return 0; // Error al abrir la base de datos
     }
@@ -186,7 +194,7 @@ int insertarAdministrador(const char *nombre, const char *email, const char *tel
                           const char *fecha_nacimiento, int nivel, const char *contrasena)
 {
 
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL)
     {
         return 0; // Error al abrir la base de datos
@@ -234,7 +242,7 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
                           const char *fecha_nacimiento, const char *contrasena)
 {
 
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL)
     {
         return 0; // Error al abrir la base de datos
@@ -277,7 +285,7 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
 }
 
 int borrarUsuario(const char *email) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         return 0; // Error al abrir la base de datos
     }
@@ -312,7 +320,7 @@ int borrarUsuario(const char *email) {
 // Metodo para modificar el numero de telefono de un usuario desde su email
 int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
     
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         return 0; // Error al abrir la base de datos
     }
@@ -348,7 +356,7 @@ int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
 // Metodo para modificar el nombre de un usuario desde su email
 int cambiarNombreUsuario(const char *email, const char *new_name) {
     
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         return 0; // Error al abrir la base de datos
     }
@@ -401,7 +409,7 @@ int get_user_id(sqlite3 *db, const char *email) {
 
 // Metodo para insertar Grupo en la base de datos
 int insert_group(Grupo *group) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (!db) return 0;
 
     // Get creator's user ID from email
@@ -482,7 +490,7 @@ int insert_group(Grupo *group) {
 
 
 int insert_mensaje(Mensaje *mensaje) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     if (!db) return 0;
     
     const char *sql = "INSERT INTO Mensaje (fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo) "
@@ -522,6 +530,12 @@ int insert_mensaje(Mensaje *mensaje) {
 
 int obtenerUsuarios(Usuario **usuarios, int *numUsuarios) {
     sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0;
+    }
+
+    const char *sql = "SELECT * FROM Usuario;";
     sqlite3_stmt *stmt;
     const char *sql = "SELECT * FROM Usuario;";
 
@@ -569,6 +583,7 @@ int obtenerAdministradores(Administrador **administradores, int *numAdministrado
     printf("Entrando en obtenerAdministradores...\n");
     sqlite3 *db = open_database(nombreBaseDatos);
     
+    sqlite3 *db = open_database(config.nombreBD);
     if (db == NULL) {
         printf("Error: No se pudo abrir la base de datos.\n");
         return 0;
@@ -630,7 +645,7 @@ int obtenerAdministradores(Administrador **administradores, int *numAdministrado
 }
 
 int getExisteEmail(const char* email) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT COUNT(*) FROM Usuario WHERE email_usuario = ? "
                       "UNION ALL "
@@ -657,7 +672,7 @@ int getExisteEmail(const char* email) {
 
 
 int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_grupo, nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo FROM Grupo";
 
@@ -696,7 +711,7 @@ int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, c
 }
 
 int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_usuario, id_grupo FROM Conversacion";
 
@@ -731,7 +746,7 @@ int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversacion
 
 
 int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes) {
-    sqlite3 *db = open_database(nombreBaseDatos);
+    sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_mensaje, fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo FROM Mensaje";
 
