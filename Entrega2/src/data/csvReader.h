@@ -1,6 +1,6 @@
 #ifndef _CSV_READER_
 #define _CSV_READER_
-#include "..\estructuras.h"
+#include "../estructuras.h"
 
 Usuario* obtenerUsuarioPorId(int id, Usuario* usuarios, int tamanyo);
 

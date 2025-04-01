@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "logger.h": "c",
+        "config.h": "c",
+        "estructuras.h": "c",
+        "basedatos.h": "c",
+        "csvreader.h": "c",
+        "sqlite3.h": "c"
+    }
+}

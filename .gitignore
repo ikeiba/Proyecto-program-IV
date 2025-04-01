@@ -11,3 +11,7 @@
  *.hex
 
 Entrega2/main
+
+*.db"
+
+*.log
