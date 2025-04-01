@@ -230,7 +230,7 @@ void leerCsvConversaciones(Usuario* usuarios, Grupo* grupos) {
 
         g->size++;
 
-        printf("Grupo actualizado: %d, tamaño: %d\n", g->id, g->size);
+        // printf("Grupo actualizado: %d, tamaño: %d\n", g->id, g->size);
 
         i++;
     }

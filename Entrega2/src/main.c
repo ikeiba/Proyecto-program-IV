@@ -51,8 +51,6 @@ int main(){
     
     //menuMorrarLog();
 
-    mostrarMensaje(10);
-
     administracion();
 
     return 0;
