@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 #include "menu.h"
-#include "..\baseDatos\baseDatos.h"
-#include "..\utils\logger.h"
+#include "../baseDatos/baseDatos.h"
+#include "../utils/logger.h"
 
 
 void clearInputBuffer() {

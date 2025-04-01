@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "menu\menu.h"
-#include "baseDatos\sqlite3.h"
-#include "baseDatos\baseDatos.h"
-#include "utils\config.h"
+#include "menu/menu.h"
+#include "baseDatos/sqlite3.h"
+#include "baseDatos/baseDatos.h"
+#include "utils/config.h"
 #include "estructuras.h"
-#include "data\csvReader.h"
+#include "data/csvReader.h"
 //#include "logger.h"
 
 // COMANDO PARA COMPILAR: 
