@@ -1059,3 +1059,533 @@ ID,Fecha,Hora,Contenido,ID_Emisor,ID_Grupo
 1058,2024-05-01,16:38,Perfecto, alli estare.,12,25
 1059,2024-05-04,14:49,¿Nos encontramos en la entrada?,12,25
 1060,2024-05-04,22:48,¡Me parece bien!,14,25
+1061,2024-05-01,20:36,¡Hola!,16,26
+1062,2024-05-02,19:56,¿Alguien tiene recetas faciles para esta semana?,24,26
+1063,2024-05-05,8:05,¡Si! Ayer hice pasta con salsa casera, super facil.,46,26
+1064,2024-05-08,10:42,Que buena idea.,46,26
+1065,2024-05-10,16:03,Tambien recomiendo ensalada de quinoa, rapida y sana.,46,26
+1066,2024-05-11,20:11,¡La probare!,46,26
+1067,2025-01-15,10:37,¡Hola a todos!,23,27
+1068,2025-01-16,8:36,¿Que tal la semana?,50,27
+1069,2025-01-17,18:20,Estoy organizando un evento, ¿alguien se apunta?,16,27
+1070,2025-01-18,15:41,¡Yo me apunto!,42,27
+1071,2025-01-19,8:54,Suena genial, contad conmigo.,42,27
+1072,2025-01-22,8:06,¿Donde seria?,42,27
+1073,2025-01-23,21:11,Podemos hacerlo en el parque central.,50,27
+1074,2025-01-26,8:31,Perfecto, buen plan.,16,27
+1075,2025-01-28,16:27,¡Entonces nos vemos pronto!,16,27
+1076,2025-01-28,21:52,Hasta luego, un gusto hablar con ustedes.,28,27
+1077,2025-02-23,15:08,¡Hola grupo!,13,28
+1078,2025-02-24,13:02,¿Alguien va al partido este fin de semana?,13,28
+1079,2025-02-27,20:11,¡Yo si!,13,28
+1080,2025-02-27,8:17,¿A que hora es?,13,28
+1081,2025-03-02,20:30,El domingo a las 6.,7,28
+1082,2025-03-03,12:45,Perfecto, alli estare.,12,28
+1083,2025-03-06,17:15,¿Nos encontramos en la entrada?,7,28
+1084,2025-03-06,16:32,¡Me parece bien!,7,28
+1085,2025-03-08,12:08,¡Que ganas!,12,28
+1086,2024-08-07,14:24,¡Hola grupo!,43,29
+1087,2024-08-10,22:13,¿Alguien va al partido este fin de semana?,36,29
+1088,2024-08-10,21:01,¡Yo si!,43,29
+1089,2024-08-12,22:12,¿A que hora es?,29,29
+1090,2024-08-13,21:14,El domingo a las 6.,29,29
+1091,2024-08-16,19:31,Perfecto, alli estare.,43,29
+1092,2024-08-16,8:27,¿Nos encontramos en la entrada?,43,29
+1093,2024-08-16,11:49,¡Me parece bien!,36,29
+1094,2024-08-16,17:00,¡Que ganas!,43,29
+1095,2024-11-21,15:42,¡Hola equipo!,32,30
+1096,2024-11-22,10:15,¿Como llevais el proyecto?,10,30
+1097,2024-11-22,14:25,Va avanzando bien, aunque tengo dudas.,38,30
+1098,2024-11-23,16:15,¿Sobre que parte?,13,30
+1099,2024-11-23,18:12,El informe final, no se si esta completo.,13,30
+1100,2024-11-23,17:15,Te lo reviso y te comento.,32,30
+1101,2024-05-24,12:02,¡Hola a todos!,1,31
+1102,2024-05-27,21:11,¿Que tal la semana?,15,31
+1103,2024-05-28,19:24,Estoy organizando un evento, ¿alguien se apunta?,15,31
+1104,2024-05-28,16:51,¡Yo me apunto!,48,31
+1105,2024-05-31,11:03,Suena genial, contad conmigo.,1,31
+1106,2024-06-01,16:43,¿Donde seria?,48,31
+1107,2024-06-04,11:04,Podemos hacerlo en el parque central.,48,31
+1108,2024-06-04,16:04,Perfecto, buen plan.,48,31
+1109,2024-07-03,22:37,¡Hola a todos!,19,32
+1110,2024-07-05,20:14,¿Que tal la semana?,19,32
+1111,2024-07-06,18:51,Estoy organizando un evento, ¿alguien se apunta?,49,32
+1112,2024-07-08,20:17,¡Yo me apunto!,1,32
+1113,2024-07-11,10:52,Suena genial, contad conmigo.,49,32
+1114,2024-07-12,9:08,¿Donde seria?,19,32
+1115,2024-07-15,10:03,Podemos hacerlo en el parque central.,1,32
+1116,2024-07-28,13:03,¡Hola a todos!,50,33
+1117,2024-07-30,16:47,¿Que tal la semana?,39,33
+1118,2024-08-01,10:34,Estoy organizando un evento, ¿alguien se apunta?,50,33
+1119,2024-08-01,18:13,¡Yo me apunto!,12,33
+1120,2024-08-01,14:38,Suena genial, contad conmigo.,12,33
+1121,2024-08-03,12:13,¿Donde seria?,50,33
+1122,2024-08-06,20:08,Podemos hacerlo en el parque central.,49,33
+1123,2024-08-08,19:22,Perfecto, buen plan.,12,33
+1124,2024-08-11,10:04,¡Entonces nos vemos pronto!,39,33
+1125,2024-08-12,23:08,Hasta luego, un gusto hablar con ustedes.,13,33
+1126,2024-11-03,20:45,¡Hola grupo!,8,34
+1127,2024-11-05,11:15,¿Alguien va al partido este fin de semana?,3,34
+1128,2024-11-07,23:57,¡Yo si!,8,34
+1129,2024-11-07,15:31,¿A que hora es?,30,34
+1130,2024-11-09,22:22,El domingo a las 6.,3,34
+1131,2024-11-09,14:37,Perfecto, alli estare.,9,34
+1132,2024-11-10,8:28,¿Nos encontramos en la entrada?,11,34
+1133,2024-11-11,14:14,¡Me parece bien!,33,34
+1134,2025-01-18,15:51,¡Hola equipo!,29,35
+1135,2025-01-19,18:20,¿Como llevais el proyecto?,32,35
+1136,2025-01-22,8:22,Va avanzando bien, aunque tengo dudas.,43,35
+1137,2025-01-22,19:25,¿Sobre que parte?,5,35
+1138,2025-01-24,10:02,El informe final, no se si esta completo.,15,35
+1139,2025-01-26,18:02,Te lo reviso y te comento.,29,35
+1140,2025-01-27,16:20,Gracias, ¡eres un crack!,5,35
+1141,2025-01-29,20:30,Sin problema, para eso estamos.,15,35
+1142,2025-01-31,12:35,Nos mantenemos al tanto.,32,35
+1143,2025-01-31,8:32,¡Hasta manana!,15,35
+1144,2024-10-12,8:09,¡Hola a todos!,37,36
+1145,2024-10-15,15:30,¿Que tal la semana?,8,36
+1146,2024-10-17,21:18,Estoy organizando un evento, ¿alguien se apunta?,8,36
+1147,2024-10-18,21:40,¡Yo me apunto!,24,36
+1148,2024-10-18,9:46,Suena genial, contad conmigo.,33,36
+1149,2024-10-18,11:42,¿Donde seria?,24,36
+1150,2024-10-20,16:57,Podemos hacerlo en el parque central.,33,36
+1151,2024-10-20,10:56,Perfecto, buen plan.,20,36
+1152,2024-10-21,23:38,¡Entonces nos vemos pronto!,33,36
+1153,2024-08-28,11:40,¡Hola!,50,37
+1154,2024-08-28,11:34,¿Alguien tiene recetas faciles para esta semana?,10,37
+1155,2024-08-30,18:00,¡Si! Ayer hice pasta con salsa casera, super facil.,35,37
+1156,2024-09-02,8:47,Que buena idea.,46,37
+1157,2024-09-02,13:07,Tambien recomiendo ensalada de quinoa, rapida y sana.,46,37
+1158,2024-09-05,8:57,¡La probare!,35,37
+1159,2024-09-08,18:54,Si quieren, paso las recetas.,10,37
+1160,2024-11-21,10:33,¡Hola equipo!,19,38
+1161,2024-11-23,14:26,¿Como llevais el proyecto?,1,38
+1162,2024-11-23,23:21,Va avanzando bien, aunque tengo dudas.,18,38
+1163,2024-11-23,16:26,¿Sobre que parte?,3,38
+1164,2024-11-23,9:56,El informe final, no se si esta completo.,3,38
+1165,2024-11-23,18:30,Te lo reviso y te comento.,3,38
+1166,2024-11-24,8:51,Gracias, ¡eres un crack!,19,38
+1167,2024-11-26,22:38,Sin problema, para eso estamos.,35,38
+1168,2024-09-25,12:37,Buenas tardes :),5,39
+1169,2024-09-26,12:19,¿Alguien ha visto la ultima serie de Netflix?,28,39
+1170,2024-09-26,8:19,Si, ¡esta buenisima!,5,39
+1171,2024-09-29,12:08,Yo la empece ayer, me encanta.,18,39
+1172,2024-10-01,17:11,¿Que capitulo llevais?,28,39
+1173,2024-10-01,17:03,Voy por el tercero, engancha mucho.,18,39
+1174,2024-10-04,21:16,¡La recomiendo a todos!,5,39
+1175,2024-10-04,13:06,Gracias, la agregare a mi lista.,28,39
+1176,2024-12-07,12:33,¡Hola a todos!,8,40
+1177,2024-12-07,8:44,¿Que tal la semana?,16,40
+1178,2024-12-09,22:07,Estoy organizando un evento, ¿alguien se apunta?,16,40
+1179,2024-12-12,22:45,¡Yo me apunto!,31,40
+1180,2024-12-15,12:11,Suena genial, contad conmigo.,16,40
+1181,2024-12-17,21:34,¿Donde seria?,16,40
+1182,2024-12-19,20:55,Podemos hacerlo en el parque central.,35,40
+1183,2024-11-25,18:56,¡Hola equipo!,28,41
+1184,2024-11-25,9:15,¿Como llevais el proyecto?,28,41
+1185,2024-11-25,22:34,Va avanzando bien, aunque tengo dudas.,15,41
+1186,2024-11-25,23:17,¿Sobre que parte?,11,41
+1187,2024-11-27,13:52,El informe final, no se si esta completo.,11,41
+1188,2024-11-30,15:43,Te lo reviso y te comento.,11,41
+1189,2024-12-01,11:25,Gracias, ¡eres un crack!,15,41
+1190,2024-12-02,12:30,Sin problema, para eso estamos.,15,41
+1191,2024-05-01,20:18,¡Hola!,2,42
+1192,2024-05-01,15:25,¿Alguien tiene recetas faciles para esta semana?,2,42
+1193,2024-05-02,14:34,¡Si! Ayer hice pasta con salsa casera, super facil.,2,42
+1194,2024-05-03,16:40,Que buena idea.,2,42
+1195,2024-05-06,14:45,Tambien recomiendo ensalada de quinoa, rapida y sana.,2,42
+1196,2024-05-06,8:15,¡La probare!,50,42
+1197,2024-05-09,12:45,Si quieren, paso las recetas.,2,42
+1198,2024-05-11,16:14,¡Por favor!,23,42
+1199,2024-05-13,18:23,Gracias por compartir.,2,42
+1200,2024-05-13,17:04,Bueno, me voy a cocinar. ¡Un abrazo!,23,42
+1201,2025-01-26,14:57,¡Hola equipo!,2,43
+1202,2025-01-28,16:08,¿Como llevais el proyecto?,30,43
+1203,2025-01-28,8:17,Va avanzando bien, aunque tengo dudas.,41,43
+1204,2025-01-29,21:39,¿Sobre que parte?,15,43
+1205,2025-01-30,18:12,El informe final, no se si esta completo.,41,43
+1206,2025-01-31,15:49,Te lo reviso y te comento.,30,43
+1207,2024-07-01,17:56,¡Hola grupo!,35,44
+1208,2024-07-02,17:01,¿Alguien va al partido este fin de semana?,6,44
+1209,2024-07-04,15:57,¡Yo si!,15,44
+1210,2024-07-04,18:07,¿A que hora es?,35,44
+1211,2024-07-07,12:11,El domingo a las 6.,4,44
+1212,2024-07-10,23:49,Perfecto, alli estare.,35,44
+1213,2024-07-10,23:23,¿Nos encontramos en la entrada?,4,44
+1214,2024-07-13,20:24,¡Me parece bien!,4,44
+1215,2024-07-13,19:39,¡Que ganas!,4,44
+1216,2024-07-14,21:42,Bueno, nos vemos pronto. ¡Chao!,6,44
+1217,2024-04-24,10:54,¡Hola grupo!,5,45
+1218,2024-04-27,11:09,¿Alguien va al partido este fin de semana?,35,45
+1219,2024-04-30,8:52,¡Yo si!,13,45
+1220,2024-05-01,19:03,¿A que hora es?,35,45
+1221,2024-05-02,15:22,El domingo a las 6.,38,45
+1222,2024-05-02,11:43,Perfecto, alli estare.,19,45
+1223,2024-05-04,11:09,¿Nos encontramos en la entrada?,19,45
+1224,2024-05-07,14:30,¡Me parece bien!,5,45
+1225,2024-11-04,21:12,Buenas tardes :),43,46
+1226,2024-11-06,12:55,¿Alguien ha visto la ultima serie de Netflix?,43,46
+1227,2024-11-08,8:55,Si, ¡esta buenisima!,43,46
+1228,2024-11-08,19:10,Yo la empece ayer, me encanta.,43,46
+1229,2024-11-09,19:48,¿Que capitulo llevais?,43,46
+1230,2024-11-11,21:19,Voy por el tercero, engancha mucho.,6,46
+1231,2025-02-10,20:06,¡Hola!,7,47
+1232,2025-02-11,20:06,¿Alguien tiene recetas faciles para esta semana?,46,47
+1233,2025-02-14,12:20,¡Si! Ayer hice pasta con salsa casera, super facil.,20,47
+1234,2025-02-14,19:43,Que buena idea.,20,47
+1235,2025-02-14,12:16,Tambien recomiendo ensalada de quinoa, rapida y sana.,20,47
+1236,2025-02-15,13:02,¡La probare!,7,47
+1237,2025-02-18,21:01,Si quieren, paso las recetas.,6,47
+1238,2025-02-18,19:41,¡Por favor!,46,47
+1239,2025-02-21,21:21,Gracias por compartir.,6,47
+1240,2025-02-22,17:27,Bueno, me voy a cocinar. ¡Un abrazo!,46,47
+1241,2024-06-03,21:43,¡Hola grupo!,7,48
+1242,2024-06-03,21:11,¿Alguien va al partido este fin de semana?,35,48
+1243,2024-06-03,11:18,¡Yo si!,38,48
+1244,2024-06-06,18:42,¿A que hora es?,38,48
+1245,2024-06-09,8:32,El domingo a las 6.,35,48
+1246,2024-06-11,8:36,Perfecto, alli estare.,7,48
+1247,2024-06-13,16:53,¿Nos encontramos en la entrada?,7,48
+1248,2024-06-13,21:54,¡Me parece bien!,22,48
+1249,2024-03-28,17:46,Buenas tardes :),9,49
+1250,2024-03-28,8:18,¿Alguien ha visto la ultima serie de Netflix?,33,49
+1251,2024-03-31,20:14,Si, ¡esta buenisima!,29,49
+1252,2024-04-01,13:18,Yo la empece ayer, me encanta.,33,49
+1253,2024-04-03,20:37,¿Que capitulo llevais?,9,49
+1254,2024-04-06,22:23,Voy por el tercero, engancha mucho.,29,49
+1255,2025-03-16,16:59,¡Hola!,50,50
+1256,2025-03-18,10:10,¿Alguien tiene recetas faciles para esta semana?,50,50
+1257,2025-03-20,10:05,¡Si! Ayer hice pasta con salsa casera, super facil.,18,50
+1258,2025-03-23,19:37,Que buena idea.,18,50
+1259,2025-03-26,14:31,Tambien recomiendo ensalada de quinoa, rapida y sana.,47,50
+1260,2025-03-27,14:14,¡La probare!,50,50
+1261,2024-04-13,8:39,¡Hola!,37,51
+1262,2024-04-15,19:35,¿Alguien tiene recetas faciles para esta semana?,37,51
+1263,2024-04-16,8:04,¡Si! Ayer hice pasta con salsa casera, super facil.,14,51
+1264,2024-04-16,17:45,Que buena idea.,14,51
+1265,2024-04-19,11:57,Tambien recomiendo ensalada de quinoa, rapida y sana.,37,51
+1266,2024-04-19,15:45,¡La probare!,14,51
+1267,2024-04-20,22:37,Si quieren, paso las recetas.,14,51
+1268,2024-10-09,10:17,¡Hola a todos!,23,52
+1269,2024-10-10,9:13,¿Que tal la semana?,14,52
+1270,2024-10-13,8:18,Estoy organizando un evento, ¿alguien se apunta?,34,52
+1271,2024-10-16,9:50,¡Yo me apunto!,34,52
+1272,2024-10-19,14:44,Suena genial, contad conmigo.,34,52
+1273,2024-10-19,18:15,¿Donde seria?,23,52
+1274,2024-10-19,17:00,Podemos hacerlo en el parque central.,23,52
+1275,2024-10-20,11:36,Perfecto, buen plan.,23,52
+1276,2024-10-21,11:31,¡Entonces nos vemos pronto!,34,52
+1277,2024-10-21,21:10,Hasta luego, un gusto hablar con ustedes.,23,52
+1278,2024-07-04,9:47,¡Hola a todos!,17,53
+1279,2024-07-07,11:35,¿Que tal la semana?,25,53
+1280,2024-07-07,10:45,Estoy organizando un evento, ¿alguien se apunta?,17,53
+1281,2024-07-09,22:53,¡Yo me apunto!,12,53
+1282,2024-07-09,23:59,Suena genial, contad conmigo.,17,53
+1283,2024-07-09,23:02,¿Donde seria?,17,53
+1284,2024-07-09,22:20,Podemos hacerlo en el parque central.,45,53
+1285,2024-07-11,10:01,Perfecto, buen plan.,45,53
+1286,2024-07-11,17:06,¡Entonces nos vemos pronto!,45,53
+1287,2024-09-08,22:31,¡Hola grupo!,26,54
+1288,2024-09-10,10:01,¿Alguien va al partido este fin de semana?,50,54
+1289,2024-09-11,11:34,¡Yo si!,17,54
+1290,2024-09-12,13:24,¿A que hora es?,50,54
+1291,2024-09-12,9:51,El domingo a las 6.,50,54
+1292,2024-09-14,13:47,Perfecto, alli estare.,17,54
+1293,2024-12-25,14:38,Buenas tardes :),50,55
+1294,2024-12-28,20:20,¿Alguien ha visto la ultima serie de Netflix?,17,55
+1295,2024-12-28,16:18,Si, ¡esta buenisima!,50,55
+1296,2024-12-28,11:54,Yo la empece ayer, me encanta.,17,55
+1297,2024-12-30,9:14,¿Que capitulo llevais?,38,55
+1298,2025-01-01,18:29,Voy por el tercero, engancha mucho.,38,55
+1299,2025-01-04,20:15,¡La recomiendo a todos!,17,55
+1300,2025-01-05,13:59,Gracias, la agregare a mi lista.,50,55
+1301,2024-11-19,11:14,Buenas tardes :),20,56
+1302,2024-11-22,12:22,¿Alguien ha visto la ultima serie de Netflix?,24,56
+1303,2024-11-24,18:18,Si, ¡esta buenisima!,24,56
+1304,2024-11-24,9:45,Yo la empece ayer, me encanta.,24,56
+1305,2024-11-24,14:27,¿Que capitulo llevais?,20,56
+1306,2024-11-26,10:11,Voy por el tercero, engancha mucho.,20,56
+1307,2024-11-27,8:09,¡La recomiendo a todos!,24,56
+1308,2024-08-27,15:29,Buenas tardes :),15,57
+1309,2024-08-30,15:25,¿Alguien ha visto la ultima serie de Netflix?,15,57
+1310,2024-09-01,22:42,Si, ¡esta buenisima!,31,57
+1311,2024-09-01,16:06,Yo la empece ayer, me encanta.,43,57
+1312,2024-09-02,17:09,¿Que capitulo llevais?,15,57
+1313,2024-09-03,20:35,Voy por el tercero, engancha mucho.,33,57
+1314,2024-09-03,20:57,¡La recomiendo a todos!,31,57
+1315,2024-09-03,11:46,Gracias, la agregare a mi lista.,15,57
+1316,2024-09-04,23:13,Bueno, me despido. ¡Un placer!,15,57
+1317,2024-07-06,12:38,Buenas tardes :),21,58
+1318,2024-07-07,14:07,¿Alguien ha visto la ultima serie de Netflix?,2,58
+1319,2024-07-08,9:44,Si, ¡esta buenisima!,12,58
+1320,2024-07-11,9:35,Yo la empece ayer, me encanta.,12,58
+1321,2024-07-12,8:54,¿Que capitulo llevais?,21,58
+1322,2024-07-13,10:11,Voy por el tercero, engancha mucho.,12,58
+1323,2024-07-13,21:35,¡La recomiendo a todos!,2,58
+1324,2024-07-15,10:43,Buenas tardes :),49,59
+1325,2024-07-17,16:45,¿Alguien ha visto la ultima serie de Netflix?,49,59
+1326,2024-07-20,11:09,Si, ¡esta buenisima!,21,59
+1327,2024-07-22,13:43,Yo la empece ayer, me encanta.,44,59
+1328,2024-07-22,14:36,¿Que capitulo llevais?,21,59
+1329,2024-07-25,14:25,Voy por el tercero, engancha mucho.,49,59
+1330,2024-07-28,19:17,¡La recomiendo a todos!,44,59
+1331,2024-11-11,22:46,¡Hola!,43,60
+1332,2024-11-14,10:41,¿Alguien tiene recetas faciles para esta semana?,32,60
+1333,2024-11-14,9:38,¡Si! Ayer hice pasta con salsa casera, super facil.,15,60
+1334,2024-11-17,22:13,Que buena idea.,32,60
+1335,2024-11-17,21:18,Tambien recomiendo ensalada de quinoa, rapida y sana.,27,60
+1336,2024-11-18,8:19,¡La probare!,32,60
+1337,2024-08-02,12:26,Buenas tardes :),40,61
+1338,2024-08-02,22:52,¿Alguien ha visto la ultima serie de Netflix?,27,61
+1339,2024-08-03,22:25,Si, ¡esta buenisima!,38,61
+1340,2024-08-06,15:48,Yo la empece ayer, me encanta.,15,61
+1341,2024-08-09,15:15,¿Que capitulo llevais?,27,61
+1342,2024-08-09,22:53,Voy por el tercero, engancha mucho.,50,61
+1343,2024-08-10,10:20,¡La recomiendo a todos!,15,61
+1344,2024-08-10,15:10,Gracias, la agregare a mi lista.,38,61
+1345,2024-08-12,23:01,Bueno, me despido. ¡Un placer!,15,61
+1346,2024-08-15,21:44,Nos hablamos pronto.,50,61
+1347,2024-04-03,12:33,¡Hola a todos!,18,62
+1348,2024-04-06,17:13,¿Que tal la semana?,18,62
+1349,2024-04-09,12:39,Estoy organizando un evento, ¿alguien se apunta?,6,62
+1350,2024-04-10,9:54,¡Yo me apunto!,36,62
+1351,2024-04-12,16:15,Suena genial, contad conmigo.,18,62
+1352,2024-04-14,8:41,¿Donde seria?,6,62
+1353,2024-04-15,9:03,Podemos hacerlo en el parque central.,18,62
+1354,2024-04-17,19:53,Perfecto, buen plan.,36,62
+1355,2024-04-19,11:52,¡Entonces nos vemos pronto!,36,62
+1356,2024-10-20,12:59,¡Hola!,29,63
+1357,2024-10-22,21:38,¿Alguien tiene recetas faciles para esta semana?,43,63
+1358,2024-10-24,14:41,¡Si! Ayer hice pasta con salsa casera, super facil.,46,63
+1359,2024-10-25,22:28,Que buena idea.,39,63
+1360,2024-10-26,15:32,Tambien recomiendo ensalada de quinoa, rapida y sana.,29,63
+1361,2024-10-28,22:21,¡La probare!,43,63
+1362,2024-10-29,14:46,Si quieren, paso las recetas.,29,63
+1363,2024-11-01,12:05,¡Por favor!,20,63
+1364,2024-10-01,10:57,¡Hola a todos!,41,64
+1365,2024-10-02,22:01,¿Que tal la semana?,41,64
+1366,2024-10-04,21:18,Estoy organizando un evento, ¿alguien se apunta?,11,64
+1367,2024-10-07,23:57,¡Yo me apunto!,41,64
+1368,2024-10-10,22:41,Suena genial, contad conmigo.,11,64
+1369,2024-10-11,9:24,¿Donde seria?,11,64
+1370,2024-10-12,10:22,Podemos hacerlo en el parque central.,11,64
+1371,2024-10-14,9:09,Perfecto, buen plan.,41,64
+1372,2024-10-16,15:22,¡Entonces nos vemos pronto!,11,64
+1373,2024-08-03,17:04,Buenas tardes :),28,65
+1374,2024-08-06,21:48,¿Alguien ha visto la ultima serie de Netflix?,37,65
+1375,2024-08-07,18:32,Si, ¡esta buenisima!,44,65
+1376,2024-08-09,20:16,Yo la empece ayer, me encanta.,34,65
+1377,2024-08-12,10:40,¿Que capitulo llevais?,44,65
+1378,2024-08-15,21:43,Voy por el tercero, engancha mucho.,28,65
+1379,2024-08-17,18:48,¡La recomiendo a todos!,44,65
+1380,2024-08-18,15:32,Gracias, la agregare a mi lista.,37,65
+1381,2024-12-20,15:38,¡Hola grupo!,44,66
+1382,2024-12-21,18:32,¿Alguien va al partido este fin de semana?,23,66
+1383,2024-12-24,8:31,¡Yo si!,44,66
+1384,2024-12-27,19:34,¿A que hora es?,48,66
+1385,2024-12-27,22:43,El domingo a las 6.,48,66
+1386,2024-12-28,16:28,Perfecto, alli estare.,44,66
+1387,2024-12-30,23:17,¿Nos encontramos en la entrada?,44,66
+1388,2025-01-02,23:11,¡Me parece bien!,44,66
+1389,2025-01-03,23:33,¡Que ganas!,44,66
+1390,2025-01-03,11:20,Bueno, nos vemos pronto. ¡Chao!,23,66
+1391,2025-01-12,17:54,¡Hola a todos!,45,67
+1392,2025-01-14,23:18,¿Que tal la semana?,45,67
+1393,2025-01-16,16:02,Estoy organizando un evento, ¿alguien se apunta?,13,67
+1394,2025-01-16,12:04,¡Yo me apunto!,3,67
+1395,2025-01-18,16:31,Suena genial, contad conmigo.,3,67
+1396,2025-01-20,11:40,¿Donde seria?,13,67
+1397,2025-01-23,20:39,Podemos hacerlo en el parque central.,13,67
+1398,2025-01-26,10:45,Perfecto, buen plan.,45,67
+1399,2025-01-26,23:35,¡Entonces nos vemos pronto!,3,67
+1400,2024-08-13,11:36,Buenas tardes :),11,1
+1401,2024-08-16,11:47,¿Alguien ha visto la ultima serie de Netflix?,43,1
+1402,2024-08-16,11:18,Si, ¡esta buenisima!,11,1
+1403,2024-08-16,18:12,Yo la empece ayer, me encanta.,11,1
+1404,2024-08-19,8:31,¿Que capitulo llevais?,11,1
+1405,2024-08-19,13:11,Voy por el tercero, engancha mucho.,11,1
+1406,2024-03-31,19:35,¡Hola!,33,2
+1407,2024-04-01,15:04,¿Alguien tiene recetas faciles para esta semana?,38,2
+1408,2024-04-02,10:32,¡Si! Ayer hice pasta con salsa casera, super facil.,33,2
+1409,2024-04-05,10:24,Que buena idea.,33,2
+1410,2024-04-07,23:15,Tambien recomiendo ensalada de quinoa, rapida y sana.,33,2
+1411,2024-04-09,13:31,¡La probare!,33,2
+1412,2024-04-12,18:39,Si quieren, paso las recetas.,33,2
+1413,2024-11-02,21:55,¡Hola equipo!,50,3
+1414,2024-11-02,18:57,¿Como llevais el proyecto?,33,3
+1415,2024-11-02,11:47,Va avanzando bien, aunque tengo dudas.,50,3
+1416,2024-11-05,10:05,¿Sobre que parte?,33,3
+1417,2024-11-07,14:41,El informe final, no se si esta completo.,50,3
+1418,2024-11-09,16:28,Te lo reviso y te comento.,50,3
+1419,2024-12-07,11:24,¡Hola!,31,4
+1420,2024-12-08,10:28,¿Alguien tiene recetas faciles para esta semana?,32,4
+1421,2024-12-09,17:13,¡Si! Ayer hice pasta con salsa casera, super facil.,32,4
+1422,2024-12-12,21:23,Que buena idea.,31,4
+1423,2024-12-13,19:41,Tambien recomiendo ensalada de quinoa, rapida y sana.,32,4
+1424,2024-12-16,16:39,¡La probare!,32,4
+1425,2025-01-26,19:48,¡Hola equipo!,15,5
+1426,2025-01-28,18:09,¿Como llevais el proyecto?,15,5
+1427,2025-01-30,9:03,Va avanzando bien, aunque tengo dudas.,30,5
+1428,2025-01-30,19:13,¿Sobre que parte?,30,5
+1429,2025-01-30,15:56,El informe final, no se si esta completo.,15,5
+1430,2025-01-30,13:05,Te lo reviso y te comento.,15,5
+1431,2025-01-30,20:32,Gracias, ¡eres un crack!,15,5
+1432,2025-02-01,20:05,Sin problema, para eso estamos.,15,5
+1433,2025-02-02,12:18,Nos mantenemos al tanto.,15,5
+1434,2024-10-22,13:41,¡Hola a todos!,49,6
+1435,2024-10-25,23:27,¿Que tal la semana?,49,6
+1436,2024-10-25,12:36,Estoy organizando un evento, ¿alguien se apunta?,47,6
+1437,2024-10-28,8:21,¡Yo me apunto!,49,6
+1438,2024-10-28,17:35,Suena genial, contad conmigo.,47,6
+1439,2024-10-30,19:34,¿Donde seria?,49,6
+1440,2024-04-22,23:55,¡Hola grupo!,3,7
+1441,2024-04-24,15:25,¿Alguien va al partido este fin de semana?,2,7
+1442,2024-04-27,10:45,¡Yo si!,3,7
+1443,2024-04-28,9:45,¿A que hora es?,2,7
+1444,2024-04-29,18:51,El domingo a las 6.,3,7
+1445,2024-04-30,12:47,Perfecto, alli estare.,2,7
+1446,2024-05-03,19:51,¿Nos encontramos en la entrada?,2,7
+1447,2024-05-05,22:29,¡Me parece bien!,3,7
+1448,2024-05-05,20:29,¡Que ganas!,3,7
+1449,2024-06-19,18:19,¡Hola a todos!,42,8
+1450,2024-06-22,10:48,¿Que tal la semana?,42,8
+1451,2024-06-22,8:01,Estoy organizando un evento, ¿alguien se apunta?,42,8
+1452,2024-06-25,10:08,¡Yo me apunto!,42,8
+1453,2024-06-27,22:11,Suena genial, contad conmigo.,42,8
+1454,2024-06-28,22:15,¿Donde seria?,11,8
+1455,2024-09-24,15:00,¡Hola!,27,9
+1456,2024-09-27,16:11,¿Alguien tiene recetas faciles para esta semana?,27,9
+1457,2024-09-30,19:29,¡Si! Ayer hice pasta con salsa casera, super facil.,27,9
+1458,2024-10-02,8:04,Que buena idea.,45,9
+1459,2024-10-02,20:35,Tambien recomiendo ensalada de quinoa, rapida y sana.,45,9
+1460,2024-10-02,13:02,¡La probare!,27,9
+1461,2024-10-05,8:43,Si quieren, paso las recetas.,27,9
+1462,2024-10-07,11:44,¡Por favor!,45,9
+1463,2024-10-07,16:24,Gracias por compartir.,27,9
+1464,2024-10-08,22:44,Bueno, me voy a cocinar. ¡Un abrazo!,45,9
+1465,2025-03-09,12:54,¡Hola equipo!,32,10
+1466,2025-03-11,19:21,¿Como llevais el proyecto?,32,10
+1467,2025-03-11,23:09,Va avanzando bien, aunque tengo dudas.,32,10
+1468,2025-03-14,8:29,¿Sobre que parte?,40,10
+1469,2025-03-17,11:32,El informe final, no se si esta completo.,32,10
+1470,2025-03-17,14:02,Te lo reviso y te comento.,32,10
+1471,2024-05-22,9:22,¡Hola!,15,11
+1472,2024-05-25,8:47,¿Alguien tiene recetas faciles para esta semana?,15,11
+1473,2024-05-26,21:53,¡Si! Ayer hice pasta con salsa casera, super facil.,15,11
+1474,2024-05-28,21:19,Que buena idea.,15,11
+1475,2024-05-29,9:06,Tambien recomiendo ensalada de quinoa, rapida y sana.,42,11
+1476,2024-06-01,12:35,¡La probare!,15,11
+1477,2024-06-02,8:44,Si quieren, paso las recetas.,42,11
+1478,2024-06-04,21:18,¡Por favor!,42,11
+1479,2024-06-04,20:08,Gracias por compartir.,15,11
+1480,2024-06-04,23:54,Bueno, me voy a cocinar. ¡Un abrazo!,15,11
+1481,2024-10-24,14:35,¡Hola!,25,12
+1482,2024-10-27,9:11,¿Alguien tiene recetas faciles para esta semana?,25,12
+1483,2024-10-28,9:32,¡Si! Ayer hice pasta con salsa casera, super facil.,25,12
+1484,2024-10-31,15:58,Que buena idea.,25,12
+1485,2024-10-31,14:17,Tambien recomiendo ensalada de quinoa, rapida y sana.,25,12
+1486,2024-10-31,17:39,¡La probare!,25,12
+1487,2024-11-03,17:30,Si quieren, paso las recetas.,40,12
+1488,2024-11-05,12:25,¡Por favor!,25,12
+1489,2024-11-06,11:33,Gracias por compartir.,25,12
+1490,2024-11-09,8:05,Bueno, me voy a cocinar. ¡Un abrazo!,25,12
+1491,2025-03-21,20:04,¡Hola a todos!,11,13
+1492,2025-03-24,9:29,¿Que tal la semana?,11,13
+1493,2025-03-24,11:00,Estoy organizando un evento, ¿alguien se apunta?,11,13
+1494,2025-03-24,23:53,¡Yo me apunto!,11,13
+1495,2025-03-26,8:18,Suena genial, contad conmigo.,23,13
+1496,2025-03-29,19:35,¿Donde seria?,23,13
+1497,2025-01-10,9:45,¡Hola a todos!,41,14
+1498,2025-01-12,14:31,¿Que tal la semana?,41,14
+1499,2025-01-15,23:38,Estoy organizando un evento, ¿alguien se apunta?,41,14
+1500,2025-01-16,23:10,¡Yo me apunto!,37,14
+1501,2025-01-19,22:35,Suena genial, contad conmigo.,41,14
+1502,2025-01-19,20:21,¿Donde seria?,41,14
+1503,2025-01-21,22:44,Podemos hacerlo en el parque central.,41,14
+1504,2025-01-24,13:52,Perfecto, buen plan.,41,14
+1505,2024-11-22,17:12,¡Hola equipo!,50,15
+1506,2024-11-24,18:15,¿Como llevais el proyecto?,50,15
+1507,2024-11-27,22:45,Va avanzando bien, aunque tengo dudas.,50,15
+1508,2024-11-30,16:37,¿Sobre que parte?,37,15
+1509,2024-12-03,11:14,El informe final, no se si esta completo.,50,15
+1510,2024-12-05,14:13,Te lo reviso y te comento.,37,15
+1511,2024-12-06,12:07,Gracias, ¡eres un crack!,50,15
+1512,2024-12-08,8:08,Sin problema, para eso estamos.,50,15
+1513,2024-12-11,11:34,Nos mantenemos al tanto.,37,15
+1514,2024-08-04,22:10,Buenas tardes :),34,16
+1515,2024-08-05,20:23,¿Alguien ha visto la ultima serie de Netflix?,31,16
+1516,2024-08-06,9:21,Si, ¡esta buenisima!,31,16
+1517,2024-08-07,18:03,Yo la empece ayer, me encanta.,34,16
+1518,2024-08-09,22:19,¿Que capitulo llevais?,34,16
+1519,2024-08-11,12:55,Voy por el tercero, engancha mucho.,34,16
+1520,2024-08-11,10:07,¡La recomiendo a todos!,34,16
+1521,2024-08-11,12:34,Gracias, la agregare a mi lista.,31,16
+1522,2024-12-13,19:05,¡Hola grupo!,26,17
+1523,2024-12-16,23:30,¿Alguien va al partido este fin de semana?,4,17
+1524,2024-12-16,11:29,¡Yo si!,4,17
+1525,2024-12-18,13:44,¿A que hora es?,4,17
+1526,2024-12-21,20:23,El domingo a las 6.,26,17
+1527,2024-12-21,23:55,Perfecto, alli estare.,26,17
+1528,2024-12-21,17:11,¿Nos encontramos en la entrada?,4,17
+1529,2024-12-22,10:00,¡Me parece bien!,4,17
+1530,2024-12-23,9:43,¡Que ganas!,26,17
+1531,2024-12-28,17:56,¡Hola equipo!,10,18
+1532,2024-12-31,20:54,¿Como llevais el proyecto?,1,18
+1533,2025-01-02,15:40,Va avanzando bien, aunque tengo dudas.,1,18
+1534,2025-01-02,13:37,¿Sobre que parte?,1,18
+1535,2025-01-02,21:09,El informe final, no se si esta completo.,10,18
+1536,2025-01-03,19:55,Te lo reviso y te comento.,1,18
+1537,2025-01-02,22:32,¡Hola!,34,19
+1538,2025-01-05,14:57,¿Alguien tiene recetas faciles para esta semana?,39,19
+1539,2025-01-05,10:11,¡Si! Ayer hice pasta con salsa casera, super facil.,34,19
+1540,2025-01-07,21:55,Que buena idea.,39,19
+1541,2025-01-07,19:49,Tambien recomiendo ensalada de quinoa, rapida y sana.,34,19
+1542,2025-01-10,21:18,¡La probare!,39,19
+1543,2025-01-11,21:13,Si quieren, paso las recetas.,34,19
+1544,2025-01-14,13:49,¡Por favor!,34,19
+1545,2024-07-04,8:51,Buenas tardes :),28,20
+1546,2024-07-06,17:42,¿Alguien ha visto la ultima serie de Netflix?,28,20
+1547,2024-07-09,9:16,Si, ¡esta buenisima!,28,20
+1548,2024-07-12,13:23,Yo la empece ayer, me encanta.,28,20
+1549,2024-07-15,9:26,¿Que capitulo llevais?,15,20
+1550,2024-07-17,19:48,Voy por el tercero, engancha mucho.,15,20
+1551,2024-09-01,8:54,¡Hola grupo!,25,21
+1552,2024-09-02,12:45,¿Alguien va al partido este fin de semana?,25,21
+1553,2024-09-04,18:52,¡Yo si!,18,21
+1554,2024-09-06,21:32,¿A que hora es?,18,21
+1555,2024-09-07,9:04,El domingo a las 6.,25,21
+1556,2024-09-09,15:47,Perfecto, alli estare.,18,21
+1557,2024-09-11,15:03,¿Nos encontramos en la entrada?,25,21
+1558,2024-09-03,8:15,¡Hola a todos!,25,22
+1559,2024-09-04,11:44,¿Que tal la semana?,29,22
+1560,2024-09-07,22:10,Estoy organizando un evento, ¿alguien se apunta?,29,22
+1561,2024-09-10,19:43,¡Yo me apunto!,29,22
+1562,2024-09-10,18:28,Suena genial, contad conmigo.,29,22
+1563,2024-09-13,15:42,¿Donde seria?,25,22
+1564,2024-09-13,20:24,Podemos hacerlo en el parque central.,29,22
+1565,2024-09-16,20:12,Perfecto, buen plan.,29,22
+1566,2025-03-06,8:10,Buenas tardes :),33,23
+1567,2025-03-06,13:37,¿Alguien ha visto la ultima serie de Netflix?,33,23
+1568,2025-03-08,8:30,Si, ¡esta buenisima!,33,23
+1569,2025-03-10,11:33,Yo la empece ayer, me encanta.,33,23
+1570,2025-03-11,22:34,¿Que capitulo llevais?,13,23
+1571,2025-03-14,13:07,Voy por el tercero, engancha mucho.,13,23
+1572,2025-03-14,15:12,¡La recomiendo a todos!,33,23
+1573,2024-06-20,15:09,¡Hola equipo!,35,24
+1574,2024-06-20,8:40,¿Como llevais el proyecto?,35,24
+1575,2024-06-21,18:23,Va avanzando bien, aunque tengo dudas.,35,24
+1576,2024-06-21,12:51,¿Sobre que parte?,35,24
+1577,2024-06-23,10:47,El informe final, no se si esta completo.,38,24
+1578,2024-06-26,15:15,Te lo reviso y te comento.,38,24
+1579,2024-06-28,19:12,Gracias, ¡eres un crack!,38,24
+1580,2024-06-28,19:52,Sin problema, para eso estamos.,38,24
+1581,2024-06-29,8:44,Nos mantenemos al tanto.,35,24
+1582,2024-06-29,13:39,¡Hasta manana!,35,24
+1583,2024-04-24,20:50,¡Hola grupo!,14,25
+1584,2024-04-24,9:50,¿Alguien va al partido este fin de semana?,12,25
+1585,2024-04-27,17:33,¡Yo si!,12,25
+1586,2024-04-28,8:24,¿A que hora es?,12,25
+1587,2024-04-29,20:58,El domingo a las 6.,14,25
+1588,2024-05-01,16:38,Perfecto, alli estare.,12,25
+1589,2024-05-04,14:49,¿Nos encontramos en la entrada?,12,25
+1590,2024-05-04,22:48,¡Me parece bien!,14,25

@@ -15,12 +15,8 @@
 // gcc -I src -I src/baseDatos -I src/data -I src/menu -I src/utils src\*.c src\baseDatos\*.c src\data\*.c src\utils\*.c src\menu\*.c -o main.exe
 // Usuario y constraseña: admin
 int main(){
-<<<<<<< Updated upstream
-    //borrarTablas();
-=======
     leerConfig();
     borrarTablas();
->>>>>>> Stashed changes
     crearBD();
     printf("\n\n%d\n",comprobarCredenciales("iker", "ibarrola"));
     printf("\n\n%d\n",insertarAdministrador("xabi", "xabi@em.com","658465921","12-12-12",3,"1234"));
