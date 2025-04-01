@@ -30,20 +30,46 @@ void registrarMensaje(const char *formato, ...) {
     }
 }
 
-void mostrarMensaje(char *texto) {
-    time_t momentoActual;
-    char *fechaStr;
-
-    momentoActual = time(NULL);
-    fechaStr = ctime(&momentoActual);
-    printf("%s - %s\n", fechaStr, texto);
-}
-
-void borrarLog() {
+void mostrarMensaje(int n) {
     FILE *archivo;
-    archivo = fopen(FICHERO_LOG, "w"); //sobreescribe
-    if (archivo != NULL) {
-        fclose(archivo);
+    char lineas[1000][512]; 
+    int countadorLineas = 0;
+
+    //leer el archivo línea por linea 
+    archivo = fopen(FICHERO_LOG, "r");
+    if (archivo == NULL) {
+        perror("Error al abrir el archivo de log");
+        return;
     }
     
+    while (fgets(lineas[countadorLineas % 1000], sizeof(lineas[0]), archivo)) {
+        countadorLineas++;
+    }
+    fclose(archivo);
+
+    //calcular el numero de lineas que quiero enseñar
+    int empezar;
+    if (countadorLineas > n) {
+        empezar = countadorLineas - n;
+    } else {
+        empezar = 0;
+    }
+    
+    //imprimir las últimas n lineas
+    for (int i = empezar; i < countadorLineas; i++) {
+        printf("%s", lineas[i % 1000]);
+    }
+       
+}
+    
+
+
+void borrarLog() {
+    const char *filename = "BDlogger.log"; 
+
+    if (remove(filename) == 0) {
+        printf("Archivo borrado con exito\n");
+    } else {
+        perror("Error al borrar el archivo");
+    }
 }

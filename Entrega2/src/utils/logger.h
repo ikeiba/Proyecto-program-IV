@@ -4,6 +4,6 @@
 #define FICHERO_LOG "src\\utils\\BDlogger.log"
 
 void registrarMensaje(const char *formato, ...);
-void mostrarMensaje(char *texto);
+void mostrarMensaje(int n);
 void borrarLog();
 #endif
