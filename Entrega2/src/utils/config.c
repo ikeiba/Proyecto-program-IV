@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
-Config leerConfig(char *nombrefichero) {
+Config config;
+
+void leerConfig() {
+    char* nombrefichero = "src\\utils\\configuracion.config";
     FILE *punterofichero;
     Config con;
 
@@ -18,16 +21,21 @@ Config leerConfig(char *nombrefichero) {
             if (strncmp(clave, "nombreBD", 8)==0) //el numero es las letras que tiene la palabra nombreBD, y esa linea dice que si la variable campo tiene nombreBD
             {
                 strcpy(con.nombreBD, valor); //copia el valor y lo mete en valor
-            }else if (strncmp(clave, "administrador", 13)==0)
+            }else if (strncmp(clave, "cleanBBDD", 9)==0)
             {
-                strcpy(con.administrador, valor);
-            }else if (strncmp(clave, "contrasena", 10)==0)
+                strcpy(con.cleanBBDD, valor);
+            }else if (strncmp(clave, "createBBDD", 10)==0)
             {
-                strcpy(con.contrasena, valor);
+                strcpy(con.createBBDD, valor);
+            }else if (strncmp(clave, "deleteBBDD", 10)==0)
+            {
+                strcpy(con.deleteBBDD, valor);
+            }else if (strncmp(clave, "loadCSV", 7)==0)
+            {
+                strcpy(con.loadCSV, valor);
             }
         }
         fclose(punterofichero);
     }
-    return con;
-    
+    config = con;
 }
