@@ -4,8 +4,10 @@
 typedef struct 
 {
     char nombreBD[TAM];
-    char administrador[TAM];
-    char contrasena[TAM];
+    char loadCSV[TAM];
+    char cleanBBDD[TAM];
+    char createBBDD[TAM];
+    char deleteBBDD[TAM];
 }Config;
-Config leerConfig(char *nombrefichero);
+void leerConfig();
 #endif
