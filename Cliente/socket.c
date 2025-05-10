@@ -1,17 +1,17 @@
-// IMPORTANT: Winsock Library ("ws2_32") should be linked
-
 #include <stdio.h>
 #include <winsock2.h>
+#include <string.h>
+#include "socket.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
-int main(int argc, char *argv[]) {
+SOCKET s;
+char sendBuff[512], recvBuff[512];
 
-	WSADATA wsaData;
-	SOCKET s;
+int inicializarSocket(){
+    WSADATA wsaData;
 	struct sockaddr_in server;
-	char sendBuff[512], recvBuff[512];
 
 	printf("\nInitialising Winsock...\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -45,32 +45,27 @@ int main(int argc, char *argv[]) {
 	printf("Connection stablished with: %s (%d)\n", inet_ntoa(server.sin_addr),
 			ntohs(server.sin_port));
 
-	// SEND and RECEIVE data
-	printf("Sending message 1... \n");
-	strcpy(sendBuff, "Hello, server.");
+    return 0;
+}
+
+//Si el usuario y contraseña son correctos devuelve 1, sino devuelve 0
+int inicioSesion(const char* usuario, const char* contrasenya){
+    inicializarSocket();
+    printf("Sending message 1... \n");
+    sprintf(sendBuff, "INI;%s;%s", usuario, contrasenya);
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
-	printf("Receiving message 1... \n");
+    printf("Receiving message 1... \n");
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	printf("Data received: %s \n", recvBuff);
-
-	printf("Sending message 2... \n");
-	strcpy(sendBuff, "Hello again.");
-	send(s, sendBuff, sizeof(sendBuff), 0);
-	printf("Data sent: %s \n", sendBuff);
-
-	printf("Receiving message 2... \n");
-	recv(s, recvBuff, sizeof(recvBuff), 0);
-	printf("Data received: %s \n", recvBuff);
-
-	printf("Sending last message... \n");
-	strcpy(sendBuff, "Bye");
-	send(s, sendBuff, sizeof(sendBuff), 0);
-	printf("Data sent: %s \n", sendBuff);
-
-	// CLOSING the socket and cleaning Winsock...
-	closesocket(s);
+    closesocket(s);
 	WSACleanup();
+    if(strcmp(recvBuff, "ERROR")){
+        return -1;
+    }
+    if(strcmp(recvBuff, "CORRECT")){
+        return 1;
+    }
 
 	return 0;
 }
