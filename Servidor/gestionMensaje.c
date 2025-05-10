@@ -15,6 +15,6 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     //Codigo de prueba 
     printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
-    send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
+    send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
 }

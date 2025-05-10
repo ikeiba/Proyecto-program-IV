@@ -83,8 +83,9 @@ int main(int argc, char *argv[]) {
                     gestionarMesajeINI(sendBuff, recvBuff, &comm_socket);
                 }
 
-                if (strcmp(recvBuff, "Bye") == 0)
+                if (strcmp(recvBuff, "Bye") == 0){
                     break;
+                }       
             }
         } while (1);
 
