@@ -49,10 +49,10 @@ int inicializarSocket(){
 }
 
 //Si el usuario y contraseña son correctos devuelve 1, sino devuelve 0
-int inicioSesion(const char* usuario, const char* contrasenya){
+int inicioSesion(const char* email, const char* contrasenya){
     inicializarSocket();
     printf("Sending message 1... \n");
-    sprintf(sendBuff, "INI;%s;%s", usuario, contrasenya);
+    sprintf(sendBuff, "INI;%s;%s", email, contrasenya);
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
     printf("Receiving message 1... \n");
@@ -60,12 +60,16 @@ int inicioSesion(const char* usuario, const char* contrasenya){
 	printf("Data received: %s \n", recvBuff);
     closesocket(s);
 	WSACleanup();
+	sprintf(sendBuff, "Bye");
     if(strcmp(recvBuff, "ERROR")){
+		send(s, sendBuff, sizeof(sendBuff), 0);
         return -1;
     }
     if(strcmp(recvBuff, "CORRECT")){
+		send(s, sendBuff, sizeof(sendBuff), 0);
         return 1;
     }
+	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	return 0;
 }

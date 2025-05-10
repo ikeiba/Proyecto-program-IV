@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <winsock2.h>
+#include "gestionMensaje.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
@@ -76,14 +77,11 @@ int main(int argc, char *argv[]) {
         do {
             int bytes = recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
             if (bytes > 0) {
-                printf("Receiving message... \n");
-                printf("Data received: %s \n", recvBuff);
+                char* tipo = strtok(recvBuff, ";");
 
-                printf("Sending reply... \n");
-                strcpy(sendBuff, "ACK -> ");
-                strcat(sendBuff, recvBuff);
-                send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-                printf("Data sent: %s \n", sendBuff);
+                if(strcmp(tipo, "INI") == 0){
+                    gestionarMesajeINI(sendBuff, recvBuff, &comm_socket);
+                }
 
                 if (strcmp(recvBuff, "Bye") == 0)
                     break;
