@@ -2,6 +2,6 @@
 #define _SOCKET_H_
 
 int inicializarSocket();
-int inicioSesion(const char* usuario, const char* contrasenya);
-
+int inicioSesion(const char* email, const char* contrasenya);
+int regristrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya);
 #endif

@@ -71,3 +71,28 @@ int inicioSesion(const char* email, const char* contrasenya){
 	WSACleanup();
 	return 0;
 }
+
+int regristrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya) {
+	inicializarSocket();
+	sprintf(sendBuff, "REG;%s,%s,%s,%s,%s",usuario,email,telefono,f_nacimiento,contrasenya);
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	printf("Data received: %s \n", recvBuff);
+	sprintf(sendBuff, "Bye");
+	
+	if(strcmp(recvBuff, "ERROR") == 0){
+		send(s, sendBuff, sizeof(sendBuff), 0);
+        return -1;
+    }
+    if(strcmp(recvBuff, "CORRECT") == 0){
+		send(s, sendBuff, sizeof(sendBuff), 0);
+        return 1;
+    }
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	closesocket(s);
+	WSACleanup();
+	return 0;
+
+}
