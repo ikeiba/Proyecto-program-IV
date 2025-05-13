@@ -3,5 +3,5 @@
 
 int inicializarSocket();
 int inicioSesion(const char* email, const char* contrasenya);
-int regristrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya);
+int registrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya);
 #endif

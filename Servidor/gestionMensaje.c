@@ -31,6 +31,7 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         strcpy(sendBuff, "ERROR");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
+        return -1;
     }
 
     //Codigo de prueba 
@@ -38,4 +39,5 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     strcpy(sendBuff, "CORRECT");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+    return 1;
 }

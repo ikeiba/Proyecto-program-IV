@@ -72,7 +72,7 @@ int inicioSesion(const char* email, const char* contrasenya){
 	return 0;
 }
 
-int regristrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya) {
+int registrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya) {
 	inicializarSocket();
 	sprintf(sendBuff, "REG;%s,%s,%s,%s,%s",usuario,email,telefono,f_nacimiento,contrasenya);
 	send(s, sendBuff, sizeof(sendBuff), 0);

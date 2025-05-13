@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include "gestionMensaje.h"
+#include "baseDatos.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
@@ -85,6 +86,7 @@ int main(int argc, char *argv[]) {
 
                 if(strcmp(tipo, "REG") == 0){
                     gestionarMensajeREG(sendBuff, recvBuff, &comm_socket);
+                    borrarUsuario("amayamanuela@gmail.com");
                 }
 
                 if (strcmp(recvBuff, "Bye") == 0){
