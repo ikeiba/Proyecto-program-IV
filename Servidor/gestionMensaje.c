@@ -1,5 +1,5 @@
 #include "gestionMensaje.h"
-//#include "baseDatos.h"
+#include "baseDatos.h"
 #include <string.h>
 #include <stdio.h>
 #include <winsock2.h>
@@ -15,6 +15,27 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     //Codigo de prueba 
     printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
+    send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+    printf("Data sent: %s \n", sendBuff);
+}
+
+int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
+    char* nombre = strtok(NULL, ",");
+    char* email = strtok(NULL, ",");
+    char* telefono = strtok(NULL, ",");
+    char* f_nacimiento = strtok(NULL, ",");
+    char* contrasenya = strtok(NULL, ",");
+
+    if(insertarUsuario(nombre, email, telefono, f_nacimiento, contrasenya) == 0){
+        printf("Sending reply... \n");
+        strcpy(sendBuff, "ERROR");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        printf("Data sent: %s \n", sendBuff);
+    }
+
+    //Codigo de prueba 
+    printf("Sending reply... \n");
+    strcpy(sendBuff, "CORRECT");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
 }

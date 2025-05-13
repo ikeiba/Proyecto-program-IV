@@ -1,0 +1,616 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "sqlite3.h"
+#include "baseDatos.h"
+#include "estructuras.h"
+#include "config.h"
+
+extern Config config;
+
+sqlite3 *open_database(const char *db_name)
+{
+    sqlite3 *db;
+    int rc = sqlite3_open(db_name, &db);
+    if (rc)
+    {
+        //fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return NULL;
+    }
+    else
+    {
+        //printf("Opened database successfully\n");
+        //registrarMensaje("Opened database successfully\n");
+    }
+    return db;
+}
+
+void ejecutarTablas(sqlite3 *db, const char *sql)
+{
+    char *errMsg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+    if (rc != SQLITE_OK)
+    {
+        //fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+    else
+    {
+        //printf("Table created successfully\n");
+        //registrarMensaje("Table created successfully\n");
+    }
+}
+
+int comprobarCredenciales(char *email, char *contrasena)
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT COUNT(*) FROM Administrador WHERE email_admin = ? AND contrasena_admin = ?";
+    int exists = 0;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK)
+    {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, contrasena, -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            exists = sqlite3_column_int(stmt, 0) > 0;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+
+    // Close database
+    sqlite3_close(db);
+    //registrarMensaje("Base de datos cerrada\n");
+
+    return exists;
+}
+
+int insertarUsuario(const char *nombre, const char *email, const char *telefono,
+                          const char *fecha_nacimiento, const char *contrasena)
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL)
+    {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "INSERT INTO Usuario (nombre_usuario, email_usuario, telefono_usuario,f_nacimiento_usuario, contrasena_usuario) VALUES (?, ?, ?, ?, ?);";
+
+    sqlite3_stmt *stmt;
+    int resultado = 0;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK)
+    {
+        sqlite3_bind_text(stmt, 1, nombre, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 3, telefono, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 4, fecha_nacimiento, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 5, contrasena, -1, SQLITE_STATIC);
+        if (sqlite3_step(stmt) == SQLITE_DONE)
+        {
+            resultado = 1; // Éxito al insertar
+            printf("Usuario insertado correctamente.\n");
+            //registrarMensaje("Usuario insertado correctamente.\n");
+        }
+        else
+        {
+            fprintf(stderr, "Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
+            //registrarMensaje("Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
+        }
+    }
+    else
+    {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return resultado;
+}
+
+int borrarUsuario(const char *email) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "DELETE FROM Usuario WHERE email_usuario = ?;";
+    sqlite3_stmt *stmt;
+    int resultado = 0;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+
+        if (sqlite3_step(stmt) == SQLITE_DONE) {
+            resultado = 1; // Éxito al borrar
+            printf("Usuario con email %s eliminado correctamente.\n", email);
+            //registrarMensaje("Usuario con email %s eliminado correctamente.\n", email);
+        } else {
+            fprintf(stderr, "Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
+            //registrarMensaje("Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
+        }
+    } else {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    
+    return resultado;
+}
+
+
+// Metodo para modificar el numero de telefono de un usuario desde su email
+int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
+    
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "UPDATE Usuario SET telefono_usuario = ? WHERE email_usuario = ?";
+    sqlite3_stmt *stmt;
+    int rc;
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, new_phone, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Número de teléfono actualizado correctamente del usuario %s a %s.\n", email, new_phone);
+        //registrarMensaje("Número de teléfono actualizado correctamente del usuario %s a %s.\n", email, new_phone);
+        return 1;
+    } else {
+        fprintf(stderr, "Error al actualizar el número de teléfono: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al actualizar el número de teléfono: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+}
+
+// Metodo para modificar el nombre de un usuario desde su email
+int cambiarNombreUsuario(const char *email, const char *new_name) {
+    
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0; // Error al abrir la base de datos
+    }
+
+    const char *sql = "UPDATE Usuario SET nombre_usuario = ? WHERE email_usuario = ?";
+    sqlite3_stmt *stmt;
+    int rc;
+
+    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, new_name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Nombre de usuario actualizado correctamente para %s a %s.\n", email, new_name);
+        //registrarMensaje("Nombre de usuario actualizado correctamente para %s a %s.\n", email, new_name);
+        return 1;
+    } else {
+        fprintf(stderr, "Error al actualizar el nombre de usuario: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al actualizar el nombre de usuario: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+}
+
+
+// Metodo para sacar el id de un usuario desde su email
+int get_user_id(sqlite3 *db, const char *email) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_usuario FROM Usuario WHERE email_usuario = ?";
+    int user_id = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            user_id = sqlite3_column_int(stmt, 0);
+        }
+    }
+    
+    sqlite3_finalize(stmt);
+    return user_id;
+}
+
+// Metodo para insertar Grupo en la base de datos
+int insert_group(Grupo *group) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    // Get creator's user ID from email
+    int creator_id = get_user_id(db, group->creador->email);
+    if (creator_id == -1) {
+        fprintf(stderr, "Error: ningun usuario encontrado con email %s\n", group->creador->email);
+        //registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->creador->email);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    const char *sql = "INSERT INTO Grupo (nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo) VALUES (?, ?, ?, ?)";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, group->nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, group->fCreacion, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, creator_id);
+    sqlite3_bind_text(stmt, 4, group->descripcion, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Grupo '%s' creado con exito.\n", group->nombre);
+        //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
+    } else {
+        fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+    }
+
+    for(int i = 0; i<group->size;i++){
+        int miembro_id = get_user_id(db, group->miembros[i]->email);
+        if (miembro_id == -1) {
+            fprintf(stderr, "Error: ningun usuario encontrado con email %s\n", group->miembros[i]->email);
+            //registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->miembros[i]->email);
+            sqlite3_close(db);
+            return 0;
+        }
+
+        const char *sqlc = "INSERT INTO Conversacion (id_usuario, id_grupo) VALUES (?, ?)";
+
+        sqlite3_stmt *stmtc;
+        rc = sqlite3_prepare_v2(db, sqlc, -1, &stmtc, 0);
+
+        if (rc != SQLITE_OK) {
+            fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+            //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+            sqlite3_close(db);
+            return 0;
+        }
+
+        sqlite3_bind_int(stmtc, 1, miembro_id);
+        sqlite3_bind_int(stmtc, 2, group->id);
+
+        rc = sqlite3_step(stmtc);
+        sqlite3_finalize(stmtc);
+
+        if (rc == SQLITE_DONE) {
+            printf("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
+            //registrarMensaje("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
+        } else {
+            fprintf(stderr, "Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+            //registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+        }
+    }
+
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+
+int insert_mensaje(Mensaje *mensaje) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+    
+    const char *sql = "INSERT INTO Mensaje (fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo) "
+                      "VALUES (?, ?, ?, ?, ?);";
+    
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    // Bind values to the SQL statement
+    sqlite3_bind_text(stmt, 1, mensaje->fecha, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, mensaje->hora, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, mensaje->contenido, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, mensaje->emisor->id);
+    sqlite3_bind_int(stmt, 5, mensaje->grupo->id);
+
+    // Execute the statement
+    rc = sqlite3_step(stmt);
+    
+    if (rc != SQLITE_DONE) {
+        fprintf(stderr, "Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+    } else {
+        printf("Mensaje insertado correctamente\n");
+        //registrarMensaje("Mensaje insertado correctamente\n");
+    }
+
+    // Clean up
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+int obtenerUsuarios(Usuario **usuarios, int *numUsuarios) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        return 0;
+    }
+
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT * FROM Usuario;";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener los usuarios: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numUsuarios = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numUsuarios)++;
+    }
+
+    *usuarios = (Usuario *)malloc(sizeof(Usuario) * (*numUsuarios));
+    if (*usuarios == NULL) {
+        printf("Error al reservar memoria para usuarios\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*usuarios)[index].id = sqlite3_column_int(stmt, 0);
+        (*usuarios)[index].nombre = strdup((const char *)sqlite3_column_text(stmt, 1));
+        (*usuarios)[index].email = strdup((const char *)sqlite3_column_text(stmt, 2));
+        (*usuarios)[index].telefono = strdup((const char *)sqlite3_column_text(stmt, 3));
+        (*usuarios)[index].fNacimiento = strdup((const char *)sqlite3_column_text(stmt, 4));
+        (*usuarios)[index].contra = strdup((const char *)sqlite3_column_text(stmt, 5));
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    printf("Usuarios obtenidos: %d\n", *numUsuarios);
+    return 1;
+}
+
+
+int obtenerAdministradores(Administrador **administradores, int *numAdministradores) {
+    printf("Entrando en obtenerAdministradores...\n");
+    sqlite3 *db = open_database(config.nombreBD);
+    if (db == NULL) {
+        printf("Error: No se pudo abrir la base de datos.\n");
+        return 0;
+    }
+    
+    const char *sql = "SELECT * FROM Administrador;";
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) != SQLITE_OK) {
+        printf("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numAdministradores = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numAdministradores)++;
+    }
+    printf("Número de administradores encontrados: %d\n", *numAdministradores);
+
+    if (*numAdministradores == 0) {
+        printf("No hay administradores en la base de datos.\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
+        // Reservar memoria para almacenar los resultados
+        *administradores = (Administrador *)malloc(sizeof(Administrador) * (*numAdministradores));
+        if (*administradores == NULL) {
+            printf("Error al reservar memoria para administradores\n");
+            sqlite3_finalize(stmt);
+            sqlite3_close(db);
+            return 0;
+        }
+    
+        // Volver al principio de la sentencia para extraer los datos
+        sqlite3_reset(stmt);
+        int index = 0;
+    
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            (*administradores)[index].id = sqlite3_column_int(stmt, 0);
+            (*administradores)[index].nombre = strdup((const char *)sqlite3_column_text(stmt, 1));
+            (*administradores)[index].email = strdup((const char *)sqlite3_column_text(stmt, 2));
+            (*administradores)[index].telefono = strdup((const char *)sqlite3_column_text(stmt, 3));
+            (*administradores)[index].fNacimiento = strdup((const char *)sqlite3_column_text(stmt, 4));
+            (*administradores)[index].nivel = sqlite3_column_int(stmt, 5);
+            (*administradores)[index].contra = strdup((const char *)sqlite3_column_text(stmt, 6));
+    
+            index++;
+        }
+    
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+    
+        printf("Administradores obtenidos: %d\n", *numAdministradores);
+        return 1;
+    
+    
+}
+
+int getExisteEmail(const char* email) {
+    sqlite3 *db = open_database(config.nombreBD);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT COUNT(*) FROM Usuario WHERE email_usuario = ? "
+                      "UNION ALL "
+                      "SELECT COUNT(*) FROM Administrador WHERE email_admin = ?";
+
+    int existe = 0;
+    
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, email, -1, SQLITE_STATIC);
+
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            existe += sqlite3_column_int(stmt, 0);  // Sumar los valores obtenidos
+        }
+    } else {
+        printf("Error al ejecutar la consulta: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return existe > 0;  // Retorna 1 si el email existe en alguna de las tablas, 0 si no existe
+}
+
+
+int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos) {
+    sqlite3 *db = open_database(config.nombreBD);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_grupo, nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo FROM Grupo";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener los grupos: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numGrupos = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numGrupos)++;
+    }
+
+    *ids = (int*)malloc(sizeof(int) * (*numGrupos));
+    *nombres = (char**)malloc(sizeof(char*) * (*numGrupos));
+    *fechas = (char**)malloc(sizeof(char*) * (*numGrupos));
+    *idCreador = (int*)malloc(sizeof(int) * (*numGrupos));
+    *descripciones = (char**)malloc(sizeof(char*) * (*numGrupos));
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*ids)[index] = sqlite3_column_int(stmt, 0);
+        (*nombres)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*idCreador)[index] = sqlite3_column_int(stmt, 3);
+        (*descripciones)[index] = strdup((const char*)sqlite3_column_text(stmt, 4));
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+
+int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones) {
+    sqlite3 *db = open_database(config.nombreBD);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_usuario, id_grupo FROM Conversacion";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener conversaciones: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numConversaciones = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numConversaciones)++;
+    }
+
+    *idUsuarios = (int*)malloc(sizeof(int) * (*numConversaciones));
+    *idGrupos = (int*)malloc(sizeof(int) * (*numConversaciones));
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*idUsuarios)[index] = sqlite3_column_int(stmt, 0);
+        (*idGrupos)[index] = sqlite3_column_int(stmt, 1);
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+
+int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes) {
+    sqlite3 *db = open_database(config.nombreBD);
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_mensaje, fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo FROM Mensaje";
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    if (rc != SQLITE_OK) {
+        printf("Error al obtener los mensajes: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    *numMensajes = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*numMensajes)++;
+    }
+
+    *ids = (int*)malloc(sizeof(int) * (*numMensajes));
+    *fechas = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *horas = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *contenidos = (char**)malloc(sizeof(char*) * (*numMensajes));
+    *idEmisores = (int*)malloc(sizeof(int) * (*numMensajes));
+    *idGrupos = (int*)malloc(sizeof(int) * (*numMensajes));
+
+    sqlite3_reset(stmt);
+    int index = 0;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        (*ids)[index] = sqlite3_column_int(stmt, 0);
+        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*horas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*contenidos)[index] = strdup((const char*)sqlite3_column_text(stmt, 3));
+        (*idEmisores)[index] = sqlite3_column_int(stmt, 4);
+        (*idGrupos)[index] = sqlite3_column_int(stmt, 5);
+        index++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return 1;
+}
+

@@ -4,4 +4,6 @@
 
 int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
 
+int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
+
 #endif

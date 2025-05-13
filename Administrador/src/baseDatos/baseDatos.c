@@ -276,6 +276,7 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
     {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        return 0;
     }
 
     sqlite3_finalize(stmt);

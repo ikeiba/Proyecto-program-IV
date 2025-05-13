@@ -83,6 +83,10 @@ int main(int argc, char *argv[]) {
                     gestionarMesajeINI(sendBuff, recvBuff, &comm_socket);
                 }
 
+                if(strcmp(tipo, "REG") == 0){
+                    gestionarMensajeREG(sendBuff, recvBuff, &comm_socket);
+                }
+
                 if (strcmp(recvBuff, "Bye") == 0){
                     break;
                 }       
