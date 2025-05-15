@@ -19,3 +19,5 @@ Entrega2/main
 Entrega2/main.exe
 
 *.log
+
+.vscode/c_cpp_properties.json
