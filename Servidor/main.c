@@ -4,12 +4,13 @@
 #include <winsock2.h>
 #include "gestionMensaje.h"
 #include "baseDatos.h"
+#include "config.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
 int main(int argc, char *argv[]) {
-
+    leerConfig();
 	WSADATA wsaData;
 	SOCKET conn_socket;
 	SOCKET comm_socket;
@@ -79,17 +80,15 @@ int main(int argc, char *argv[]) {
             int bytes = recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
             if (bytes > 0) {
                 char* tipo = strtok(recvBuff, ";");
-
                 if(strcmp(tipo, "INI") == 0){
                     gestionarMesajeINI(sendBuff, recvBuff, &comm_socket);
                 }
 
                 if(strcmp(tipo, "REG") == 0){
                     gestionarMensajeREG(sendBuff, recvBuff, &comm_socket);
-                    borrarUsuario("amayamanuela@gmail.com");
                 }
 
-                if (strcmp(recvBuff, "Bye") == 0){
+                if (strcmp(tipo, "Bye") == 0){
                     break;
                 }       
             }

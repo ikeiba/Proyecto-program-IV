@@ -29,6 +29,7 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     if(insertarUsuario(nombre, email, telefono, f_nacimiento, contrasenya) == 0){
         printf("Sending reply... \n");
         strcpy(sendBuff, "ERROR");
+        borrarUsuario("amayamanuela@gmail.com");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
         return -1;

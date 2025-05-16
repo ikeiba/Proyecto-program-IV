@@ -79,8 +79,8 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	printf("Data received: %s \n", recvBuff);
-	sprintf(sendBuff, "Bye");
-	
+	sprintf(sendBuff, "Bye;");
+	printf(sendBuff);
 	if(strcmp(recvBuff, "ERROR") == 0){
 		send(s, sendBuff, sizeof(sendBuff), 0);
         return -1;
@@ -94,5 +94,4 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 	closesocket(s);
 	WSACleanup();
 	return 0;
-
 }

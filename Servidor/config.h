@@ -1,6 +1,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
-#define TAM 40
+#define TAM 70
 
 typedef struct 
 {
