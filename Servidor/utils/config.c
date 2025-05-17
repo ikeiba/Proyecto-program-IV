@@ -5,7 +5,7 @@
 Config config;
 
 void leerConfig() {
-    char* nombrefichero = "configuracion.config";
+    char* nombrefichero = "utils/configuracion.config";
     FILE *punterofichero;
     Config con;
 
