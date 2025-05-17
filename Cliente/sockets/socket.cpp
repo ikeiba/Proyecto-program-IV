@@ -2,12 +2,23 @@
 #include <winsock2.h>
 #include <string.h>
 #include "socket.h"
+#include "../dominio/usuario.h"
+#include "../dominio/grupo.h"
+#include "../dominio/mensaje.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
 SOCKET s;
-char sendBuff[512], recvBuff[512];
+char sendBuff[10240], recvBuff[10240];
+Usuario** usuarios;
+int* numUsuarios;
+
+Grupo** grupos;
+int* numGrupos;
+
+Mensaje** mensajes;
+int* numMensajes;
 
 int inicializarSocket(){
     WSADATA wsaData;
@@ -96,12 +107,93 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 	return 0;
 }
 
+void leerUsuarios(Usuario** usuarios, int* numUsuarios, char* recvBuff){
+	char* token = strtok(recvBuff, ";");
+	int i = 0;
+
+	while(token != NULL){
+		usuarios[i] = new Usuario(atoi(strtok(token, ",")), 
+						strtok(NULL, ","), strtok(NULL, ","), 
+						strtok(NULL, ","), strtok(NULL, ","), 
+						strtok(NULL, ","));
+		
+		token = strtok(NULL, ";");
+		i++;
+	}
+	*numUsuarios = i;
+}
+
+Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
+    Usuario* u;
+    for(int i = 0; i<tamanyo; i++){
+        if(usuarios[i]->getId() == id){
+            u = usuarios[i];
+        }
+    }
+    return u;
+}
+
+Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
+    Grupo* g;
+    for(int i = 0; i<tamanyo; i++){
+        if(grupos[i]->getId() == id){
+            g = grupos[i];
+        }
+    }
+    return g;
+}
+
+void leerGrupos(Grupo** grupos, int* numGrupos, char* recvBuff){
+	char* token = strtok(recvBuff, ";");
+	int i = 0;
+
+	while(token != NULL){
+		grupos[i] = new Grupo(atoi(strtok(token, ",")), 
+						strtok(NULL, ","), strtok(NULL, ","), 
+						obtenerUsuarioPorId(atoi(strtok(NULL, ",")), NULL, 0),
+						strtok(NULL, ","), NULL, 0);
+		
+		token = strtok(NULL, ";");
+		i++;
+	}
+	*numGrupos = i;
+}
+
+void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff){
+	char* token = strtok(recvBuff, ";");
+	int i = 0;
+
+	while(token != NULL){
+		mensajes[i] = new Mensaje(atoi(strtok(token, ",")), 
+						strtok(NULL, ","), strtok(NULL, ","), 
+						strtok(NULL, ","), obtenerUsuarioPorId(atoi(strtok(NULL, ",")), NULL, 0),
+						obtenerGrupoPorId(atoi(strtok(NULL, ",")), NULL, 0));
+		
+		token = strtok(NULL, ";");
+		i++;
+	}
+	*numMensajes = i;
+}
+
+void leerConversacion(char* recvBuff){
+	char* token = strtok(recvBuff, ";");
+	int i = 0;
+
+	while(token != NULL){
+		// Conversacion
+		printf("Conversacion %d: %s\n", i, token);
+		token = strtok(NULL, ";");
+		i++;
+	}
+}
+
 int getUsuario() {
 	inicializarSocket();
 	sprintf(sendBuff, "GET;USUARIO;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
+	leerUsuarios(usuarios, numUsuarios, recvBuff);
 	printf("Usuario recibido: %s\n", recvBuff);
 	return 0;
 	
@@ -113,9 +205,19 @@ int getGrupos() {
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	printf("Grupos recibidos: %s\n", recvBuff);
+	leerGrupos(grupos, numGrupos, recvBuff);
 	return 0;
 	
+}
+
+int getMensajes() {
+	inicializarSocket();
+	sprintf(sendBuff, "GET;MENSAJES;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	leerMensajes(mensajes, numMensajes, recvBuff);
+	return 0;	
 }
 
 int getConversaciones() {
@@ -133,6 +235,7 @@ int getGeneral() {
 	
 	getUsuario();
 	getGrupos();
+	getMensajes();
 	getConversaciones();
 	
 	sprintf(sendBuff, "Bye;");
