@@ -2,6 +2,7 @@
 #define baseDatos_H_
 #include "sqlite3.h"
 #include "../estructuras.h"
+#include "../utils/config.h"
 
 // Metodo para abrir la base de datos
 sqlite3 *open_database(const char *db_name);
