@@ -95,3 +95,50 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 	WSACleanup();
 	return 0;
 }
+
+int getUsuario() {
+	inicializarSocket();
+	sprintf(sendBuff, "GET;USUARIO;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	printf("Usuario recibido: %s\n", recvBuff);
+	return 0;
+	
+}
+
+int getGrupos() {
+	inicializarSocket();
+	sprintf(sendBuff, "GET;GRUPOS;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	printf("Grupos recibidos: %s\n", recvBuff);
+	return 0;
+	
+}
+
+int getConversaciones() {
+
+	sprintf(sendBuff, "GET;CONVERSACIONES;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	printf("Conversaciones recibidas: %s\n", recvBuff);
+	return 0;
+}
+
+int getGeneral() {
+	inicializarSocket();
+	
+	getUsuario();
+	getGrupos();
+	getConversaciones();
+	
+	sprintf(sendBuff, "Bye;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	closesocket(s);
+	WSACleanup();
+	return 0;
+}
