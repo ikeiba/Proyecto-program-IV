@@ -11,28 +11,32 @@
 #define SERVER_PORT 6000
 
 Usuario** usuarios;
-int* numUsuarios;
+int numUsuarios;
 
 Grupo** grupos;
-int* numGrupos;
+int numGrupos;
 
 int** idUsuarios;
 int** idGrupos;
-int* numConversaciones;
+int numConversaciones;
 
 Mensaje** mensajes;
-int* numMensajes;
+int numMensajes;
 
 int main(int argc, char *argv[]) {
     leerConfig();
     printf("HOLA");
-    obtenerUsuarios(usuarios, numUsuarios);
+
+    obtenerUsuarios(&usuarios, &numUsuarios);
     printf(usuarios[0]->nombre);
-    obtenerGrupos(grupos, numGrupos, usuarios, *numUsuarios);
+
+    obtenerGrupos(&grupos, &numGrupos, usuarios, numUsuarios);
     printf("HOLA"); 
-    obtenerConversaciones(idUsuarios, idGrupos, numConversaciones);
+
+    obtenerConversaciones(idUsuarios, idGrupos, &numConversaciones);
     printf("HOLA");
-    obtenerMensajes(mensajes, numMensajes, grupos, *numGrupos, usuarios, *numUsuarios);
+
+    obtenerMensajes(&mensajes, &numMensajes, grupos, numGrupos, usuarios, numUsuarios);
     printf(mensajes[0]->contenido);
 
     WSADATA wsaData;

@@ -52,19 +52,20 @@ int insert_mensaje(Mensaje *mensaje);
 int getExisteEmail(const char* email);
 
 //select de administradores
+//! select de administradores (MODIFICADO)
 int obtenerAdministradores(Administrador **administradores, int *numAdministradores);
 
 //select de administradores
-int obtenerUsuarios(Usuario **usuarios, int *numUsuarios);
+int obtenerUsuarios(Usuario ***usuarios, int *numUsuarios);
 
 //! select de grupos (MODIFICADO)
-int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsuarios); 
+int obtenerGrupos(Grupo ***grupos, int *numGrupos, Usuario **usuarios, int numUsuarios);
 
 //select de conversaciones
 int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones);
 
 //!select de mensajes (MODIFICADO)
-int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios);
+int obtenerMensajes(Mensaje ***mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios) {
 
 // Metodo auxiliar para encontrar el usuario concreto desde su ID
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
