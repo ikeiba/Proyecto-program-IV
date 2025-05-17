@@ -5,6 +5,7 @@
 #include "baseDatos.h"
 #include "../estructuras.h"
 #include "../utils/config.h"
+#include "../utils/config.h" 
 
 extern Config config;
 
