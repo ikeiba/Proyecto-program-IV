@@ -3,8 +3,8 @@
 #include <string.h>
 #include "sqlite3.h"
 #include "baseDatos.h"
-#include "estructuras.h"
-#include "config.h"
+#include "../estructuras.h"
+#include "../utils/config.h"
 
 extern Config config;
 

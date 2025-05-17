@@ -1,5 +1,5 @@
 #include "gestionMensaje.h"
-#include "baseDatos.h"
+#include "../baseDatos/baseDatos.h"
 #include <string.h>
 #include <stdio.h>
 #include <winsock2.h>

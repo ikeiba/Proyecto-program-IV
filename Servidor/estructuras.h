@@ -43,6 +43,4 @@ typedef struct
     Grupo* grupo;
 }Mensaje;
 
-void cargarDatosCsvEnBD(Usuario* usuarios, Grupo* grupos, Mensaje* mensajes);
-
 #endif
