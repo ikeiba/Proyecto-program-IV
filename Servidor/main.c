@@ -1,4 +1,5 @@
 // IMPORTANT: Winsock Library ("ws2_32") should be linked
+//gcc -I baseDatos -I utils -I sockets *.c baseDatos\*.c utils\*.c sockets\*.c -o servidor.exe -lws2_32
 
 #include <stdio.h>
 #include <winsock2.h>
