@@ -49,7 +49,7 @@ int insert_group(Grupo *group);
 int insert_mensaje(Mensaje *mensaje);
 
 //metodo si existe email
-int getExisteEmail(const char* email) ;
+int getExisteEmail(const char* email);
 
 //select de administradores
 int obtenerAdministradores(Administrador **administradores, int *numAdministradores);
@@ -57,13 +57,19 @@ int obtenerAdministradores(Administrador **administradores, int *numAdministrado
 //select de administradores
 int obtenerUsuarios(Usuario **usuarios, int *numUsuarios);
 
-//select de grupos
-int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos);
+//! select de grupos (MODIFICADO)
+int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsuarios); 
 
 //select de conversaciones
 int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones);
 
-//select de mensajes
-int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes);
+//!select de mensajes (MODIFICADO)
+int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int* numGrupos, Usuario **usuarios, int *numUsuarios);
+
+// Metodo auxiliar para encontrar el usuario concreto desde su ID
+Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
+
+// Metodo auxiliar para encontrar el grupo concreto desde su ID
+Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo);
 
 #endif
