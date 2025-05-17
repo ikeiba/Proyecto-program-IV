@@ -500,8 +500,7 @@ int getExisteEmail(const char* email) {
     return existe > 0;  // Retorna 1 si el email existe en alguna de las tablas, 0 si no existe
 }
 
-
-int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, char*** descripciones, int* numGrupos) {
+int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsuarios) {
     sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_grupo, nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo FROM Grupo";
@@ -518,20 +517,25 @@ int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, c
         (*numGrupos)++;
     }
 
-    *ids = (int*)malloc(sizeof(int) * (*numGrupos));
-    *nombres = (char**)malloc(sizeof(char*) * (*numGrupos));
-    *fechas = (char**)malloc(sizeof(char*) * (*numGrupos));
-    *idCreador = (int*)malloc(sizeof(int) * (*numGrupos));
-    *descripciones = (char**)malloc(sizeof(char*) * (*numGrupos));
+    *grupos = (Grupo*)malloc(sizeof(Grupo) * (*numGrupos));
+    if (!*grupos) {
+        printf("Error al reservar memoria para los grupos\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
 
     sqlite3_reset(stmt);
     int index = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        (*ids)[index] = sqlite3_column_int(stmt, 0);
-        (*nombres)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
-        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
-        (*idCreador)[index] = sqlite3_column_int(stmt, 3);
-        (*descripciones)[index] = strdup((const char*)sqlite3_column_text(stmt, 4));
+        // Encontramos el usuario creador del grupo
+        int id = sqlite3_column_int(stmt, 3);
+        Usuario* usuarioCreador = obtenerUsuarioPorId(id, usuarios, numUsuarios);
+        (*grupos)[index].id = sqlite3_column_int(stmt, 0);
+        (*grupos)[index].nombre = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*grupos)[index].fCreacion = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*grupos)[index].creador = usuarioCreador;
+        (*grupos)[index].descripcion = strdup((const char*)sqlite3_column_text(stmt, 4));
         index++;
     }
 
@@ -539,6 +543,7 @@ int obtenerGrupos(int** ids, char*** nombres, char*** fechas, int** idCreador, c
     sqlite3_close(db);
     return 1;
 }
+
 
 int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones) {
     sqlite3 *db = open_database(config.nombreBD);
@@ -573,7 +578,7 @@ int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversacion
     return 1;
 }
 
-int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos, int** idEmisores, int** idGrupos, int* numMensajes) {
+int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios) {
     sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_mensaje, fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo FROM Mensaje";
@@ -590,22 +595,31 @@ int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos
         (*numMensajes)++;
     }
 
-    *ids = (int*)malloc(sizeof(int) * (*numMensajes));
-    *fechas = (char**)malloc(sizeof(char*) * (*numMensajes));
-    *horas = (char**)malloc(sizeof(char*) * (*numMensajes));
-    *contenidos = (char**)malloc(sizeof(char*) * (*numMensajes));
-    *idEmisores = (int*)malloc(sizeof(int) * (*numMensajes));
-    *idGrupos = (int*)malloc(sizeof(int) * (*numMensajes));
+    *mensajes = (Mensaje*)malloc(sizeof(Mensaje) * (*numMensajes));
+    if (*mensajes == NULL) {
+        printf("Error al reservar memoria para mensajes.\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return 0;
+    }
 
     sqlite3_reset(stmt);
     int index = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        (*ids)[index] = sqlite3_column_int(stmt, 0);
-        (*fechas)[index] = strdup((const char*)sqlite3_column_text(stmt, 1));
-        (*horas)[index] = strdup((const char*)sqlite3_column_text(stmt, 2));
-        (*contenidos)[index] = strdup((const char*)sqlite3_column_text(stmt, 3));
-        (*idEmisores)[index] = sqlite3_column_int(stmt, 4);
-        (*idGrupos)[index] = sqlite3_column_int(stmt, 5);
+        // Encontramos el usuario que ha mandado el mensaje
+        int idUsuario = sqlite3_column_int(stmt, 3);
+        Usuario* usuarioMensaje = obtenerUsuarioPorId(idUsuario, usuarios, numUsuarios);
+
+         // Encontramos el usuario que ha mandado el mensaje
+        int idGrupo = sqlite3_column_int(stmt, 5);
+        Grupo* grupoMensaje = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
+
+        (*mensajes)[index].id = sqlite3_column_int(stmt, 0);
+        (*mensajes)[index].fecha = strdup((const char*)sqlite3_column_text(stmt, 1));
+        (*mensajes)[index].hora = strdup((const char*)sqlite3_column_text(stmt, 2));
+        (*mensajes)[index].contenido = strdup((const char*)sqlite3_column_text(stmt, 3));
+        (*mensajes)[index].emisor = usuarioMensaje;
+        (*mensajes)[index].grupo = grupoMensaje;
         index++;
     }
 
@@ -614,3 +628,23 @@ int obtenerMensajes(int** ids, char*** fechas, char*** horas, char*** contenidos
     return 1;
 }
 
+
+Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
+    Usuario* u;
+    for(int i = 0; i<tamanyo; i++){
+        if((*usuarios[i]).id == id){
+            u = usuarios[i];
+        }
+    }
+    return u;
+}
+
+Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
+    Grupo* g;
+    for(int i = 0; i<tamanyo; i++){
+        if((*grupos[i]).id == id){
+            g = grupos[i];
+        }
+    }
+    return g;
+}
