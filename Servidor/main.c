@@ -10,9 +10,26 @@
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
+Usuario** usuarios;
+int* numUsuarios;
+
+Grupo** grupos;
+int* numGrupos;
+
+int** idUsuarios;
+int** idGrupos;
+int* numConversaciones;
+
+Mensaje** mensajes;
+int* numMensajes;
+
 int main(int argc, char *argv[]) {
     leerConfig();
-	WSADATA wsaData;
+    obtenerUsuarios(usuarios, numUsuarios);
+    //obtenerGrupos(grupos, numGrupos);
+    //obtenerConversaciones(idUsuarios, idGrupos, numConversaciones);
+    //obtenerMensajes(idConversaciones, idEmisores, idDestinatarios, contenido, fechaEnvio, numMensajes);
+    WSADATA wsaData;
 	SOCKET conn_socket;
 	SOCKET comm_socket;
 	struct sockaddr_in server;
@@ -87,6 +104,10 @@ int main(int argc, char *argv[]) {
 
                 if(strcmp(tipo, "REG") == 0){
                     gestionarMensajeREG(sendBuff, recvBuff, &comm_socket);
+                }
+
+                if(strcmp(tipo, "GET") == 0){
+                    gestionarMensajeGET(sendBuff, recvBuff, &comm_socket);
                 }
 
                 if (strcmp(tipo, "Bye") == 0){
