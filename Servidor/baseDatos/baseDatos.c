@@ -500,6 +500,7 @@ int getExisteEmail(const char* email) {
     return existe > 0;  // Retorna 1 si el email existe en alguna de las tablas, 0 si no existe
 }
 
+//! MODIFICADO
 int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsuarios) {
     sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
@@ -527,6 +528,7 @@ int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsu
 
     sqlite3_reset(stmt);
     int index = 0;
+    
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Encontramos el usuario creador del grupo
         int id = sqlite3_column_int(stmt, 3);
@@ -578,6 +580,7 @@ int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversacion
     return 1;
 }
 
+//! MODIFICADO
 int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios) {
     sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;

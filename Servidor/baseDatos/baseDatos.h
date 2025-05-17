@@ -64,7 +64,7 @@ int obtenerGrupos(Grupo **grupos, int* numGrupos, Usuario **usuarios, int numUsu
 int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones);
 
 //!select de mensajes (MODIFICADO)
-int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int* numGrupos, Usuario **usuarios, int *numUsuarios);
+int obtenerMensajes(Mensaje **mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios);
 
 // Metodo auxiliar para encontrar el usuario concreto desde su ID
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
