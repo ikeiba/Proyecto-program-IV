@@ -18,7 +18,7 @@ void leerConfig() {
     if (punterofichero != (FILE*) NULL) {
         while (fgets(linea,100,punterofichero) != NULL) { //lee 100 lineas como mucho y lo guarda en el puntero si queremos que lea mas lo cambiamos, dara null en todo caso si se pasa
             sscanf(linea, "%s = %s", clave, valor);  //he guardado admin(clave) = Alvaro(valor) (ejemplo)
-            printf(clave);
+
             if (strncmp(clave, "nombreBD", 8)==0) //el numero es las letras que tiene la palabra nombreBD, y esa linea dice que si la variable campo tiene nombreBD
             {
                 strcpy(con.nombreBD, valor); //copia el valor y lo mete en valor

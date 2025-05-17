@@ -539,7 +539,7 @@ int obtenerGrupos(Grupo ***grupos, int *numGrupos, Usuario **usuarios, int numUs
         sqlite3_close(db);
         return 0;
     }
-
+    
     // Reiniciar el statement para recorrer de nuevo
     sqlite3_reset(stmt);
 

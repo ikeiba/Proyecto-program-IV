@@ -16,28 +16,31 @@ int numUsuarios;
 Grupo** grupos;
 int numGrupos;
 
-int** idUsuarios;
-int** idGrupos;
+int* idUsuarios;
+int* idGrupos;
 int numConversaciones;
 
 Mensaje** mensajes;
 int numMensajes;
 
 int main(int argc, char *argv[]) {
+    
     leerConfig();
-    printf("HOLA");
+    printf("HOLA\n");
 
     obtenerUsuarios(&usuarios, &numUsuarios);
     printf(usuarios[0]->nombre);
 
     obtenerGrupos(&grupos, &numGrupos, usuarios, numUsuarios);
-    printf("HOLA"); 
-
-    obtenerConversaciones(idUsuarios, idGrupos, &numConversaciones);
-    printf("HOLA");
+    printf(grupos[0]->nombre);
 
     obtenerMensajes(&mensajes, &numMensajes, grupos, numGrupos, usuarios, numUsuarios);
     printf(mensajes[0]->contenido);
+
+    obtenerConversaciones(&idUsuarios, &idGrupos, &numConversaciones);
+    printf("\n");
+    printf("%d\n", idGrupos[225]);
+    printf("%d\n", idUsuarios[225]);
 
     WSADATA wsaData;
 	SOCKET conn_socket;
