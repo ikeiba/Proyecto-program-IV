@@ -142,3 +142,23 @@ int getGeneral() {
 	WSACleanup();
 	return 0;
 }
+
+void actualizarDatos() {
+	inicializarSocket();
+
+	sprintf(sendBuff, "REFRESH;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+    recv(s, recvBuff, sizeof(recvBuff), 0);
+	if (strcmp(recvBuff, "NOTHING") == 0) {
+        printf("Sin datos nuevos.\n");
+    } else {
+        printf("Datos nuevos:\n%s\n", recvBuff);
+    }
+
+	sprintf(sendBuff, "Bye;");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	closesocket(s);
+    WSACleanup();
+
+}

@@ -8,4 +8,5 @@ int getUsuario(void);
 int getGrupos(void);
 int getConversaciones(void);
 int getGeneral(void);
+void actualizarDatos();
 #endif
