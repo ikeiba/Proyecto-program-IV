@@ -360,6 +360,7 @@ int insert_mensaje(Mensaje *mensaje) {
     sqlite3_close(db);
     return (rc == SQLITE_DONE);
 }
+
 //! MODIFICADO
 int obtenerUsuarios(Usuario ***usuarios, int *numUsuarios) {
     sqlite3 *db = open_database("../Administrador/src/baseDatos/deustoMessenger.db");
@@ -683,4 +684,203 @@ Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
         }
     }
     return g;
+}
+
+// Metodo para insertar Mensaje en la base de datos
+// Este metodo se usa para insertar mensajes desde el cliente, por lo que no se necesita el id del emisor ni el id del grupo
+int insertarMensajeDesdeUpdate(char* fecha, char* hora, char* contenido, int idEmisor, int idGrupo) {
+
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+    
+    const char *sql = "INSERT INTO Mensaje (fecha_mensaje, hora_mensaje, contenido_mensaje, id_emisor, id_grupo) "
+                      "VALUES (?, ?, ?, ?, ?);";
+    
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    // Bind values to the SQL statement
+    sqlite3_bind_text(stmt, 1, fecha, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hora, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, contenido, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 4, idEmisor);
+    sqlite3_bind_int(stmt, 5, idGrupo);
+
+    // Execute the statement
+    rc = sqlite3_step(stmt);
+    
+    if (rc != SQLITE_DONE) {
+        fprintf(stderr, "Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+    } else {
+        printf("Mensaje insertado correctamente\n");
+        //registrarMensaje("Mensaje insertado correctamente\n");
+    }
+
+    // Clean up
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+// Metodo para insertar Grupo en la base de datos
+// Este metodo se usa para insertar grupo desde el cliente, por lo que no se necesita el id de los miembros
+int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char* descripcion) 
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    const char *sql = "INSERT INTO Grupo (nombre_grupo, fecha_creacion_grupo, id_creador, descripcion_grupo) VALUES (?, ?, ?, ?)";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, fCreacion, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, idCreador);
+    sqlite3_bind_text(stmt, 4, descripcion, -1, SQLITE_STATIC);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Grupo '%s' creado con exito.\n", nombre);
+        //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
+    } else {
+        fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+    }
+
+
+
+    const char *sqlc = "INSERT INTO Conversacion (id_usuario, id_grupo) VALUES (?, ?)";
+
+    sqlite3_stmt *stmtc;
+    rc = sqlite3_prepare_v2(db, sqlc, -1, &stmtc, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    int idGrupo = get_group_id(db, nombre);
+    sqlite3_bind_int(stmtc, 1, idCreador);
+    sqlite3_bind_int(stmtc, 2, idGrupo);
+
+    rc = sqlite3_step(stmtc);
+    sqlite3_finalize(stmtc);
+
+    if (rc == SQLITE_DONE) {
+        printf("miembro '%d' insertado correctamente.\n", idCreador);
+        //registrarMensaje("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
+    } else {
+        fprintf(stderr, "Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+// Metodo para sacar el id de un grupo desde su nombre
+int get_group_id(sqlite3 *db, const char *nombre) {
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_grupo FROM Grupo WHERE nombre_grupo = ?";
+    int group_id = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, nombre, -1, SQLITE_STATIC);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            group_id = sqlite3_column_int(stmt, 0);
+        }
+    }
+    
+    sqlite3_finalize(stmt);
+    return group_id;
+}
+
+// Metodo para insertar Conversacion en la base de datos
+// Este metodo se usa para insertar Conversacion desde el cliente
+int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo) 
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    const char *sql = "INSERT INTO Conversacion (id_usuario, id_grupo) VALUES (?, ?)";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_int(stmt, 1, idUsuario);
+    sqlite3_bind_int(stmt, 2, idGrupo);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    if (rc == SQLITE_DONE) {
+        printf("Conversacion '%d' creado con exito.\n", idGrupo);
+        //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
+    } else {
+        fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
+}
+
+// Metodo para abandonar Grupo en la base de datos
+// Este metodo se usa para abandonar Grupo desde el cliente
+int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo) 
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    const char *sql = "DELETE FROM Conversacion WHERE id_usuario = ? AND id_grupo = ?";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_int(stmt, 1, idUsuario);
+    sqlite3_bind_int(stmt, 2, idGrupo);
+
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+
+    if (rc == SQLITE_DONE) {
+        printf("Conversacion '%d' eliminada con exito.\n", idGrupo);
+        //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
+    } else {
+        fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+    }
+
+    sqlite3_close(db);
+    return (rc == SQLITE_DONE);
 }

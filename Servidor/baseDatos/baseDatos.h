@@ -74,4 +74,20 @@ Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
 // Metodo auxiliar para encontrar el grupo concreto desde su ID
 Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo);
 
+//? Añadido
+int insertarMensajeDesdeUpdate(char* fecha, char* hora, char* contenido, int idEmisor, int idGrupo);
+
+//? Añadido
+int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char* descripcion);
+
+//? Añadido
+int get_group_id(sqlite3 *db, const char *nombre);
+
+//? Añadido
+int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo);
+
+//? Añadido
+int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo);
+
+
 #endif
