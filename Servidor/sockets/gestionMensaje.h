@@ -17,4 +17,7 @@ char* mensajeToString(Mensaje** mensajes, int numMensajes);
 
 int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
 
+int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
+
+
 #endif

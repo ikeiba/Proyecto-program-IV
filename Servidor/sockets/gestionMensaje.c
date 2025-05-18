@@ -136,3 +136,81 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
 }
+
+int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
+{
+    char* tipo = strtok(NULL, ";");
+
+    if(strcmp(tipo, "ENVIAR") == 0){
+        printf("Sending reply... \n");
+        
+        // Obtener los diferentes apartados a partir de recvBuff
+        char* fecha = strtok(NULL, ",");
+        char* hora = strtok(NULL, ",");
+        char* contenido = strtok(NULL, ",");
+        int idEmisor = strtok(NULL, ",");
+        int idGrupo = strtok(NULL, ",");
+
+        //Insertar mensaje en la base de datos
+        insertarMensajeDesdeUpdate(fecha, hora, contenido, idEmisor, idGrupo);
+
+        // Mandar mensaje de que todo ha ido bien
+        sprintf(sendBuff, "UPDATED");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        return -1;
+    }
+    
+    if(strcmp(tipo, "CREAR") == 0){
+        printf("Sending reply... \n");
+        
+        // Obtener los diferentes apartados a partir de recvBuff
+        char* nombre = strtok(NULL, ",");
+        char* fCreacion = strtok(NULL, ",");
+        int idCreador = strtok(NULL, ",");
+        char* descripcion = strtok(NULL, ",");
+
+        //Insertar mensaje en la base de datos
+        insertarGrupoDesdeUpdate(nombre, fCreacion, idCreador, descripcion);
+
+        // Mandar mensaje de que todo ha ido bien
+        sprintf(sendBuff, "UPDATED");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        return -1;
+    }
+
+    if(strcmp(tipo, "ANADIR") == 0){
+        printf("Sending reply... \n");
+        
+        // Obtener los diferentes apartados a partir de recvBuff
+        int idUsuario = strtok(NULL, ",");
+        int idGrupo = strtok(NULL, ",");
+
+        //Insertar mensaje en la base de datos
+        insertarConversacionDesdeUpdate(idUsuario, idGrupo); 
+
+        // Mandar mensaje de que todo ha ido bien
+        sprintf(sendBuff, "UPDATED");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        return -1;
+    }
+
+    if(strcmp(tipo, "ABANDONAR") == 0){
+        printf("Sending reply... \n");
+        
+        // Obtener los diferentes apartados a partir de recvBuff
+        int idUsuario = strtok(NULL, ",");
+        int idGrupo = strtok(NULL, ",");
+
+        //Insertar mensaje en la base de datos
+        abandonarGrupoDesdeUpdate(idUsuario, idGrupo);
+        // Mandar mensaje de que todo ha ido bien
+        sprintf(sendBuff, "UPDATED");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        return -1;
+    }
+    
+    printf("Sending reply... \n");
+    strcpy(sendBuff, "ERROR");
+    send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+    printf("Data sent: %s \n", sendBuff);
+}
