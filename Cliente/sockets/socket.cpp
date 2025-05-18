@@ -273,3 +273,129 @@ void actualizarDatos() {
     WSACleanup();
 
 }
+
+int enviarMensaje(void) {
+	inicializarSocket();                                           
+
+    sprintf(sendBuff, "UPDATE;enviar;mensaje");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+    printf("Data received: %s\n", recvBuff);
+
+	sprintf(sendBuff, "Bye;");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+	if (strcmp(recvBuff, "ERROR") == 0) {
+        closesocket(s); WSACleanup();
+        return -1;
+    }
+    if (strcmp(recvBuff, "CORRECT") == 0) {
+        closesocket(s); WSACleanup();
+        return 1;
+    }
+
+	closesocket(s);
+    WSACleanup();
+    return 0;
+}
+int crearGrupo(void) {
+	inicializarSocket();
+
+    sprintf(sendBuff, "UPDATE;crear;grupo");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+    recv(s, recvBuff, sizeof(recvBuff), 0);
+    printf("Data received: %s\n", recvBuff);
+
+    sprintf(sendBuff, "Bye;");
+    
+	send(s, sendBuff, sizeof(sendBuff), 0);
+	if (strcmp(recvBuff, "ERROR") == 0) {
+        closesocket(s); WSACleanup();
+        return -1;
+    }
+    if (strcmp(recvBuff, "CORRECT") == 0) {
+        closesocket(s); WSACleanup();
+        return 1;
+    }
+
+    closesocket(s);
+    WSACleanup();
+    return 0;
+}
+int aniadirUsuarioAGrupo(void) {
+	inicializarSocket();
+
+    sprintf(sendBuff, "UPDATE;anadir;conversacion");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+    recv(s, recvBuff, sizeof(recvBuff), 0);
+    printf("Data received: %s\n", recvBuff);
+
+    sprintf(sendBuff, "Bye;");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+	if (strcmp(recvBuff, "ERROR") == 0) {
+        closesocket(s); WSACleanup();
+        return -1;
+    }
+    if (strcmp(recvBuff, "CORRECT") == 0) {
+        closesocket(s); WSACleanup();
+        return 1;
+    }
+
+    closesocket(s);
+    WSACleanup();
+    return 0;
+
+}
+int abandonarGrupo(void) {
+	inicializarSocket();
+
+    sprintf(sendBuff, "UPDATE;abandonar;conversacion");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+    recv(s, recvBuff, sizeof(recvBuff), 0);
+    printf("Data received: %s\n", recvBuff);
+
+    sprintf(sendBuff, "Bye;");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+	if (strcmp(recvBuff, "ERROR") == 0) {
+        closesocket(s); WSACleanup();
+        return -1;
+    }
+    if (strcmp(recvBuff, "CORRECT") == 0) {
+        closesocket(s); WSACleanup();
+        return 1;
+    }
+
+    closesocket(s);
+    WSACleanup();
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

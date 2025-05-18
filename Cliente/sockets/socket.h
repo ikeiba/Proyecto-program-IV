@@ -21,4 +21,8 @@ int getMensajes(void);
 int getConversaciones(void);
 int getGeneral(void);
 void actualizarDatos();
+int enviarMensaje(void);
+int crearGrupo(void);
+int aniadirUsuarioAGrupo(void);
+int abandonarGrupo(void);
 #endif
