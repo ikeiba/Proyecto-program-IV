@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	SOCKET comm_socket;
 	struct sockaddr_in server;
 	struct sockaddr_in client;
-	char sendBuff[512], recvBuff[512];
+	char sendBuff[10240], recvBuff[10240];
 
 	printf("\nInitialising Winsock...\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {

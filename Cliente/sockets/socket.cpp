@@ -2,9 +2,6 @@
 #include <winsock2.h>
 #include <string.h>
 #include "socket.h"
-#include "../dominio/usuario.h"
-#include "../dominio/grupo.h"
-#include "../dominio/mensaje.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
@@ -175,48 +172,53 @@ void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff){
 	*numMensajes = i;
 }
 
-void leerConversacion(char* recvBuff){
+void leerConversacion(char* recvBuff,Grupo** grupos, int* numGrupos,Usuario** usuarios, int tamanyo){
+	//Lo que envia el serverdor es un string con el formato "idUsuario,idGrupo;idUsuario,idGrupo;..."
 	char* token = strtok(recvBuff, ";");
 	int i = 0;
 
 	while(token != NULL){
-		// Conversacion
-		printf("Conversacion %d: %s\n", i, token);
+		int idUsuario = atoi(strtok(token, ","));
+		int idGrupo = atoi(strtok(NULL, ","));
+		Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, tamanyo);
+		Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, *numGrupos);
+		grupo->addMiembro(usuario);
 		token = strtok(NULL, ";");
 		i++;
 	}
 }
 
 int getUsuario() {
-	inicializarSocket();
 	sprintf(sendBuff, "GET;USUARIO;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
+	printf("Mensaje mandado: %s\n", sendBuff);
 	recv(s, recvBuff, sizeof(recvBuff), 0);
+	printf("Mensaje recibido: %s\n", recvBuff);
 	leerUsuarios(usuarios, numUsuarios, recvBuff);
-	printf("Usuario recibido: %s\n", recvBuff);
+	printf("Usuario recibido: %s\n", usuarios[0]->getNombre());
 	return 0;
 	
 }
 
 int getGrupos() {
-	inicializarSocket();
 	sprintf(sendBuff, "GET;GRUPOS;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	leerGrupos(grupos, numGrupos, recvBuff);
+	printf("Grupos recibidos: %s\n", grupos[0]->getNombre());
 	return 0;
 	
 }
 
 int getMensajes() {
-	inicializarSocket();
 	sprintf(sendBuff, "GET;MENSAJES;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	leerMensajes(mensajes, numMensajes, recvBuff);
+	printf("Mensajes recibidos: %s\n", mensajes[0]->getContenido());
 	return 0;	
 }
 
@@ -226,7 +228,8 @@ int getConversaciones() {
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	printf("Conversaciones recibidas: %s\n", recvBuff);
+	leerConversacion(recvBuff, grupos, numGrupos, usuarios, *numUsuarios);
+	printf("Conversaciones recibidas:%s \n",grupos[0]->getMiembros()[0]->getNombre());
 	return 0;
 }
 

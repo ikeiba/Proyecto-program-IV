@@ -5,17 +5,17 @@
 #include <winsock2.h>
 
 extern Usuario** usuarios;
-extern int* numUsuarios;
+extern int numUsuarios;
 
 extern Grupo** grupos;
-extern int* numGrupos;
+extern int numGrupos;
 
-extern int** idUsuarios;
-extern int** idGrupos;
-extern int* numConversaciones;
+extern int* idUsuarios;
+extern int* idGrupos;
+extern int numConversaciones;
 
 extern Mensaje** mensajes;
-extern int* numMensajes;
+extern int numMensajes;
 
 int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     char* email = strtok(NULL, ";");
@@ -56,10 +56,10 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     return 1;
 }
 
-char* usuariosToString(Usuario** usuarios, int* numUsuarios){
+char* usuariosToString(Usuario** usuarios, int numUsuarios){
     char* result = (char*)malloc(1024);
     strcpy(result, "");
-    for(int i = 0; i < *numUsuarios; i++){
+    for(int i = 0; i < numUsuarios; i++){
         char buffer[256];
         sprintf(buffer, "%d,%s,%s,%s,%s,%s;", usuarios[i]->id, usuarios[i]->nombre, usuarios[i]->email, usuarios[i]->telefono, usuarios[i]->fNacimiento, usuarios[i]->contra);
         strcat(result, buffer);
@@ -67,10 +67,10 @@ char* usuariosToString(Usuario** usuarios, int* numUsuarios){
     return result;
 }
 
-char* gruposToString(Grupo** grupos, int* numGrupos){
+char* gruposToString(Grupo** grupos, int numGrupos){
     char* result = (char*)malloc(1024);
     strcpy(result, "");
-    for(int i = 0; i < *numGrupos; i++){
+    for(int i = 0; i < numGrupos; i++){
         char buffer[256];
         sprintf(buffer, "%d,%s,%s,%d,%s;", grupos[i]->id, grupos[i]->nombre, grupos[i]->fCreacion, grupos[i]->creador->id, grupos[i]->descripcion);
         strcat(result, buffer);
@@ -78,21 +78,21 @@ char* gruposToString(Grupo** grupos, int* numGrupos){
     return result;
 }
 
-char* conversacionToString(int** idUsuarios, int** idGrupos, int* numConversaciones){
+char* conversacionToString(int* idUsuarios, int* idGrupos, int numConversaciones){
     char* result = (char*)malloc(1024);
     strcpy(result, "");
-    for(int i = 0; i < *numConversaciones; i++){
+    for(int i = 0; i < numConversaciones; i++){
         char buffer[256];
-        sprintf(buffer, "%d,%d;", (*idUsuarios)[i], (*idGrupos)[i]);
+        sprintf(buffer, "%d,%d;", (idUsuarios)[i], (idGrupos)[i]);
         strcat(result, buffer);
     }
     return result;
 }
 
-char* mensajeToString(Mensaje** mensajes, int* numMensajes){
+char* mensajeToString(Mensaje** mensajes, int numMensajes){
     char* result = (char*)malloc(1024);
     strcpy(result, "");
-    for(int i = 0; i < *numMensajes; i++){
+    for(int i = 0; i < numMensajes; i++){
         char buffer[256];
         sprintf(buffer, "%d,%s,%s,%s,%d,%d;", mensajes[i]->id, mensajes[i]->fecha, mensajes[i]->hora, mensajes[i]->contenido, mensajes[i]->emisor->id, mensajes[i]->grupo->id);
         strcat(result, buffer);

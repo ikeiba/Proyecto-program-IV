@@ -7,13 +7,13 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
 
 int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
 
-char* usuariosToString(Usuario** usuarios, int* numUsuarios);
+char* usuariosToString(Usuario** usuarios, int numUsuarios);
 
-char* gruposToString(Grupo** grupos, int* numGrupos);
+char* gruposToString(Grupo** grupos, int numGrupos);
 
-char* conversacionToString(int** idUsuarios, int** idGrupos, int* numConversaciones);
+char* conversacionToString(int* idUsuarios, int* idGrupos, int numConversaciones);
 
-char* mensajeToString(Mensaje** mensajes, int* numMensajes);
+char* mensajeToString(Mensaje** mensajes, int numMensajes);
 
 int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket);
 
