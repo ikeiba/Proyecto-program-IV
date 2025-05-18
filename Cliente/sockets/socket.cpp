@@ -7,9 +7,9 @@
 #define SERVER_PORT 6000
 
 SOCKET s;
-char sendBuff[10240], recvBuff[10240];
+char sendBuff[16384], recvBuff[16384];
 Usuario** usuarios;
-int* numUsuarios;
+int numUsuarios;
 
 Grupo** grupos;
 int* numGrupos;
@@ -104,19 +104,26 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 	return 0;
 }
 
-int contarElementos(const char* recvBuff) {
+int contarElementos(char* recvBuffOriginal) {
+    char copia[16384];
+
+    strcpy(copia, recvBuffOriginal);
     int count = 0;
-    for (const char* p = recvBuff; *p != '\0'; ++p) {
-        if (*p == ';') count++;
+    char* token = strtok(copia, ";");
+    while (token != NULL) {	
+		printf("%s\n", token);
+        count++;
+        token = strtok(NULL, ";");
     }
+	printf("%i\n", count);
     return count;
 }
 
 void leerUsuarios(Usuario** usuarios, int* numUsuarios, char* recvBuff){
-	printf("%i\n", 1);
-	char* token = strtok(recvBuff, ";");
+	//printf("%i\n", contarElementos(recvBuff));
 	*numUsuarios = contarElementos(recvBuff);
-	
+	printf("%i\n", *numUsuarios);
+	char* token = strtok(recvBuff, ";");
 	printf("%i\n", 2);
 	while(token != NULL){
 		printf("%i\n", 3);
@@ -200,7 +207,7 @@ int getUsuario() {
 
 	printf("Mensaje mandado: %s\n", sendBuff);
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	leerUsuarios(usuarios, numUsuarios, recvBuff);
+	leerUsuarios(usuarios, &numUsuarios, recvBuff);
 	printf("Usuario recibido: %s\n", usuarios[0]->getNombre());
 	return 0;
 	
@@ -233,7 +240,7 @@ int getConversaciones() {
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	leerConversacion(recvBuff, grupos, numGrupos, usuarios, *numUsuarios);
+	leerConversacion(recvBuff, grupos, numGrupos, usuarios, numUsuarios);
 	printf("Conversaciones recibidas:%s \n",grupos[0]->getMiembros()[0]->getNombre());
 	return 0;
 }
