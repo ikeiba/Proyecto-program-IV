@@ -14,6 +14,7 @@ void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff);
 void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** usuarios, int numUsuarios);
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
 Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo);
+int contarElementos(const char* recvBuff);
 int getUsuario(void);
 int getGrupos(void);
 int getMensajes(void);

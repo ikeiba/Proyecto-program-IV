@@ -104,20 +104,30 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 	return 0;
 }
 
-void leerUsuarios(Usuario** usuarios, int* numUsuarios, char* recvBuff){
-	char* token = strtok(recvBuff, ";");
-	int i = 0;
+int contarElementos(const char* recvBuff) {
+    int count = 0;
+    for (const char* p = recvBuff; *p != '\0'; ++p) {
+        if (*p == ';') count++;
+    }
+    return count;
+}
 
+void leerUsuarios(Usuario** usuarios, int* numUsuarios, char* recvBuff){
+	printf("%i\n", 1);
+	char* token = strtok(recvBuff, ";");
+	*numUsuarios = contarElementos(recvBuff);
+	
+	printf("%i\n", 2);
 	while(token != NULL){
-		usuarios[i] = new Usuario(atoi(strtok(token, ",")), 
+		printf("%i\n", 3);
+		usuarios[*numUsuarios] = new Usuario(atoi(strtok(token, ",")), 
 						strtok(NULL, ","), strtok(NULL, ","), 
 						strtok(NULL, ","), strtok(NULL, ","), 
 						strtok(NULL, ","));
-		
+		printf("%i\n", 4);
 		token = strtok(NULL, ";");
-		i++;
 	}
-	*numUsuarios = i;
+	printf("%i\n", 1);
 }
 
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
@@ -142,34 +152,30 @@ Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
 
 void leerGrupos(Grupo** grupos, int* numGrupos, char* recvBuff){
 	char* token = strtok(recvBuff, ";");
-	int i = 0;
+	*numGrupos = contarElementos(recvBuff);
 
 	while(token != NULL){
-		grupos[i] = new Grupo(atoi(strtok(token, ",")), 
+		grupos[*numGrupos] = new Grupo(atoi(strtok(token, ",")), 
 						strtok(NULL, ","), strtok(NULL, ","), 
 						obtenerUsuarioPorId(atoi(strtok(NULL, ",")), NULL, 0),
 						strtok(NULL, ","), NULL, 0);
 		
 		token = strtok(NULL, ";");
-		i++;
 	}
-	*numGrupos = i;
 }
 
 void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff){
 	char* token = strtok(recvBuff, ";");
-	int i = 0;
+	*numMensajes = contarElementos(recvBuff);
 
 	while(token != NULL){
-		mensajes[i] = new Mensaje(atoi(strtok(token, ",")), 
+		mensajes[*numMensajes] = new Mensaje(atoi(strtok(token, ",")), 
 						strtok(NULL, ","), strtok(NULL, ","), 
 						strtok(NULL, ","), obtenerUsuarioPorId(atoi(strtok(NULL, ",")), NULL, 0),
 						obtenerGrupoPorId(atoi(strtok(NULL, ",")), NULL, 0));
 		
 		token = strtok(NULL, ";");
-		i++;
 	}
-	*numMensajes = i;
 }
 
 void leerConversacion(char* recvBuff,Grupo** grupos, int* numGrupos,Usuario** usuarios, int tamanyo){
@@ -194,7 +200,6 @@ int getUsuario() {
 
 	printf("Mensaje mandado: %s\n", sendBuff);
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	printf("Mensaje recibido: %s\n", recvBuff);
 	leerUsuarios(usuarios, numUsuarios, recvBuff);
 	printf("Usuario recibido: %s\n", usuarios[0]->getNombre());
 	return 0;

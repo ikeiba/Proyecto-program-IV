@@ -105,33 +105,29 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
 
     if(strcmp(tipo, "USUARIO") == 0){
         printf("Sending reply... \n");
-        sprintf(sendBuff, "USUARIO;%s", usuariosToString(usuarios, numUsuarios));
+        sprintf(sendBuff, usuariosToString(usuarios, numUsuarios));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-        printf("Data sent: %s \n", sendBuff);
         return -1;
     }
     
     if(strcmp(tipo, "GRUPO") == 0){
         printf("Sending reply... \n");
-        sprintf(sendBuff, "GRUPO;%s", gruposToString(grupos, numUsuarios));
+        sprintf(sendBuff, gruposToString(grupos, numUsuarios));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-        printf("Data sent: %s \n", sendBuff);
         return -1;
     }
 
     if(strcmp(tipo, "CONVERSACION") == 0){
         printf("Sending reply... \n");
-        sprintf(sendBuff, "CONVERSACION;%s", conversacionToString(idUsuarios,idGrupos, numConversaciones));
+        sprintf(sendBuff, conversacionToString(idUsuarios,idGrupos, numConversaciones));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-        printf("Data sent: %s \n", sendBuff);
         return -1;
     }
 
     if(strcmp(tipo, "MENSAJE") == 0){
         printf("Sending reply... \n");
-        sprintf(sendBuff, "MENSAJE;%s", mensajeToString(mensajes, numMensajes));
+        sprintf(sendBuff, mensajeToString(mensajes, numMensajes));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-        printf("Data sent: %s \n", sendBuff);
         return -1;
     }
     
