@@ -7,7 +7,7 @@
 #define SERVER_PORT 6000
 
 SOCKET s;
-char sendBuff[10240], recvBuff[10240];
+char sendBuff[16384], recvBuff[16384];
 Usuario** usuarios;
 int* numUsuarios;
 
