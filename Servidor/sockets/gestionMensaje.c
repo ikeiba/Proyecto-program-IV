@@ -57,7 +57,7 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
 }
 
 char* usuariosToString(Usuario** usuarios, int numUsuarios){
-    char* result = (char*)malloc(1024);
+    char* result = (char*)malloc(32768);
     strcpy(result, "");
     for(int i = 0; i < numUsuarios; i++){
         char buffer[256];
@@ -68,69 +68,72 @@ char* usuariosToString(Usuario** usuarios, int numUsuarios){
 }
 
 char* gruposToString(Grupo** grupos, int numGrupos){
-    char* result = (char*)malloc(1024);
+    char* result = (char*)malloc(32768);
     strcpy(result, "");
     for(int i = 0; i < numGrupos; i++){
-        char buffer[256];
+
+        char buffer[1024];
         sprintf(buffer, "%d,%s,%s,%d,%s;", grupos[i]->id, grupos[i]->nombre, grupos[i]->fCreacion, grupos[i]->creador->id, grupos[i]->descripcion);
         strcat(result, buffer);
     }
     return result;
 }
 
+char* mensajeToString(Mensaje** mensajes, int numMensajes){
+    char* result = (char*)malloc(32768);
+    strcpy(result, "");
+    for(int i = 0; i < numMensajes; i++){
+        char buffer[1024];
+        sprintf(buffer, "%d*%s*%s*%s*%d*%d;", mensajes[i]->id, mensajes[i]->fecha, mensajes[i]->hora, mensajes[i]->contenido, mensajes[i]->emisor->id, mensajes[i]->grupo->id);
+        strcat(result, buffer);
+    }
+    return result;
+}
+
 char* conversacionToString(int* idUsuarios, int* idGrupos, int numConversaciones){
-    char* result = (char*)malloc(1024);
+    char* result = (char*)malloc(16384);
     strcpy(result, "");
     for(int i = 0; i < numConversaciones; i++){
-        char buffer[256];
+        char buffer[1024];
         sprintf(buffer, "%d,%d;", (idUsuarios)[i], (idGrupos)[i]);
         strcat(result, buffer);
     }
     return result;
 }
 
-char* mensajeToString(Mensaje** mensajes, int numMensajes){
-    char* result = (char*)malloc(1024);
-    strcpy(result, "");
-    for(int i = 0; i < numMensajes; i++){
-        char buffer[256];
-        sprintf(buffer, "%d,%s,%s,%s,%d,%d;", mensajes[i]->id, mensajes[i]->fecha, mensajes[i]->hora, mensajes[i]->contenido, mensajes[i]->emisor->id, mensajes[i]->grupo->id);
-        strcat(result, buffer);
-    }
-    return result;
-}
-
 int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
+    memset(sendBuff, 0, sizeof(sendBuff));
     char* tipo = strtok(NULL, ";");
-
+    printf("Tipo: %s \n", tipo);
     if(strcmp(tipo, "USUARIO") == 0){
-        printf("Sending reply... \n");
-        sprintf(sendBuff, usuariosToString(usuarios, numUsuarios));
+        printf("Sending reply GET USUARIO... \n");
+        strcpy(sendBuff, usuariosToString(usuarios, numUsuarios));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
     
     if(strcmp(tipo, "GRUPO") == 0){
-        printf("Sending reply... \n");
-        sprintf(sendBuff, gruposToString(grupos, numUsuarios));
-        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-        return -1;
-    }
-
-    if(strcmp(tipo, "CONVERSACION") == 0){
-        printf("Sending reply... \n");
-        sprintf(sendBuff, conversacionToString(idUsuarios,idGrupos, numConversaciones));
+        printf("Sending reply GET GRUPO... \n");
+        strcpy(sendBuff, gruposToString(grupos, numGrupos));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
     if(strcmp(tipo, "MENSAJE") == 0){
-        printf("Sending reply... \n");
-        sprintf(sendBuff, mensajeToString(mensajes, numMensajes));
+        printf("Sending reply GET MENSAJE... \n");
+        strcpy(sendBuff, mensajeToString(mensajes, numMensajes));
+        //printf("Mensajes: %s \n", sendBuff);
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
-    
+
+    if(strcmp(tipo, "CONVERSACION") == 0){
+        printf("Sending reply GET CONVERSACION... \n");
+        strcpy(sendBuff, conversacionToString(idUsuarios,idGrupos, numConversaciones));
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        return -1;
+    }
+
     printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);

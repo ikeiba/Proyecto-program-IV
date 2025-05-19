@@ -9,7 +9,7 @@
 #define SERVER_PORT 6000
 
 SOCKET s;
-char sendBuff[16384], recvBuff[16384];
+char sendBuff[32768], recvBuff[32768];
 Usuario** usuarios;
 int numUsuarios;
 
@@ -77,6 +77,8 @@ int inicioSesion(const char* email, const char* contrasenya){
     }
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
+
+
 	closesocket(s);
 	WSACleanup();
 	return 0;
@@ -107,7 +109,7 @@ int registrarse(const char* usuario, const char* email, const char* telefono, co
 }
 
 int contarElementos(char* recvBuffOriginal) {
-    char copia[16384];
+    char copia[32768];
 
     strcpy(copia, recvBuffOriginal);
     int count = 0;
@@ -120,7 +122,7 @@ int contarElementos(char* recvBuffOriginal) {
 }
 
 void leerUsuarios(Usuario*** usuarios, int* numUsuarios, char* recvBuff) {
-    char copia[16384];
+    char copia[32768];
     strcpy(copia, recvBuff);
 
     *numUsuarios = contarElementos(copia);
@@ -175,13 +177,14 @@ Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
     return g;
 }
 
-void leerGrupos(Grupo** grupos, int* numGrupos, char* recvBuff) {
+void leerGrupos(Grupo*** grupos, int* numGrupos, char* recvBuff) {
     // Hacemos una copia del buffer para no modificar el original
-	printf("Recibido: %s\n", recvBuff);
-    char copia[16384];
+	//printf("Recibido: %s\n", recvBuff);
+    char copia[32768];
     strcpy(copia, recvBuff);
 
     *numGrupos = contarElementos(copia);
+    *grupos = new Grupo*[*numGrupos];
 
     // Rehacemos la copia porque strtok la destruye
     strcpy(copia, recvBuff);
@@ -201,27 +204,28 @@ void leerGrupos(Grupo** grupos, int* numGrupos, char* recvBuff) {
 		idGrupo = std::stoi(campo);
         std::getline(ss, nombre, ',');
         std::getline(ss, descripcion, ',');
-        std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
+        std::getline(ss, campo, ','); 
+        idUsuario = std::stoi(campo);
         std::getline(ss, fechaCreacion, ',');
 
         Usuario* creador = obtenerUsuarioPorId(idUsuario, NULL, 0);
 
-        grupos[i] = new Grupo(idGrupo, nombre.c_str(), descripcion.c_str(), creador, fechaCreacion.c_str(), NULL, 0);
+        (*grupos)[i] = new Grupo(idGrupo, nombre.c_str(), descripcion.c_str(), creador, fechaCreacion.c_str(), NULL, 0);
 
         token = strtok(NULL, ";");
         i++;
     }
+    printf("Total grupos leidos: %d\n", i);
 }
 
-void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff) {
+void leerMensajes(Mensaje*** mensajes, int* numMensajes, char* recvBuff) {
     // Copia del buffer para no modificar el original
-    char copia[16384];
+    char copia[32768];
     strcpy(copia, recvBuff);
 
     *numMensajes = contarElementos(copia);
+    *mensajes = new Mensaje*[*numMensajes];
 
-    // Hacemos la copia real para el strtok
-    strcpy(copia, recvBuff);
     char* token = strtok(copia, ";");
     int i = 0;
 
@@ -231,28 +235,32 @@ void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff) {
         std::string campo;
 
         int idMensaje;
-        std::string contenido, tipo, fecha;
+        std::string contenido, hora, fecha;
         int idUsuario, idGrupo;
 
-        std::getline(ss, campo, ','); idMensaje = std::stoi(campo);
-        std::getline(ss, contenido, ',');
-        std::getline(ss, tipo, ',');
-        std::getline(ss, fecha, ',');
-        std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
-        std::getline(ss, campo, ','); idGrupo = std::stoi(campo);
+        std::getline(ss, campo, '*'); 
+        idMensaje = std::stoi(campo);
+        std::getline(ss, fecha, '*');
+        std::getline(ss, hora, '*');
+        std::getline(ss, contenido, '*');
+        std::getline(ss, campo, '*'); 
+        idUsuario = std::stoi(campo);
+        std::getline(ss, campo, '*'); 
+        idGrupo = std::stoi(campo);
 
         Usuario* usuario = obtenerUsuarioPorId(idUsuario, NULL, 0);
         Grupo* grupo = obtenerGrupoPorId(idGrupo, NULL, 0);
 
-        mensajes[i] = new Mensaje(idMensaje, contenido.c_str(), tipo.c_str(), fecha.c_str(), usuario, grupo);
+        (*mensajes)[i] = new Mensaje(idMensaje, fecha.c_str(), hora.c_str(), contenido.c_str(), usuario, grupo);
 
         token = strtok(NULL, ";");
         i++;
     }
+    printf("Total mensajes leidos: %d\n", i);
 }
 
 void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** usuarios, int tamanyo) {
-    char copia[16384];
+    char copia[32768];
     strcpy(copia, recvBuff);
 
     char* token = strtok(copia, ";");
@@ -289,29 +297,29 @@ int getUsuario() {
 }
 
 int getGrupos() {
-	sprintf(sendBuff, "GET;GRUPOS;");
+	sprintf(sendBuff, "GET;GRUPO;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
+    printf("Mensaje mandado: %s\n", sendBuff);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	leerGrupos(grupos, &numGrupos, recvBuff);
+	leerGrupos(&grupos, &numGrupos, recvBuff);
 	printf("Grupos recibidos: %s\n", grupos[0]->getNombre());
 	return 0;
-	
 }
 
 int getMensajes() {
-	sprintf(sendBuff, "GET;MENSAJES;");
+	sprintf(sendBuff, "GET;MENSAJE;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
-	leerMensajes(mensajes, &numMensajes, recvBuff);
+	leerMensajes(&mensajes, &numMensajes, recvBuff);
 	printf("Mensajes recibidos: %s\n", mensajes[0]->getContenido());
 	return 0;	
 }
 
 int getConversaciones() {
 
-	sprintf(sendBuff, "GET;CONVERSACIONES;");
+	sprintf(sendBuff, "GET;CONVERSACION;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -324,8 +332,11 @@ int getGeneral() {
 	inicializarSocket();
 	
 	getUsuario();
-	getGrupos();
+    memset(recvBuff, 0, sizeof(recvBuff));
+    getGrupos();
+    memset(recvBuff, 0, sizeof(recvBuff));
 	getMensajes();
+    memset(recvBuff, 0, sizeof(recvBuff));
 	getConversaciones();
 	
 	sprintf(sendBuff, "Bye;");

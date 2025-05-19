@@ -26,28 +26,21 @@ int numMensajes;
 int main(int argc, char *argv[]) {
     
     leerConfig();
-    printf("HOLA\n");
 
     obtenerUsuarios(&usuarios, &numUsuarios);
-    printf(usuarios[0]->nombre);
 
     obtenerGrupos(&grupos, &numGrupos, usuarios, numUsuarios);
-    printf(grupos[0]->nombre);
 
     obtenerMensajes(&mensajes, &numMensajes, grupos, numGrupos, usuarios, numUsuarios);
-    printf(mensajes[0]->contenido);
 
     obtenerConversaciones(&idUsuarios, &idGrupos, &numConversaciones);
-    printf("\n");
-    printf("%d\n", idGrupos[225]);
-    printf("%d\n", idUsuarios[225]);
 
     WSADATA wsaData;
 	SOCKET conn_socket;
 	SOCKET comm_socket;
 	struct sockaddr_in server;
 	struct sockaddr_in client;
-	char sendBuff[16384], recvBuff[16384];
+	char sendBuff[32768], recvBuff[32768];
 
 	printf("\nInitialising Winsock...\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -123,7 +116,7 @@ int main(int argc, char *argv[]) {
                     gestionarMensajeGET(sendBuff, recvBuff, &comm_socket);
                 }
 
-                if (strcmp(tipo, "Bye") == 0){
+                if(strcmp(tipo, "Bye") == 0){
                     break;
                 }       
             }
