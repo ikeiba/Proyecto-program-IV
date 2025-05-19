@@ -148,8 +148,8 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         char* fecha = strtok(NULL, ",");
         char* hora = strtok(NULL, ",");
         char* contenido = strtok(NULL, ",");
-        int idEmisor = strtok(NULL, ",");
-        int idGrupo = strtok(NULL, ",");
+        int idEmisor = atoi(strtok(NULL, ","));
+        int idGrupo = atoi(strtok(NULL, ","));
 
         //Insertar mensaje en la base de datos
         insertarMensajeDesdeUpdate(fecha, hora, contenido, idEmisor, idGrupo);
@@ -166,7 +166,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         // Obtener los diferentes apartados a partir de recvBuff
         char* nombre = strtok(NULL, ",");
         char* fCreacion = strtok(NULL, ",");
-        int idCreador = strtok(NULL, ",");
+        int idCreador = atoi(strtok(NULL, ","));
         char* descripcion = strtok(NULL, ",");
 
         //Insertar mensaje en la base de datos
@@ -182,8 +182,8 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         printf("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
-        int idUsuario = strtok(NULL, ",");
-        int idGrupo = strtok(NULL, ",");
+        int idUsuario = atoi(strtok(NULL, ","));
+        int idGrupo = atoi(strtok(NULL, ","));
 
         //Insertar mensaje en la base de datos
         insertarConversacionDesdeUpdate(idUsuario, idGrupo); 
@@ -198,8 +198,8 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         printf("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
-        int idUsuario = strtok(NULL, ",");
-        int idGrupo = strtok(NULL, ",");
+        int idUsuario = atoi(strtok(NULL, ","));
+        int idGrupo = atoi(strtok(NULL, ","));
 
         //Insertar mensaje en la base de datos
         abandonarGrupoDesdeUpdate(idUsuario, idGrupo);
