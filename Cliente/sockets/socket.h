@@ -8,7 +8,7 @@
 int inicializarSocket();
 int inicioSesion(const char* email, const char* contrasenya);
 int registrarse(const char* usuario, const char* email, const char* telefono, const char* f_nacimiento, const char* contrasenya);
-void leerUsuarios(Usuario** usuarios, int* numUsuarios, char* recvBuff);
+void leerUsuarios(Usuario*** usuarios, int* numUsuarios, char* recvBuff);
 void leerGrupos(Grupo** grupos, int* numGrupos, char* recvBuff);
 void leerMensajes(Mensaje** mensajes, int* numMensajes, char* recvBuff);
 void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** usuarios, int numUsuarios);
