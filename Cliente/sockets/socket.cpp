@@ -356,10 +356,10 @@ void actualizarDatos() {
 
 }
 
-int enviarMensaje(void) {
+int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo) {
 	inicializarSocket();                                           
 
-    sprintf(sendBuff, "UPDATE;enviar;mensaje");
+    sprintf(sendBuff, "UPDATE;enviar;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -381,10 +381,10 @@ int enviarMensaje(void) {
     WSACleanup();
     return 0;
 }
-int crearGrupo(void) {
+int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;crear;grupo");
+    sprintf(sendBuff, "UPDATE;crear;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -406,10 +406,10 @@ int crearGrupo(void) {
     WSACleanup();
     return 0;
 }
-int aniadirUsuarioAGrupo(void) {
+int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;anadir;conversacion");
+    sprintf(sendBuff, "UPDATE;aniadir;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -432,10 +432,10 @@ int aniadirUsuarioAGrupo(void) {
     return 0;
 
 }
-int abandonarGrupo(void) {
+int abandonarGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;abandonar;conversacion");
+    sprintf(sendBuff, "UPDATE;abandonar;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
