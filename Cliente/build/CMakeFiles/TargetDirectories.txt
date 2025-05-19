@@ -1,0 +1,9 @@
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/Proyecto-program-IV.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/edit_cache.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/rebuild_cache.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/list_install_components.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/install.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/install/local.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/install/strip.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/Proyecto-program-IV_autogen_timestamp_deps.dir
+C:/prog4/Proyecto-program-IV/build/CMakeFiles/Proyecto-program-IV_autogen.dir

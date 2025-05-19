@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-ced7ca23061ea17be01f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Proyecto-program-IV",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Proyecto-program-IV::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Proyecto-program-IV-Debug-004414b73e05ff4e52ff.json",
+					"name" : "Proyecto-program-IV",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Proyecto-program-IV_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Proyecto-program-IV_autogen-Debug-953530c6787147bcde94.json",
+					"name" : "Proyecto-program-IV_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Proyecto-program-IV_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Proyecto-program-IV_autogen_timestamp_deps-Debug-73580efa71cb79c3ea47.json",
+					"name" : "Proyecto-program-IV_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/prog4/Proyecto-program-IV/build",
+		"source" : "C:/prog4/Proyecto-program-IV/Cliente"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

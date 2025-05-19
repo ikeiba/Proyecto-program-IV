@@ -1,9 +1,10 @@
-#include "sockets/socket.h"
-//g++ -I sockets -I dominio *.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
+#include "mainwindow.h"
+#include <QApplication>
 
-int main(int argc, char *argv[]) {
-	//inicioSesion("amayamanuela@gmail.com", "kp9fgaar");
-	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
-	getGeneral();
-	return 0;
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
 }
