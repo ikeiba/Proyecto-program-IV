@@ -21,8 +21,8 @@ int getMensajes(void);
 int getConversaciones(void);
 int getGeneral(void);
 void actualizarDatos();
-int enviarMensaje(void);
-int crearGrupo(void);
-int aniadirUsuarioAGrupo(void);
-int abandonarGrupo(void);
+int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo);
+int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion);
+int aniadirUsuarioAGrupo(int idUsuario, int idGrupo);
+int abandonarGrupo(int idUsuario, int idGrupo);
 #endif

@@ -116,6 +116,10 @@ int main(int argc, char *argv[]) {
                     gestionarMensajeGET(sendBuff, recvBuff, &comm_socket);
                 }
 
+                if(strcmp(tipo, "UPDATE") == 0){
+                    gestionarMensajeUPDATE(sendBuff, recvBuff, &comm_socket);
+                }
+                
                 if(strcmp(tipo, "Bye") == 0){
                     break;
                 }       
