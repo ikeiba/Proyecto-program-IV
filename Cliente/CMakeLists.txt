@@ -24,6 +24,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Proyecto-program-IV
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        sockets/socket.h sockets/socket.cpp
+        dominio/mensaje.h dominio/mensaje.cpp
+        dominio/usuario.h dominio/usuario.cpp
+        dominio/grupo.h dominio/grupo.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Proyecto APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -43,8 +47,11 @@ else()
     endif()
 endif()
 
-target_link_libraries(Proyecto-program-IV PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-
+if(WIN32)
+    target_link_libraries(Proyecto-program-IV PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ws2_32)
+else()
+    target_link_libraries(Proyecto-program-IV PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+endif()
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.

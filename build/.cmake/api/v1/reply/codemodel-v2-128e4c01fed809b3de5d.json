@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-ced7ca23061ea17be01f.json",
+					"jsonFile" : "directory-.-Debug-e60ef14192c8ce0297fc.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Proyecto-program-IV::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Proyecto-program-IV-Debug-004414b73e05ff4e52ff.json",
+					"jsonFile" : "target-Proyecto-program-IV-Debug-20154ccaf7edd625d69d.json",
 					"name" : "Proyecto-program-IV",
 					"projectIndex" : 0
 				},
