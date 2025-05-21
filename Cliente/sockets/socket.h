@@ -15,11 +15,11 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo);
 Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo);
 int contarElementos(const char* recvBuff);
-int getUsuario(void);
+int getUsuario(const char* email);
 int getGrupos(void);
 int getMensajes(void);
 int getConversaciones(void);
-int getGeneral(void);
+int getGeneral(const char* email);
 void actualizarDatos();
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo);
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion);

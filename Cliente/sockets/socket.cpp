@@ -284,8 +284,8 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
     }
 }
 
-int getUsuario() {
-	sprintf(sendBuff, "GET;USUARIO;");
+int getUsuario(const char* email) {
+	sprintf(sendBuff, "GET;USUARIO;%s",email);
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	printf("Mensaje mandado: %s\n", sendBuff);
@@ -328,10 +328,10 @@ int getConversaciones() {
 	return 0;
 }
 
-int getGeneral() {
+int getGeneral(const char* email) {
 	inicializarSocket();
 	
-	getUsuario();
+	getUsuario(email);
     memset(recvBuff, 0, sizeof(recvBuff));
     getGrupos();
     memset(recvBuff, 0, sizeof(recvBuff));
