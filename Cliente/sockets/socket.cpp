@@ -161,6 +161,7 @@ Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
     Usuario* u;
     for(int i = 0; i<tamanyo; i++){
         if(usuarios[i]->getId() == id){
+            printf("Usuario encontrado: %s\n", usuarios[i]->getNombre());
             u = usuarios[i];
         }
     }
@@ -171,6 +172,7 @@ Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
     Grupo* g;
     for(int i = 0; i<tamanyo; i++){
         if(grupos[i]->getId() == id){
+            printf("Grupo encontrado: %s\n", grupos[i]->getNombre());
             g = grupos[i];
         }
     }
@@ -272,9 +274,11 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
         int idUsuario, idGrupo;
         std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
         std::getline(ss, campo, ','); idGrupo = std::stoi(campo);
+        printf("ID Usuario: %i, ID Grupo: %i\n", idUsuario, idGrupo);
 
         Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, tamanyo);
         Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
+        //printf("Grupo: %s, Usuario: %s\n", grupo->getNombre(), usuario->getNombre());
 
         if (grupo && usuario) {
             grupo->addMiembro(usuario);

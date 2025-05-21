@@ -12,7 +12,7 @@ Grupo* grupoPorId(int idGrupo, Grupo** grupos, int numGrupos);
 
 Usuario* usuarioPorId(int idUsuario, Usuario** usuarios, int numUsuarios);
 
-Usuario** filtrarUsuariosPorGrupo(char* email, Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
+Usuario** filtrarUsuariosPorGrupo(Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
     int* numUsuariosFiltrados);
 
 Mensaje** filtrarMensajesPorGrupos(Grupo** grupos,int numGrupos, Mensaje** mensajes, int numMensajes, int* numMensajesFiltrados);

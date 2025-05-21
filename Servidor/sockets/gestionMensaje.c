@@ -78,7 +78,7 @@ Usuario* usuarioPorId(int idUsuario, Usuario** usuarios, int numUsuarios) {
     return NULL;
 }
 
-Usuario** filtrarUsuariosPorGrupo(char* email, Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
+Usuario** filtrarUsuariosPorGrupo(Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
     int* numUsuariosFiltrados) {
     // Asumimos que como máximo, todos los miembros de todos los grupos son únicos
     int maxUsuarios = numUsuarios;
@@ -86,14 +86,9 @@ Usuario** filtrarUsuariosPorGrupo(char* email, Usuario** usuarios, int numUsuari
     Usuario** usuariosFiltrados = (Usuario**)malloc(sizeof(Usuario*) * maxUsuarios);
     *numUsuariosFiltrados = 0;
 
-    int idUsuario = usuarioPorEmail(email, usuarios, numUsuarios);
     for (int i = 0; i < numGrupos; i++) {
         Grupo* grupo = grupos[i];
         for (int j = 0; j < numConversaciones; j++) {
-            // Si el email coincide con el que queremos excluir, lo saltamos
-            if ( idUsuarios[j] == idUsuario) {
-                continue;
-            }
 
             if(grupo->id == idGrupos[j]) {
                 int yaAgregado = 0;
@@ -309,7 +304,7 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         currentEmail = strtok(NULL, ";");
         printf("Sending reply GET USUARIO... \n");
         gruposCliente = filtrarGruposPorEmail(currentEmail, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
-        usuariosCliente = filtrarUsuariosPorGrupo(currentEmail, usuarios, numUsuarios, gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &numUsuariosCliente);
+        usuariosCliente = filtrarUsuariosPorGrupo(usuarios, numUsuarios, gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &numUsuariosCliente);
         strcpy(sendBuff, usuariosToString(usuariosCliente, numUsuariosCliente));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
