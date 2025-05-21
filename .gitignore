@@ -21,3 +21,9 @@ Entrega2/main.exe
 *.log
 
 .vscode/c_cpp_properties.json
+
+.vscode/
+
+.qtcreator/
+
+*.autosave
