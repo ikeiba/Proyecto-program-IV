@@ -21,11 +21,14 @@ private slots:
     void on_botonBuscar_Clicked();
 
     void on_iniciarSesionBtn_clicked();
+    void on_registrarNuevoUsuarioBtn_clicked();
 
     void on_pushButtonAadirADD_clicked();
 
     void on_pushButtonAadir_clicked();
     void on_pushButtonEliminarContacto_clicked();
+
+    void on_pushButton_ConfirmarRegistro_clicked();
 
 private:
     Ui::MainWindow *ui;

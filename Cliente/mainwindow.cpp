@@ -145,6 +145,10 @@ void MainWindow::on_iniciarSesionBtn_clicked()
     ui-> stackedWidget-> setCurrentIndex(1);
 }
 
+void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
+{
+    ui-> stackedWidget-> setCurrentIndex(3);
+}
 
 
 void MainWindow::inicialListaContactos(){
@@ -173,4 +177,29 @@ void MainWindow::on_pushButtonEliminarContacto_clicked()
     delete ui->listWidgetContactos->currentItem();
 
 }
+
+
+
+
+//REGISTRO
+void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
+{
+    ui-> stackedWidget-> setCurrentIndex(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
