@@ -48,7 +48,7 @@ int comprobarCredenciales(char *email, char *contrasena)
     }
 
     sqlite3_stmt *stmt;
-    const char *sql = "SELECT COUNT(*) FROM Administrador WHERE email_admin = ? AND contrasena_admin = ?";
+    const char *sql = "SELECT COUNT(*) FROM Usuario WHERE email_usuario = ? AND contrasena_usuario = ?";
     int exists = 0;
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK)

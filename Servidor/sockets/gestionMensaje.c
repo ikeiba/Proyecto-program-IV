@@ -214,15 +214,20 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     char* email = strtok(NULL, ";");
     char* contrasenya = strtok(NULL, ";");
 
-    printf(email);
-    printf(contrasenya);
-    //Hay que crear un metodo el la base de datos que compruebe si existe un usuario con ese email y contraseña
-
-    //Codigo de prueba 
+    int existe = comprobarCredenciales(email, contrasenya); 
+    //printf("%d\n", existe);
+    if(existe){
+        printf("Sending reply... \n");
+        strcpy(sendBuff, "CORRECT");
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        printf("Data sent: %s \n", sendBuff);
+        return 1;
+    }
     printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+    return 0;
 }
 
 int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){

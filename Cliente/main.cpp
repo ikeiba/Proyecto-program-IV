@@ -10,8 +10,8 @@ extern Mensaje** mensajes;
 extern int numMensajes;
 
 int main(int argc, char *argv[]) {
-	//inicioSesion("amayamanuela@gmail.com", "kp9fgaar");
+	inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
-	getGeneral("leopoldo23@gmail.com");
+	//getGeneral("leopoldo23@gmail.com");
 	return 0;
 }
