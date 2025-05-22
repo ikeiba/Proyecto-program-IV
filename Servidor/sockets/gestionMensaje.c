@@ -410,6 +410,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         int idUsuario = atoi(strtok(NULL, ","));
         int idGrupo = atoi(strtok(NULL, ","));
 
+        printf("ESTO ES UNA TONTERIAs");
         //Insertar mensaje en la base de datos
         abandonarGrupoDesdeUpdate(idUsuario, idGrupo);
         // Mandar mensaje de que todo ha ido bien

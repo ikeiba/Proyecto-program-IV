@@ -374,7 +374,7 @@ void actualizarDatos() {
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo) {
 	inicializarSocket();                                           
 
-    sprintf(sendBuff, "UPDATE;enviar;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
+    sprintf(sendBuff, "UPDATE;ENVIAR;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -399,7 +399,7 @@ int enviarMensaje(const char* fecha, const char* hora, const char* contenido, in
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;crear;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
+    sprintf(sendBuff, "UPDATE;CREAR;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -424,7 +424,7 @@ int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const c
 int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;aniadir;%i,%i", idUsuario, idGrupo);
+    sprintf(sendBuff, "UPDATE;ANADIR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -450,7 +450,7 @@ int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 int abandonarGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;abandonar;%i,%i", idUsuario, idGrupo);
+    sprintf(sendBuff, "UPDATE;ABANDONAR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);

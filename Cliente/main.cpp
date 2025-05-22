@@ -13,5 +13,11 @@ int main(int argc, char *argv[]) {
 	inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
 	//getGeneral("leopoldo23@gmail.com");
+
+	enviarMensaje("2025-05-22", "20:36", "primer mensaje enviado desde el cliente", 43, 1);
+	abandonarGrupo(11, 1);
+	aniadirUsuarioAGrupo(500, 500);
+	crearGrupo("GRUPO POR SOCKET", "2025-05-22", 500, "PRIMER GRUPO CREADO POR CLIENTE");
+
 	return 0;
 }
