@@ -161,6 +161,7 @@ Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
     Usuario* u;
     for(int i = 0; i<tamanyo; i++){
         if(usuarios[i]->getId() == id){
+            printf("Usuario encontrado: %s\n", usuarios[i]->getNombre());
             u = usuarios[i];
         }
     }
@@ -171,6 +172,7 @@ Grupo* obtenerGrupoPorId(int id, Grupo** grupos, int tamanyo){
     Grupo* g;
     for(int i = 0; i<tamanyo; i++){
         if(grupos[i]->getId() == id){
+            printf("Grupo encontrado: %s\n", grupos[i]->getNombre());
             g = grupos[i];
         }
     }
@@ -272,9 +274,11 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
         int idUsuario, idGrupo;
         std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
         std::getline(ss, campo, ','); idGrupo = std::stoi(campo);
+        printf("ID Usuario: %i, ID Grupo: %i\n", idUsuario, idGrupo);
 
         Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, tamanyo);
         Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
+        //printf("Grupo: %s, Usuario: %s\n", grupo->getNombre(), usuario->getNombre());
 
         if (grupo && usuario) {
             grupo->addMiembro(usuario);
@@ -284,8 +288,8 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
     }
 }
 
-int getUsuario() {
-	sprintf(sendBuff, "GET;USUARIO;");
+int getUsuario(const char* email) {
+	sprintf(sendBuff, "GET;USUARIO;%s",email);
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	printf("Mensaje mandado: %s\n", sendBuff);
@@ -328,10 +332,10 @@ int getConversaciones() {
 	return 0;
 }
 
-int getGeneral() {
+int getGeneral(const char* email) {
 	inicializarSocket();
 	
-	getUsuario();
+	getUsuario(email);
     memset(recvBuff, 0, sizeof(recvBuff));
     getGrupos();
     memset(recvBuff, 0, sizeof(recvBuff));
@@ -370,7 +374,7 @@ void actualizarDatos() {
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo) {
 	inicializarSocket();                                           
 
-    sprintf(sendBuff, "UPDATE;enviar;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
+    sprintf(sendBuff, "UPDATE;ENVIAR;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -395,7 +399,7 @@ int enviarMensaje(const char* fecha, const char* hora, const char* contenido, in
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;crear;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
+    sprintf(sendBuff, "UPDATE;CREAR;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -420,7 +424,7 @@ int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const c
 int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;aniadir;%i,%i", idUsuario, idGrupo);
+    sprintf(sendBuff, "UPDATE;ANADIR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
@@ -446,7 +450,7 @@ int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 int abandonarGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
 
-    sprintf(sendBuff, "UPDATE;abandonar;%i,%i", idUsuario, idGrupo);
+    sprintf(sendBuff, "UPDATE;ABANDONAR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
