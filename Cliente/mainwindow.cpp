@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+#include "sockets/socket.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     inicialListaContactos();
     connect(ui->botonEnviar,SIGNAL(clicked()),this,SLOT(on_botonEnviar_Clicked()));
     connect(ui->botonBuscar,SIGNAL(clicked()),this,SLOT(on_botonBuscar_Clicked()));
+    ui->label_ErrorInicioSes->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -142,12 +144,39 @@ void MainWindow::buscarEnTabla(const QString &texto)
 
 void MainWindow::on_iniciarSesionBtn_clicked()
 {
-    ui-> stackedWidget-> setCurrentIndex(1);
+    QString textoNombre = ui->textEdit_UsuarioInicioSes->toPlainText().trimmed();
+    QString textoContra = ui->textEdit_ContraInicioSes->toPlainText().trimmed();
+    if (textoNombre.isEmpty()) {
+        qDebug() << "No se ha ingresado Usuario para buscar.";
+        return;
+    } else if (textoContra.isEmpty()) {
+        qDebug() << "No se ha ingresado Contrasena para buscar.";
+        return;
+    }
+    QByteArray byteArray = textoNombre.toUtf8();
+    const char* txtNom = byteArray.data();
+    QByteArray byteArray2 = textoContra.toUtf8();
+    const char* txtCont = byteArray2.data();
+
+    if (inicioSesion(txtNom, txtCont) == 1)
+    {
+        ui-> stackedWidget-> setCurrentIndex(1);
+    } else if (inicioSesion(txtNom, txtCont) == 0)
+    {
+        ui->label_ErrorInicioSes->setVisible(true);
+        qDebug() << "Usuario o contrasena incorrectos";
+        return; 
+    } else {
+        ui->label_ErrorInicioSes->setVisible(true);
+        qDebug() << "Ocurrio un error al iniciar sesion";
+        return; 
+    }
+    
 }
 
 void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
 {
-    ui-> stackedWidget-> setCurrentIndex(3);
+        ui-> stackedWidget-> setCurrentIndex(3);
 }
 
 
@@ -184,7 +213,45 @@ void MainWindow::on_pushButtonEliminarContacto_clicked()
 //REGISTRO
 void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 {
-    ui-> stackedWidget-> setCurrentIndex(1);
+        QString textoContraReg = ui->textEdit_ContraRegistro->toPlainText().trimmed();
+    QString textoEmailReg = ui->textEdit_EmailRegistro->toPlainText().trimmed();
+    QString textoFechaReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
+    QString textoNombreReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
+    QString textoTlfReg = ui->textEdit_TlfRegistro->toPlainText().trimmed();
+
+    if (    textoContraReg.isEmpty() || textoEmailReg.isEmpty()  || 
+            textoFechaReg.isEmpty()  || textoNombreReg.isEmpty() || 
+            textoTlfReg.isEmpty()) {
+        qDebug() << "No se ha ingresado Usuario para buscar.";
+        return;
+    }
+
+    QByteArray byteArray3 = textoNombreReg.toUtf8();
+    const char* txtNomReg = byteArray3.data();
+
+    QByteArray byteArray4 = textoContraReg.toUtf8();
+    const char* txtContReg = byteArray4.data();
+
+    QByteArray byteArray5 = textoEmailReg.toUtf8();
+    const char* txtEmailReg = byteArray5.data();
+
+    QByteArray byteArray6 = textoFechaReg.toUtf8();
+    const char* txtFechaReg = byteArray6.data();
+
+    QByteArray byteArray7 = textoTlfReg.toUtf8();
+    const char* txtTlfReg = byteArray7.data();
+
+    if (registrarse(txtNomReg, txtEmailReg, txtTlfReg, txtFechaReg, txtContReg) == 1)
+    {
+        ui-> stackedWidget-> setCurrentIndex(1);
+        return;
+
+    } else if (registrarse(txtNomReg, txtEmailReg, txtTlfReg, txtFechaReg, txtContReg) == -1)
+    {
+        qDebug() << "Ocurrio un error al registrar el usuario";
+        return;
+    }
+    
 }
 
 
