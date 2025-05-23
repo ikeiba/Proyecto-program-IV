@@ -5,12 +5,6 @@
 extern Usuario** usuarios;
 extern int numUsuarios;
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
 extern Grupo** grupos;
 extern int numGrupos;
 
@@ -26,6 +20,15 @@ int main(int argc, char *argv[]) {
 	abandonarGrupo(11, 1);
 	aniadirUsuarioAGrupo(500, 500);
 	crearGrupo("GRUPO POR SOCKET", "2025-05-22", 500, "PRIMER GRUPO CREADO POR CLIENTE");
+
+
+
+	QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+	return a.exec();
+
+
 
 	return 0;
 }
