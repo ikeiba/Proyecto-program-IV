@@ -11,6 +11,7 @@ extern int numGrupos;
 extern Mensaje** mensajes;
 extern int numMensajes;
 
+
 int main(int argc, char *argv[]) {
 	//inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");

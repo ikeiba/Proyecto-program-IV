@@ -6,15 +6,24 @@
 #include <sstream>
 #include "sockets/socket.h"
 
+extern Usuario** usuarios;
+extern int numUsuarios;
+
+extern Grupo** grupos;
+extern int numGrupos;
+
+extern Mensaje** mensajes;
+extern int numMensajes;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui-> stackedWidget-> setCurrentIndex(0);
-    inicialListaContactos();
     connect(ui->botonEnviar,SIGNAL(clicked()),this,SLOT(on_botonEnviar_Clicked()));
     connect(ui->botonBuscar,SIGNAL(clicked()),this,SLOT(on_botonBuscar_Clicked()));
+    connect(ui->pushButtonChatear,SIGNAL(clicked()),this,SLOT(on_pushButton_Chatear_Clicked()));
     ui->label_ErrorInicioSes->setVisible(false);
 }
 
@@ -26,14 +35,12 @@ MainWindow::~MainWindow()
 
 
 
-
-
-
 // Método para configurar la tabla (columnas y cabeceras)
 void MainWindow::configurarTabla()
 {
+
     ui->tableWidget->setColumnCount(3);
-    ui->tableWidget->setHorizontalHeaderLabels({"ID", "Nombre", "Mensaje"});
+    ui->tableWidget->setHorizontalHeaderLabels({"Fecha", "Emisor", "Mensaje"});
     ui->tableWidget->setRowCount(0);
 
     // Habilitar selección de celdas y visibilidad
@@ -105,6 +112,82 @@ void MainWindow::on_botonEnviar_Clicked()
     ui->textEnviar->clear();
 }
 
+
+// Método para cargar mensajes
+void MainWindow::on_pushButton_Chatear_Clicked()
+{
+    if (!ui->tableWidget) {
+        qDebug() << "La tabla no está inicializada.";
+        return;
+    }
+
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0); // También limpiar las filas
+    QString tituloChat;
+    QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
+
+    if (!chatSeleccionado) {
+        qDebug() << "Ningún chat seleccionado.";
+        return;
+    }
+
+    tituloChat = chatSeleccionado->text();
+    qDebug() << "Texto seleccionado:" << tituloChat;
+
+    Grupo* grupoSeleccionado = nullptr;
+
+    for (int i = 0; i < numGrupos; i++) {
+        QString nombreGrupo = QString::fromUtf8(grupos[i]->getNombre());
+
+        if (nombreGrupo.contains(tituloChat, Qt::CaseInsensitive)) {
+            grupoSeleccionado = grupos[i];
+            qDebug() << "Grupo seleccionado:" << nombreGrupo;
+            break;
+        }
+    }
+
+    if (!grupoSeleccionado) {
+        qDebug() << "No se encontró ningún grupo que coincida con el título.";
+        return;
+    }
+
+    int rowCount = 0;
+   for (int i = 0; i < numMensajes; i++) {
+    QString nombreMensajeGrupo = QString::fromLatin1(mensajes[i]->getGrupo()->getNombre());
+    QString nombreSeleccionado = QString::fromLatin1(grupoSeleccionado->getNombre());
+
+    qDebug() << "Grupo del mensaje:" << mensajes[i]->getContenido();
+    qDebug() << "Nombre del grupo del mensaje:" << QString::fromUtf8(mensajes[i]->getGrupo()->getNombre());
+    qDebug() << "Grupo seleccionado:" << grupoSeleccionado;
+    qDebug() << "Nombre grupo seleccionado:" << QString::fromUtf8(grupoSeleccionado->getNombre());
+
+    if (nombreMensajeGrupo == nombreSeleccionado) {
+
+        Mensaje mensajeActual = *mensajes[i];
+
+        ui->tableWidget->insertRow(rowCount);
+        ui->tableWidget->setItem(rowCount, 0, new QTableWidgetItem());
+        ui->tableWidget->setItem(rowCount, 1, new QTableWidgetItem());
+        ui->tableWidget->setItem(rowCount, 2, new QTableWidgetItem());
+
+        ui->tableWidget->item(rowCount, 0)->setText(mensajeActual.getFecha());
+        ui->tableWidget->item(rowCount, 1)->setText(mensajeActual.getEmisor()->getNombre());
+        ui->tableWidget->item(rowCount, 2)->setText(mensajeActual.getContenido());
+
+        rowCount++;
+        }
+    }
+
+    if (rowCount == 0) {
+        qDebug() << "No se encontraron mensajes para este grupo.";
+    }
+
+    ui->tableWidget->scrollToBottom();
+    ui->textEnviar->clear();
+}
+
+
+
 // Método para buscar en la tabla
 void MainWindow::on_botonBuscar_Clicked()
 {
@@ -160,6 +243,8 @@ void MainWindow::on_iniciarSesionBtn_clicked()
 
     if (inicioSesion(txtNom, txtCont) == 1)
     {
+        getGeneral(txtNom);
+        inicialListaContactos();
         ui-> stackedWidget-> setCurrentIndex(1);
     } else if (inicioSesion(txtNom, txtCont) == 0)
     {
@@ -181,9 +266,10 @@ void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
 
 
 void MainWindow::inicialListaContactos(){
-    ui->listWidgetContactos->addItem("Madre");
-    ui->listWidgetContactos->addItem("Pedro");
-    ui->listWidgetContactos->addItem("Manuela");
+    for (int i = 0; i < numGrupos; i++)
+    {
+        ui->listWidgetContactos->addItem(grupos[i]->getNombre());
+    }
 }
 
 
@@ -204,7 +290,6 @@ void MainWindow::on_pushButtonAadir_clicked()
 void MainWindow::on_pushButtonEliminarContacto_clicked()
 {
     delete ui->listWidgetContactos->currentItem();
-
 }
 
 
@@ -213,7 +298,7 @@ void MainWindow::on_pushButtonEliminarContacto_clicked()
 //REGISTRO
 void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 {
-        QString textoContraReg = ui->textEdit_ContraRegistro->toPlainText().trimmed();
+    QString textoContraReg = ui->textEdit_ContraRegistro->toPlainText().trimmed();
     QString textoEmailReg = ui->textEdit_EmailRegistro->toPlainText().trimmed();
     QString textoFechaReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
     QString textoNombreReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
