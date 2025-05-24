@@ -1,5 +1,5 @@
-//#include "mainwindow.h"
-//#include <QApplication>
+#include "mainwindow.h"
+#include <QApplication>
 #include "sockets/socket.h"
 //g++ -I sockets -I dominio *.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
 //Sin interfaz: g++ -I sockets -I dominio main.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
@@ -14,28 +14,28 @@ extern int numMensajes;
 
 
 int main(int argc, char *argv[]) {
-	inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
+	//inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
-	getGeneral("leopoldo23@gmail.com");
+	//getGeneral("leopoldo23@gmail.com");
 
-	actualizarDatos();
+	//actualizarDatos();
 
 	//enviarMensaje("2025-05-22", "20:36", "primer mensaje enviado desde el cliente", 43, 1);
-	aniadirUsuarioAGrupo(2, 67);
+	//aniadirUsuarioAGrupo(2, 67);
 
-	actualizarDatos();
+	//actualizarDatos();
 
-	abandonarGrupo(2, 67);
+	//abandonarGrupo(2, 67);
 	//actualizarDatos();
 	//crearGrupo("GRUPO POR SOCKET", "2025-05-22", 500, "PRIMER GRUPO CREADO POR CLIENTE");
 	//registrarse("admin1","admin","332181961","1999-08-11","admin");
 	
-	/*
+	
 	QApplication a(argc, argv);
     MainWindow w;
     w.show();
 	return a.exec();
-	*/
+	
 	
 
 

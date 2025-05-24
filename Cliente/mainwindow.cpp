@@ -2,12 +2,17 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <iomanip>
+#include <cstdio>
 #include <ctime>
 #include <sstream>
 #include "sockets/socket.h"
 
 extern Usuario** usuarios;
 extern int numUsuarios;
+
+extern Usuario* cliente;
+
+Grupo* activo;
 
 extern Grupo** grupos;
 extern int numGrupos;
@@ -22,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui-> stackedWidget-> setCurrentIndex(0);
     connect(ui->botonEnviar,SIGNAL(clicked()),this,SLOT(on_botonEnviar_Clicked()));
-    connect(ui->botonBuscar,SIGNAL(clicked()),this,SLOT(on_botonBuscar_Clicked()));
     connect(ui->pushButtonChatear,SIGNAL(clicked()),this,SLOT(on_pushButton_Chatear_Clicked()));
     ui->label_ErrorInicioSes->setVisible(false);
 }
@@ -94,7 +98,16 @@ void MainWindow::on_botonEnviar_Clicked()
     }
 
     time_t ahora= time(0);
-    char* fecha= ctime(&ahora);
+    struct tm* local = localtime(&ahora);  // Convertir a estructura tm
+
+    char fecha[11];  // YYYY-MM-DD (10 + 1 para null terminator)
+    char hora[6];    // HH:MM (5 + 1 para null terminator)
+
+    // Formatear la fecha
+    strftime(fecha, sizeof(fecha), "%Y-%m-%d", local);
+
+    // Formatear la hora
+    strftime(hora, sizeof(hora), "%H:%M", local);
 
     // Insertar texto en las celdas
     ui->tableWidget->item(rowCount, 0)->setText(fecha);
@@ -102,7 +115,10 @@ void MainWindow::on_botonEnviar_Clicked()
     ui->tableWidget->item(rowCount, 2)->setText(texto);
 
     qDebug() << "Texto añadido correctamente a la tabla.";
+    QByteArray textoByte = texto.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    const char* textoNormal = textoByte.data(); 
 
+    enviarMensaje(fecha, hora, textoNormal, cliente->getId(), activo->getId());
     // Forzar la actualización visual
     ui->tableWidget->scrollToBottom();
     ui->tableWidget->viewport()->update();
@@ -150,7 +166,7 @@ void MainWindow::on_pushButton_Chatear_Clicked()
         qDebug() << "No se encontró ningún grupo que coincida con el título.";
         return;
     }
-
+    activo=grupoSeleccionado;
     int rowCount = 0;
    for (int i = 0; i < numMensajes; i++) {
     QString nombreMensajeGrupo = QString::fromLatin1(mensajes[i]->getGrupo()->getNombre());
@@ -186,19 +202,6 @@ void MainWindow::on_pushButton_Chatear_Clicked()
     ui->textEnviar->clear();
 }
 
-
-
-// Método para buscar en la tabla
-void MainWindow::on_botonBuscar_Clicked()
-{
-    QString textoBusqueda = ui->textEdit_2->toPlainText().trimmed();
-    if (textoBusqueda.isEmpty()) {
-        qDebug() << "No se ha ingresado texto para buscar.";
-        return;
-    }
-
-
-}
 
 // Método que realiza la búsqueda en la tabla
 void MainWindow::buscarEnTabla(const QString &texto)
