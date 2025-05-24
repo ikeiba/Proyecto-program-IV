@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui-> stackedWidget-> setCurrentIndex(0);
     connect(ui->botonEnviar,SIGNAL(clicked()),this,SLOT(on_botonEnviar_Clicked()));
     connect(ui->pushButtonChatear,SIGNAL(clicked()),this,SLOT(on_pushButton_Chatear_Clicked()));
+    connect(ui->pushBtnAnadirUsu,SIGNAL(clicked()),this,SLOT(on_pushBtnAnadirUsu_Clicked()));
+    connect(ui->pushButtonAnadirAGrupo,SIGNAL(clicked()),this,SLOT(on_pushButtonAnadirAGrupo_Clicked()));
+
     ui->label_ErrorInicioSes->setVisible(false);
 }
 
@@ -343,13 +346,55 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 }
 
 
+void MainWindow::on_pushBtnAnadirUsu_Clicked(){
 
 
 
+    QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
+    if (!chatSeleccionado) {
+        qDebug() << "Ningún chat seleccionado.";
+        return;
+    }
+    QString tituloChat;
+    tituloChat = chatSeleccionado->text();
+    qDebug() << "Texto seleccionado:" << tituloChat;
+
+
+    Grupo* grupoSeleccionado = nullptr;
+
+    for (int i = 0; i < numGrupos; i++) {
+        QString nombreGrupo = QString::fromUtf8(grupos[i]->getNombre());
+
+        if (nombreGrupo.contains(tituloChat, Qt::CaseInsensitive)) {
+            grupoSeleccionado = grupos[i];
+            qDebug() << "Grupo seleccionado:" << nombreGrupo;
+            break;
+        }
+    }
+
+    if (!grupoSeleccionado) {
+        qDebug() << "No se encontró ningún grupo que coincida con el título.";
+        return;
+    }
+
+    ui-> stackedWidget-> setCurrentIndex(4);
 
 
 
+}
 
+void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
+
+    QString texto = ui->textEditEmailUsu->toPlainText().trimmed();
+
+    if (texto.isEmpty()) {
+        ui-> stackedWidget-> setCurrentIndex(1);
+        return;
+    }
+
+    ui-> stackedWidget-> setCurrentIndex(1);
+
+}
 
 
 
