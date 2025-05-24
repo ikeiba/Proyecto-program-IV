@@ -25,4 +25,10 @@ int enviarMensaje(const char* fecha, const char* hora, const char* contenido, in
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion);
 int aniadirUsuarioAGrupo(int idUsuario, int idGrupo);
 int abandonarGrupo(int idUsuario, int idGrupo);
+void agregarGrupo(Grupo*** grupos, int* tamanyo, Grupo* nuevoGrupo);
+void agregarUsuario(Usuario*** usuarios, int* tamanyo, Usuario* nuevoUsuario);
+void leerConversacionNuevas(char* recvBuff);
+void actualizarDatosConversacion();
+void actualizarDatosMensaje();
+void actualizarDatos();
 #endif

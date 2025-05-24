@@ -571,10 +571,10 @@ int obtenerGrupos(Grupo ***grupos, int *numGrupos, Usuario **usuarios, int numUs
 
 
 
-int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones) {
+int obtenerConversaciones(int** idUsuarios, int** idGrupos, int** idConversaciones, int* numConversaciones) {
     sqlite3 *db = open_database(config.nombreBD);
     sqlite3_stmt *stmt;
-    const char *sql = "SELECT id_usuario, id_grupo FROM Conversacion";
+    const char *sql = "SELECT id_usuario, id_grupo, id_conversacion FROM Conversacion";
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
     if (rc != SQLITE_OK) {
@@ -590,12 +590,15 @@ int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversacion
 
     *idUsuarios = (int*)malloc(sizeof(int) * (*numConversaciones));
     *idGrupos = (int*)malloc(sizeof(int) * (*numConversaciones));
+    *idConversaciones = (int*)malloc(sizeof(int) * (*numConversaciones));
 
     sqlite3_reset(stmt);
     int index = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         (*idUsuarios)[index] = sqlite3_column_int(stmt, 0);
         (*idGrupos)[index] = sqlite3_column_int(stmt, 1);
+        int idConversacion = sqlite3_column_int(stmt, 2);
+        (*idConversaciones)[index] = idConversacion;
         index++;
     }
 
@@ -846,6 +849,37 @@ int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo)
 
     sqlite3_close(db);
     return (rc == SQLITE_DONE);
+}
+
+// Metodo para obtener el id de una conversacion desde el id del usuario y el id del grupo
+int obetenerIdConversacion(int idUsuario, int idGrupo) 
+{
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    const char *sql = "SELECT id_conversacion FROM Conversacion WHERE id_usuario = ? AND id_grupo = ?";
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    sqlite3_bind_int(stmt, 1, idUsuario);
+    sqlite3_bind_int(stmt, 2, idGrupo);
+
+    int idConversacion = -1;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        idConversacion = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    
+    return idConversacion;
 }
 
 // Metodo para abandonar Grupo en la base de datos

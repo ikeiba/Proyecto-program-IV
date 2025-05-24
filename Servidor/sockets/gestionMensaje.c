@@ -12,6 +12,7 @@ extern int numGrupos;
 
 extern int* idUsuarios;
 extern int* idGrupos;
+extern int* idConversacion;
 extern int numConversaciones;
 
 extern Mensaje** mensajes;
@@ -27,6 +28,7 @@ Mensaje** mensajesCliente;
 int numMensajesCliente;
 int* idUsuariosCliente;
 int* idGruposCliente;
+int* idConversacionCliente;
 int numConversacionesCliente;
 
 Grupo** filtrarGruposPorEmail(char* email, Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
@@ -161,13 +163,14 @@ Mensaje** filtrarMensajesPorGrupos(Grupo** grupos,int numGrupos, Mensaje** mensa
     return mensajesFiltrados;
 }
 
-int filtrarConversacionesPorGrupos(Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones, int** idUsuariosFiltrados, int** idGruposFiltrados,int* numConversacionesFiltradas) {
+int filtrarConversacionesPorGrupos(Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int* idConversacion, int numConversaciones, int** idUsuariosFiltrados, int** idGruposFiltrados, int** idConversacionesFiltradas, int* numConversacionesFiltradas) {
     // Conversaciones son relaciones entre usuario-grupo, esto es miembros de grupos
     // Asumimos que como máximo, todos los mensajes de todos los grupos son únicos
     int maxConversaciones = numConversaciones;
 
     int* idUsuariosFiltradosTemp = (int*)malloc(sizeof(int) * maxConversaciones);
     int* idGruposFiltradosTemp = (int*)malloc(sizeof(int) * maxConversaciones);
+    int* idConversacionTemp = (int*)malloc(sizeof(int) * maxConversaciones);
     *numConversacionesFiltradas = 0;
     for (int i = 0; i < numConversaciones; i++) {
         int idUsuario = idUsuarios[i];
@@ -199,14 +202,17 @@ int filtrarConversacionesPorGrupos(Grupo** grupos, int numGrupos, int* idUsuario
         if (!yaAgregado) {
             idUsuariosFiltradosTemp[*numConversacionesFiltradas] = idUsuario;
             idGruposFiltradosTemp[*numConversacionesFiltradas] = idGrupo;
+            idConversacionTemp[*numConversacionesFiltradas] = idConversacion[i];
             (*numConversacionesFiltradas)++;
         }
     }
     // Redimensionar al tamaño exacto
     idUsuariosFiltradosTemp = (int*)realloc(idUsuariosFiltradosTemp, sizeof(int) * (*numConversacionesFiltradas));
     idGruposFiltradosTemp = (int*)realloc(idGruposFiltradosTemp, sizeof(int) * (*numConversacionesFiltradas));
+    idConversacionTemp = (int*)realloc(idConversacionTemp, sizeof(int) * (*numConversacionesFiltradas));
     *idUsuariosFiltrados = idUsuariosFiltradosTemp;
     *idGruposFiltrados = idGruposFiltradosTemp;
+    *idConversacionesFiltradas = idConversacionTemp;
     return 0;
 }
 
@@ -288,12 +294,12 @@ char* mensajeToString(Mensaje** mensajes, int numMensajes){
     return result;
 }
 
-char* conversacionToString(int* idUsuarios, int* idGrupos, int numConversaciones){
+char* conversacionToString(int* idUsuarios, int* idGrupos, int* idConversacion,  int numConversaciones){
     char* result = (char*)malloc(16384);
     strcpy(result, "");
     for(int i = 0; i < numConversaciones; i++){
         char buffer[1024];
-        sprintf(buffer, "%d,%d;", (idUsuarios)[i], (idGrupos)[i]);
+        sprintf(buffer, "%d,%d,%d;", (idUsuarios)[i], (idGrupos)[i], (idConversacion)[i]);
         strcat(result, buffer);
     }
     return result;
@@ -304,10 +310,8 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     memset(sendBuff, 0, sizeof(sendBuff));
     // Obtener el tipo de dato
     char* tipo = strtok(NULL, ";");
-    printf("Tipo: %s \n", tipo);
     if(strcmp(tipo, "USUARIO") == 0){
         currentEmail = strtok(NULL, ";");
-        printf("Sending reply GET USUARIO... \n");
         gruposCliente = filtrarGruposPorEmail(currentEmail, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
         usuariosCliente = filtrarUsuariosPorGrupo(usuarios, numUsuarios, gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &numUsuariosCliente);
         strcpy(sendBuff, usuariosToString(usuariosCliente, numUsuariosCliente));
@@ -316,7 +320,6 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     }
     
     if(strcmp(tipo, "GRUPO") == 0){
-        printf("Sending reply GET GRUPO... \n");
         strcpy(sendBuff, gruposToString(gruposCliente, numGruposCliente));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
@@ -324,23 +327,19 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
 
     if(strcmp(tipo, "MENSAJE") == 0){
         mensajesCliente = filtrarMensajesPorGrupos(gruposCliente, numGruposCliente, mensajes, numMensajes, &numMensajesCliente);
-        printf("Sending reply GET MENSAJE... \n");
         strcpy(sendBuff, mensajeToString(mensajesCliente, numMensajesCliente));
-        //printf("Mensajes: %s \n", sendBuff);
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
     if(strcmp(tipo, "CONVERSACION") == 0){
         //Filtrar las conversaciones por los grupos
-        filtrarConversacionesPorGrupos(gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &idUsuariosCliente, &idGruposCliente, &numConversacionesCliente);
-        printf("Sending reply GET CONVERSACION... \n");
-        strcpy(sendBuff, conversacionToString(idUsuariosCliente,idGruposCliente, numConversacionesCliente));
+        filtrarConversacionesPorGrupos(gruposCliente, numGruposCliente, idUsuarios, idGrupos, idConversacion, numConversaciones, &idUsuariosCliente, &idGruposCliente, &idConversacionCliente, &numConversacionesCliente);
+        strcpy(sendBuff, conversacionToString(idUsuariosCliente, idGruposCliente, idConversacionCliente, numConversacionesCliente));
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
-    printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
@@ -395,7 +394,20 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         int idGrupo = atoi(strtok(NULL, ","));
 
         //Insertar mensaje en la base de datos
-        insertarConversacionDesdeUpdate(idUsuario, idGrupo); 
+        insertarConversacionDesdeUpdate(idUsuario, idGrupo);
+
+        int idConversacionInt = obetenerIdConversacion(idUsuario, idGrupo);
+        // Añadir el idConversacion al array de conversaciones, teniendo en cuenta que idConversacion es un array con un tamaño predeterminado
+        idConversacion = (int*) realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
+        idConversacion[numConversaciones] = idConversacionInt;
+        printf("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
+        idUsuarios = (int*) realloc(idUsuarios, sizeof(int) * (numConversaciones + 1));
+        idUsuarios[numConversaciones] = idUsuario;
+        printf("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
+        idGrupos = (int*) realloc(idGrupos, sizeof(int) * (numConversaciones + 1));
+        idGrupos[numConversaciones] = idGrupo;
+        numConversaciones++;
+
 
         // Mandar mensaje de que todo ha ido bien
         sprintf(sendBuff, "UPDATED");
@@ -423,4 +435,160 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+}
+
+int gestionarMensajeREFRESH(char* sendBuff, char* recvBuff, SOCKET* comm_socket) {
+    char* tipo = strtok(NULL, ";");
+    memset(sendBuff, 0, sizeof(sendBuff));
+    
+    if(strcmp(tipo, "CONVERSACION") == 0){
+        int ultimaIdConversacion = atoi(strtok(NULL, ","));
+        int idCliente = atoi(strtok(NULL, ","));
+        printf("Sending reply REFRESH CONVERSACION... \n");
+        char* nuevasConversaciones = mandarNuevasConversaciones(idCliente, ultimaIdConversacion);
+        
+        printf("Nuevas conversaciones: %s\n", nuevasConversaciones);
+        if(strcmp(nuevasConversaciones, "") == 0){
+            strcpy(sendBuff, "NOTHING");
+            send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        }else{
+            strcpy(sendBuff, nuevasConversaciones);
+            send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        }
+        return -1;
+    }
+    
+    if(strcmp(tipo, "MENSAJE") == 0){
+        int ultimoIdMensaje = atoi(strtok(NULL, ","));
+        int idCliente = atoi(strtok(NULL, ","));
+        printf("Sending reply REFRESH MENSAJE... \n");
+        char* nuevosMensajes = mandarNuevosMensajes(idCliente, ultimoIdMensaje);
+        if(strcmp(nuevosMensajes, "") == 0){
+            strcpy(sendBuff, "NOTHING");
+            send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        }else{
+            strcpy(sendBuff, nuevosMensajes);
+            send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        }
+        return -1;
+    }
+}
+
+char* mandarNuevosMensajes(int idCliente, int idUltimoMensaje){
+    // Filtrar los mensajes por el cliente y la última conversación
+    filtrarGruposPorEmail(usuarioPorId(idCliente, usuarios, numUsuarios)->email, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
+    Mensaje** mensajesFiltrados = (Mensaje**)malloc(sizeof(Mensaje*) * numMensajes);
+    int numMensajesFiltrados = 0;
+
+    for (int i = 0; i < numMensajes; i++) {
+        if (mensajes[i]->id <= idUltimoMensaje) {
+            continue; // Saltar mensajes anteriores
+        }
+
+        for(int j = 0; j < numGruposCliente; j++) {
+            if (mensajes[i]->grupo->id == gruposCliente[j]->id) {
+                mensajesFiltrados[numMensajesFiltrados] = mensajes[i];
+                numMensajesFiltrados++;
+                break;
+            }
+        }
+
+    }
+
+    // Redimensionar al tamaño exacto
+    mensajesFiltrados = (Mensaje**)realloc(mensajesFiltrados, sizeof(Mensaje*) * numMensajesFiltrados);
+
+    char* result = mensajeToString(mensajesFiltrados, numMensajesFiltrados);
+    free(mensajesFiltrados);
+    
+    return result;
+}
+
+int filtrarMiembrosViejos(int idGrupo, int idUltimaConversacion) {
+    for (int i = 0; i < numConversaciones; i++) {
+        if(idConversacion[i] > idUltimaConversacion) {
+            continue;
+        }
+
+        for (int j = 0; j < numGruposCliente; j++) {
+            if (idGrupo == gruposCliente[j]->id) {
+                idUsuariosCliente[numConversacionesCliente] = idUsuariosCliente[i];
+                idGruposCliente[numConversacionesCliente] = idGrupo;
+                idConversacionCliente[numConversacionesCliente] = idConversacion[i];
+                numConversacionesCliente++;
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int filtrarConversacionesNuevas(int idCliente, int idUltimaConversacion) {
+    int* idUsuariosFiltrados = (int*)malloc(sizeof(int) * numConversaciones);
+    int* idGruposFiltrados = (int*)malloc(sizeof(int) * numConversaciones);
+    int* idConversacionFiltrados = (int*)malloc(sizeof(int) * numConversaciones);
+    numConversacionesCliente = 0;
+
+    for (int i = 0; i < numConversaciones; i++) {
+        if(idConversacion[i] <= idUltimaConversacion) {
+            continue; // Saltar conversaciones anteriores
+        }
+        
+        int idUsuario = idUsuarios[i];
+        int idGrupo = idGrupos[i];
+
+        if(idUsuario == idCliente) {
+            idUsuariosFiltrados[numConversacionesCliente] = idUsuario;
+            idGruposFiltrados[numConversacionesCliente] = idGrupo;
+            printf("Filtrando conversación nueva: Usuario %d, Grupo %d, Conversación %d\n", idUsuario, idGrupo, idConversacion[i]);
+            idConversacionFiltrados[numConversacionesCliente] = idConversacion[i];
+            filtrarMiembrosViejos(idGrupo, idUltimaConversacion);
+            numConversacionesCliente++;
+            continue;
+        }
+        
+        for (int j = 0; j < numGruposCliente; j++) {
+            if (idGrupo == gruposCliente[j]->id) {
+                idUsuariosCliente[numConversacionesCliente] = idUsuario;
+                idGruposCliente[numConversacionesCliente] = idGrupo;
+                idConversacionCliente[numConversacionesCliente] = idConversacion[i];
+                numConversacionesCliente++;
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+
+char* mandarNuevasConversaciones(int idCliente, int idUltimaConversacion) {
+
+    filtrarGruposPorEmail(usuarioPorId(idCliente, usuarios, numUsuarios)->email, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
+    printf("Numero de grupos del cliente: %d\n", numGruposCliente);
+
+    filtrarConversacionesNuevas(idCliente, idUltimaConversacion);
+
+    printf("Numero de conversaciones del cliente: %d\n", numConversacionesCliente);
+
+    char* result = (char*)malloc(32768);
+    strcpy(result, "");
+    Grupo* grupoTemp;
+    Usuario* usuarioTemp;
+
+    for(int i = 0; i < numConversacionesCliente; i++) {
+        char buffer[1024];
+        
+        grupoTemp = grupoPorId(idGruposCliente[i], grupos, numGrupos);
+        usuarioTemp = usuarioPorId(idUsuariosCliente[i], usuarios, numUsuarios);
+        printf("Usuario: %d, Grupo: %d, Conversacion: %d\n", idUsuariosCliente[i], idGruposCliente[i], idConversacionCliente[i]);
+        if(idCliente == idUsuariosCliente[i]){
+            sprintf(buffer, "%d,%d,%d,%d,%s,%s,%d,%s;", idUsuariosCliente[i], idGruposCliente[i], idConversacionCliente[i], grupos[i]->id, grupos[i]->nombre, grupos[i]->fCreacion, grupos[i]->creador->id, grupos[i]->descripcion);
+        }else{
+            sprintf(buffer, "%d,%d,%d,%d,%s,%s,%s,%s,%s;", idUsuariosCliente[i], idGruposCliente[i], idConversacionCliente[i], usuarios[i]->id, usuarios[i]->nombre, usuarios[i]->email, usuarios[i]->telefono, usuarios[i]->fNacimiento, usuarios[i]->contra);
+        }
+        strcat(result, buffer);
+    }
+
+    return result;
 }

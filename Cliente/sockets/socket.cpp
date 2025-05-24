@@ -19,6 +19,11 @@ int numGrupos;
 Mensaje** mensajes;
 int numMensajes;
 
+Usuario* cliente;
+
+int ultimoIdMensaje = 0;
+int ultimoIdConversacion = 0;
+
 int inicializarSocket(){
     WSADATA wsaData;
 	struct sockaddr_in server;
@@ -157,6 +162,15 @@ void leerUsuarios(Usuario*** usuarios, int* numUsuarios, char* recvBuff) {
     printf("Total usuarios leidos: %d\n", i);
 }
 
+Usuario* obtenerUsuarioPorEmail(const char* email, Usuario** usuarios, int numUsuarios) {
+    for (int i = 0; i < numUsuarios; i++) {
+        if (strcmp(usuarios[i]->getEmail(), email) == 0) {
+            return usuarios[i];
+        }
+    }
+    return NULL; 
+}
+
 Usuario* obtenerUsuarioPorId(int id, Usuario** usuarios, int tamanyo){
     Usuario* u;
     for(int i = 0; i<tamanyo; i++){
@@ -248,6 +262,10 @@ void leerMensajes(Mensaje*** mensajes, int* numMensajes, char* recvBuff) {
         std::getline(ss, campo, '*'); 
         idGrupo = std::stoi(campo);
 
+        if (idMensaje > ultimoIdMensaje) {
+            ultimoIdMensaje = idMensaje;
+        }
+
         Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, numUsuarios);
         Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
 
@@ -269,9 +287,14 @@ void leerConversacion(char* recvBuff, Grupo** grupos, int numGrupos, Usuario** u
         std::stringstream ss(linea);
         std::string campo;
 
-        int idUsuario, idGrupo;
+        int idUsuario, idGrupo, idConversacion;
         std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
         std::getline(ss, campo, ','); idGrupo = std::stoi(campo);
+        std::getline(ss, campo, ','); idConversacion = std::stoi(campo);
+
+        if(idConversacion > ultimoIdConversacion) {
+            ultimoIdConversacion = idConversacion;
+        }
 
         Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, tamanyo);
         Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
@@ -291,6 +314,7 @@ int getUsuario(const char* email) {
 	printf("Mensaje mandado: %s\n", sendBuff);
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	leerUsuarios(&usuarios, &numUsuarios, recvBuff);
+    cliente = obtenerUsuarioPorEmail(email, usuarios, numUsuarios);
 	printf("Usuario recibido: %s\n", usuarios[0]->getNombre());
 	return 0;
 	
@@ -331,6 +355,7 @@ int getConversaciones() {
 int getGeneral(const char* email) {
 	inicializarSocket();
 	
+    memset(recvBuff, 0, sizeof(recvBuff));
 	getUsuario(email);
     memset(recvBuff, 0, sizeof(recvBuff));
     getGrupos();
@@ -338,6 +363,7 @@ int getGeneral(const char* email) {
 	getMensajes();
     memset(recvBuff, 0, sizeof(recvBuff));
 	getConversaciones();
+    printf("ULTIMO ID CONVERSACION: %d\n",ultimoIdConversacion);
 	
 	sprintf(sendBuff, "Bye;");
 	send(s, sendBuff, sizeof(sendBuff), 0);
@@ -347,28 +373,149 @@ int getGeneral(const char* email) {
 	return 0;
 }
 
-void actualizarDatos() {
-	inicializarSocket();
+void agregarGrupo(Grupo*** grupos, int* tamanyo, Grupo* nuevoGrupo) {
+    Grupo** nuevoArray = new Grupo*[*tamanyo + 1];
 
-	sprintf(sendBuff, "REFRESH;");
+    for (int i = 0; i < *tamanyo; ++i) {
+        nuevoArray[i] = (*grupos)[i];
+    }
+
+    nuevoArray[*tamanyo] = nuevoGrupo;
+
+    delete[] *grupos;
+
+    *grupos = nuevoArray;
+    (*tamanyo)++;
+}
+
+void agregarUsuario(Usuario*** usuarios, int* tamanyo, Usuario* nuevoUsuario) {
+    Usuario** nuevoArray = new Usuario*[*tamanyo + 1];
+
+    for (int i = 0; i < *tamanyo; ++i) {
+        nuevoArray[i] = (*usuarios)[i];
+    }
+
+    nuevoArray[*tamanyo] = nuevoUsuario;
+
+    delete[] *usuarios;
+
+    *usuarios = nuevoArray;
+    (*tamanyo)++;
+}
+
+void leerConversacionNuevas(char* recvBuff) {
+    char copia[32768];
+    strcpy(copia, recvBuff);
+
+    char* token = strtok(copia, ";");
+    int i = 0;
+    while (token != NULL) {
+        std::string linea(token);
+        std::stringstream ss(linea);
+        std::string campo;
+
+        int idUsuario, idGrupo, idConversacion;
+        std::getline(ss, campo, ','); idUsuario = std::stoi(campo);
+        std::getline(ss, campo, ','); idGrupo = std::stoi(campo);
+        std::getline(ss, campo, ','); idConversacion = std::stoi(campo);
+        if(idUsuario == cliente->getId()){
+            std::string nombre, descripcion, fechaCreacion;
+            int idCreador;
+
+            std::getline(ss, campo, ','); 
+		    idGrupo = std::stoi(campo);
+            std::getline(ss, nombre, ',');
+            std::getline(ss, descripcion, ',');
+            std::getline(ss, campo, ','); 
+            idCreador = std::stoi(campo);
+            std::getline(ss, fechaCreacion, ',');
+
+            Grupo* nuevoGrupo = new Grupo(idGrupo, nombre.c_str(), descripcion.c_str(), obtenerUsuarioPorId(idUsuario,usuarios,numUsuarios), fechaCreacion.c_str(), NULL, 0);
+            agregarGrupo(&grupos, &numGrupos, nuevoGrupo);
+        }else{
+            std::string linea(token);
+            std::stringstream ss(linea);
+            std::string campo;
+
+            int id;
+            std::string user, email, tel, fecha, pass;
+
+            std::getline(ss, campo, ','); id = std::stoi(campo);
+            std::getline(ss, user, ',');
+            std::getline(ss, email, ',');
+            std::getline(ss, tel, ',');
+            std::getline(ss, fecha, ',');
+            std::getline(ss, pass, ',');
+
+            if(obtenerUsuarioPorId(idUsuario, usuarios, numUsuarios) == NULL) {
+                Usuario* nuevoUsuario = new Usuario(id, user.c_str(), email.c_str(), tel.c_str(), fecha.c_str(), pass.c_str());
+                agregarUsuario(&usuarios, &numUsuarios, nuevoUsuario);
+            }
+        }
+
+        if(idConversacion > ultimoIdConversacion) {
+            ultimoIdConversacion = idConversacion;
+        }
+
+        Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, numUsuarios);
+        Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
+
+        if (grupo && usuario) {
+            grupo->addMiembro(usuario);
+        }
+
+        token = strtok(NULL, ";");
+        i++;
+    }
+}
+
+void actualizarDatosConversacion(){
+    sprintf(sendBuff, "REFRESH;CONVERSACION;%d,%d", ultimoIdConversacion, cliente->getId());
+    printf("Mensaje mandado: %s\n", sendBuff);
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
 	if (strcmp(recvBuff, "NOTHING") == 0) {
-        printf("Sin datos nuevos.\n");
+        printf("Sin Conversaciones nuevas.\n");
     } else {
-        printf("Datos nuevos:\n%s\n", recvBuff);
+        leerConversacionNuevas(recvBuff);
+        printf("Conversaciones nuevas recibidas: %s\n", recvBuff);
     }
+}
 
-	sprintf(sendBuff, "Bye;");
-	send(s, sendBuff, sizeof(sendBuff), 0);
+void actualizarDatosMensaje(){
+    sprintf(sendBuff, "REFRESH;MENSAJE;%d,%d", ultimoIdMensaje, cliente->getId());
+    printf("Mensaje mandado: %s\n", sendBuff);
+    send(s, sendBuff, sizeof(sendBuff), 0);
+
+    recv(s, recvBuff, sizeof(recvBuff), 0);
+    if (strcmp(recvBuff, "NOTHING") == 0) {
+        printf("Sin Mensajes nuevos.\n");
+    } else {
+        leerMensajes(&mensajes, &numMensajes, recvBuff);
+    }
+}
+
+void actualizarDatos() {
+	inicializarSocket();
+
+    memset(recvBuff, 0, sizeof(recvBuff));
+    actualizarDatosConversacion();
+
+    memset(recvBuff, 0, sizeof(recvBuff));
+    actualizarDatosMensaje();
+
+    sprintf(sendBuff, "Bye;");
+    send(s, sendBuff, sizeof(sendBuff), 0);
+	
 	closesocket(s);
     WSACleanup();
-
 }
 
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo) {
 	inicializarSocket();                                           
+
+    memset(recvBuff, 0, sizeof(recvBuff));
 
     sprintf(sendBuff, "UPDATE;ENVIAR;%s,%s,%s,%i,%i", fecha, hora, contenido, idEmisor, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
@@ -395,6 +542,8 @@ int enviarMensaje(const char* fecha, const char* hora, const char* contenido, in
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion) {
 	inicializarSocket();
 
+    memset(recvBuff, 0, sizeof(recvBuff));
+
     sprintf(sendBuff, "UPDATE;CREAR;%s,%s,%i,%s", nombre, fCreacion, idCreador, descripcion);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
@@ -419,6 +568,8 @@ int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const c
 }
 int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
+
+    memset(recvBuff, 0, sizeof(recvBuff));
 
     sprintf(sendBuff, "UPDATE;ANADIR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
@@ -445,6 +596,8 @@ int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
 }
 int abandonarGrupo(int idUsuario, int idGrupo) {
 	inicializarSocket();
+
+    memset(recvBuff, 0, sizeof(recvBuff));
 
     sprintf(sendBuff, "UPDATE;ABANDONAR;%i,%i", idUsuario, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);

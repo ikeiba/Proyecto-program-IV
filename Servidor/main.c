@@ -18,6 +18,7 @@ int numGrupos;
 
 int* idUsuarios;
 int* idGrupos;
+int* idConversacion;
 int numConversaciones;
 
 Mensaje** mensajes;
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     obtenerMensajes(&mensajes, &numMensajes, grupos, numGrupos, usuarios, numUsuarios);
 
-    obtenerConversaciones(&idUsuarios, &idGrupos, &numConversaciones);
+    obtenerConversaciones(&idUsuarios, &idGrupos, &idConversacion, &numConversaciones);
 
     WSADATA wsaData;
 	SOCKET conn_socket;
@@ -118,6 +119,10 @@ int main(int argc, char *argv[]) {
 
                 if(strcmp(tipo, "UPDATE") == 0){
                     gestionarMensajeUPDATE(sendBuff, recvBuff, &comm_socket);
+                }
+
+                if(strcmp(tipo, "REFRESH") == 0){
+                    gestionarMensajeREFRESH(sendBuff, recvBuff, &comm_socket);
                 }
                 
                 if(strcmp(tipo, "Bye") == 0){

@@ -63,7 +63,7 @@ int obtenerUsuarios(Usuario ***usuarios, int *numUsuarios);
 int obtenerGrupos(Grupo ***grupos, int *numGrupos, Usuario **usuarios, int numUsuarios);
 
 //select de conversaciones
-int obtenerConversaciones(int** idUsuarios, int** idGrupos, int* numConversaciones);
+int obtenerConversaciones(int** idUsuarios, int** idGrupos, int** idConversacion, int* numConversaciones);
 
 //!select de mensajes (MODIFICADO)
 int obtenerMensajes(Mensaje ***mensajes, int* numMensajes, Grupo **grupos, int numGrupos, Usuario **usuarios, int numUsuarios);
@@ -85,6 +85,8 @@ int get_group_id(sqlite3 *db, const char *nombre);
 
 //? Añadido
 int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo);
+
+int obetenerIdConversacion(int idUsuario, int idGrupo);
 
 //? Añadido
 int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo);

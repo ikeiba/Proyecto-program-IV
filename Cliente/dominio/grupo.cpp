@@ -6,7 +6,6 @@ Grupo::Grupo(int id, const char* nombre, const char* fCreacion, Usuario* creador
 {
     // Asignar el id (como es int no necesitamos hacer nada especial, ya que la copia se hace byte a byte)
     this->id = id;
-
     // Asignar los demás atributos (como son char* necesitamos hacer una copia "profunda", para no asignar la dirección de memoria del char* que recibimos)
     this->nombre = new char[strlen(nombre) + 1];
     strcpy(this->nombre, nombre);
