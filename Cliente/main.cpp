@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "sockets/socket.h"
 //g++ -I sockets -I dominio *.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
+//Sin interfaz: g++ -I sockets -I dominio main.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
 extern Usuario** usuarios;
 extern int numUsuarios;
 
