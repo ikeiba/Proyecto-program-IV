@@ -71,8 +71,9 @@ int crearBD()
 
         const char *sql_conversacion = "CREATE TABLE IF NOT EXISTS Conversacion ("
             "id_usuario INTEGER, "
-            "id_grupo INTEGER, "
-            "PRIMARY KEY (id_usuario, id_grupo), "
+            "id_grupo INTEGER, "           
+            "id_conversacion INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "UNIQUE(id_usuario, id_grupo), "
             "FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE, "
             "FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)"
             ");";
