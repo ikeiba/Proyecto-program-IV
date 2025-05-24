@@ -39,7 +39,7 @@ int gestionarMensajeREFRESH(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
 
 char* mandarNuevosMensajes(int idCliente, int idUltimoMensaje);
 
-int filtrarMiembrosViejos(int idGrupo, int idUltimaConversacion);
+int filtrarMiembrosViejos(int idGrupo, int idUltimaConversacion, int* idUsuariosCliente, int* idGruposCliente, int* idConversacionCliente, int* numConversacionesCliente);
 
 int filtrarConversacionesNuevas(int idCliente, int idUltimaConversacion);
 
