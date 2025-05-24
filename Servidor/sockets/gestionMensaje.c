@@ -390,7 +390,8 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         printf("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
-        int idUsuario = atoi(strtok(NULL, ","));
+        char* email = strtok(NULL, ",");
+        int idUsuario = usuarioPorEmail(email, usuarios, numUsuarios);
         int idGrupo = atoi(strtok(NULL, ","));
 
         //Insertar mensaje en la base de datos

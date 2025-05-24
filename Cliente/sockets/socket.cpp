@@ -566,12 +566,12 @@ int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const c
     WSACleanup();
     return 0;
 }
-int aniadirUsuarioAGrupo(int idUsuario, int idGrupo) {
+int aniadirUsuarioAGrupo(char* email, int idGrupo) {
 	inicializarSocket();
 
     memset(recvBuff, 0, sizeof(recvBuff));
 
-    sprintf(sendBuff, "UPDATE;ANADIR;%i,%i", idUsuario, idGrupo);
+    sprintf(sendBuff, "UPDATE;ANADIR;%s,%i", email, idGrupo);
     send(s, sendBuff, sizeof(sendBuff), 0);
 
     recv(s, recvBuff, sizeof(recvBuff), 0);
