@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <winsock2.h>
+#include "../utils/logger.h"
+
 
 extern Usuario** usuarios;
 extern int numUsuarios;
@@ -224,12 +226,15 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     //printf("%d\n", existe);
     if(existe){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         strcpy(sendBuff, "CORRECT");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
+        registrarMensaje("Data sent: %s \n", sendBuff);
         return 1;
     }
     printf("Sending reply... \n");
+    registrarMensaje("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     return 0;
@@ -244,17 +249,21 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
 
     if(insertarUsuario(nombre, email, telefono, f_nacimiento, contrasenya) == 0){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         strcpy(sendBuff, "ERROR");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
+        registrarMensaje("Data sent: %s \n", sendBuff);
         return -1;
     }
 
     //Codigo de prueba 
     printf("Sending reply... \n");
+    registrarMensaje("Sending reply... \n");
     strcpy(sendBuff, "CORRECT");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+    registrarMensaje("Data sent: %s \n", sendBuff);
     return 1;
 }
 
@@ -341,6 +350,7 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+    registrarMensaje("Data sent: %s \n", sendBuff);
 }
 
 int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
@@ -349,6 +359,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
 
     if(strcmp(tipo, "ENVIAR") == 0){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
         char* fecha = strtok(NULL, ",");
@@ -375,7 +386,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         mensajes[numMensajes] = nuevoMensaje;
         numMensajes++;
         printf("Nuevo mensaje enviado: %s con id %d, emisor: %s, grupo: %s\n", mensajes[numMensajes-1]->contenido, mensajes[numMensajes-1]->id, mensajes[numMensajes-1]->emisor->nombre, mensajes[numMensajes-1]->grupo->nombre);
-
+        registrarMensaje("Nuevo mensaje enviado: %s con id %d, emisor: %s, grupo: %s\n", mensajes[numMensajes-1]->contenido, mensajes[numMensajes-1]->id, mensajes[numMensajes-1]->emisor->nombre, mensajes[numMensajes-1]->grupo->nombre);
 
         // Mandar mensaje de que todo ha ido bien
         sprintf(sendBuff, "UPDATED");
@@ -385,6 +396,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
     
     if(strcmp(tipo, "CREAR") == 0){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
         char* nombre = strtok(NULL, ",");
@@ -406,9 +418,11 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         idConversacion = (int*) realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
         idConversacion[numConversaciones] = idConversacionInt;
         printf("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
+        registrarMensaje("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
         idUsuarios = (int*) realloc(idUsuarios, sizeof(int) * (numConversaciones + 1));
         idUsuarios[numConversaciones] = idCreador;
         printf("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
+        registrarMensaje("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
         idGrupos = (int*) realloc(idGrupos, sizeof(int) * (numConversaciones + 1));
         idGrupos[numConversaciones] = idGrupo;
         numConversaciones++;
@@ -433,6 +447,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         numGrupos++;
 
         printf("Nuevo grupo creado: %s con id %d, creador: %s\n", grupos[numGrupos-1]->nombre, grupos[numGrupos-1]->id, grupos[numGrupos-1]->creador->nombre);
+        registrarMensaje("Nuevo grupo creado: %s con id %d, creador: %s\n", grupos[numGrupos-1]->nombre, grupos[numGrupos-1]->id, grupos[numGrupos-1]->creador->nombre);
         
         // Mandar mensaje de que todo ha ido bien
         sprintf(sendBuff, "UPDATED");
@@ -442,6 +457,7 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
 
     if(strcmp(tipo, "ANADIR") == 0){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
         char* email = strtok(NULL, ",");
@@ -456,9 +472,11 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         idConversacion = (int*) realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
         idConversacion[numConversaciones] = idConversacionInt;
         printf("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
+        registrarMensaje("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
         idUsuarios = (int*) realloc(idUsuarios, sizeof(int) * (numConversaciones + 1));
         idUsuarios[numConversaciones] = idUsuario;
         printf("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
+        registrarMensaje("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
         idGrupos = (int*) realloc(idGrupos, sizeof(int) * (numConversaciones + 1));
         idGrupos[numConversaciones] = idGrupo;
         numConversaciones++;
@@ -472,12 +490,14 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
 
     if(strcmp(tipo, "ABANDONAR") == 0){
         printf("Sending reply... \n");
+        registrarMensaje("Sending reply... \n");
         
         // Obtener los diferentes apartados a partir de recvBuff
         int idUsuario = atoi(strtok(NULL, ","));
         int idGrupo = atoi(strtok(NULL, ","));
 
         printf("ESTO ES UNA TONTERIAs");
+        registrarMensaje("ESTO ES UNA TONTERIA");
         //Insertar mensaje en la base de datos
         abandonarGrupoDesdeUpdate(idUsuario, idGrupo);
         // Mandar mensaje de que todo ha ido bien
@@ -487,9 +507,11 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
     }
     
     printf("Sending reply... \n");
+    registrarMensaje("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
+    registrarMensaje("Data sent: %s \n", sendBuff);
 }
 
 int gestionarMensajeREFRESH(char* sendBuff, char* recvBuff, SOCKET* comm_socket) {
@@ -500,9 +522,11 @@ int gestionarMensajeREFRESH(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         int ultimaIdConversacion = atoi(strtok(NULL, ","));
         int idCliente = atoi(strtok(NULL, ","));
         printf("Sending reply REFRESH CONVERSACION... \n");
+        registrarMensaje("Sending reply REFRESH CONVERSACION... \n");
         char* nuevasConversaciones = mandarNuevasConversaciones(idCliente, ultimaIdConversacion);
         
         printf("Nuevas conversaciones: %s\n", nuevasConversaciones);
+        registrarMensaje("Nuevas conversaciones: %s\n", nuevasConversaciones);
         if(strcmp(nuevasConversaciones, "") == 0){
             strcpy(sendBuff, "NOTHING");
             send(*comm_socket, sendBuff, strlen(sendBuff), 0);
@@ -517,6 +541,7 @@ int gestionarMensajeREFRESH(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         int ultimoIdMensaje = atoi(strtok(NULL, ","));
         int idCliente = atoi(strtok(NULL, ","));
         printf("Sending reply REFRESH MENSAJE... \n");
+        registrarMensaje("Sending reply REFRESH MENSAJE... \n");
         char* nuevosMensajes = mandarNuevosMensajes(idCliente, ultimoIdMensaje);
         if(strcmp(nuevosMensajes, "") == 0){
             strcpy(sendBuff, "NOTHING");
@@ -541,6 +566,7 @@ char* mandarNuevosMensajes(int idCliente, int idUltimoMensaje){
         }
 
         printf("Mensaje: %d, Grupo: %d, Usuario: %d\n", mensajes[i]->id, mensajes[i]->grupo->id, mensajes[i]->emisor->id);
+        registrarMensaje("Mensaje: %d, Grupo: %d, Usuario: %d\n", mensajes[i]->id, mensajes[i]->grupo->id, mensajes[i]->emisor->id);
 
         for(int j = 0; j < numGruposCliente; j++) {
             if (mensajes[i]->grupo->id == gruposCliente[j]->id) {
@@ -594,6 +620,7 @@ int filtrarConversacionesNuevas(int idCliente, int idUltimaConversacion) {
 
         if(idUsuario == idCliente) {
             printf("Conversacion: %d, Grupo: %d, Usuario: %d\n", idConversacion[i], idGrupo, idUsuario);
+            registrarMensaje("Conversacion: %d, Grupo: %d, Usuario: %d\n", idConversacion[i], idGrupo, idUsuario);
             idUsuariosFiltrados[numConversacionesCliente] = idUsuario;
             idGruposFiltrados[numConversacionesCliente] = idGrupo;
             idConversacionFiltrados[numConversacionesCliente] = idConversacion[i];
@@ -621,6 +648,7 @@ int filtrarConversacionesNuevas(int idCliente, int idUltimaConversacion) {
     idGruposCliente = idGruposFiltrados;
     idConversacionCliente = idConversacionFiltrados;
     printf("Numero de conversaciones filtradas: %d\n", numConversacionesCliente);
+    registrarMensaje("Numero de conversaciones filtradas: %d\n", numConversacionesCliente);
 
     return 0;
 }
@@ -629,6 +657,7 @@ char* mandarNuevasConversaciones(int idCliente, int idUltimaConversacion) {
 
     filtrarGruposPorEmail(usuarioPorId(idCliente, usuarios, numUsuarios)->email, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
     printf("Numero de grupos del cliente: %d\n", numGruposCliente);
+    registrarMensaje("Numero de grupos del cliente: %d\n", numGruposCliente);
 
     /**for(int i = 0; i < numGruposCliente; i++) {
         printf("Grupo %d: %s\n", gruposCliente[i]->id, gruposCliente[i]->nombre);
@@ -637,6 +666,7 @@ char* mandarNuevasConversaciones(int idCliente, int idUltimaConversacion) {
     filtrarConversacionesNuevas(idCliente, idUltimaConversacion);
 
     printf("Numero de conversaciones del cliente: %d\n", numConversacionesCliente);
+    registrarMensaje("Numero de conversaciones del cliente: %d\n", numConversacionesCliente);
 
     char* result = (char*)malloc(32768);
     strcpy(result, "");

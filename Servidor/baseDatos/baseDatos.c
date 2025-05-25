@@ -4,6 +4,8 @@
 #include "sqlite3.h"
 #include "baseDatos.h"
 #include "../estructuras.h"
+#include "../utils/logger.h"
+
 
 extern Config config;
 
@@ -19,7 +21,7 @@ sqlite3 *open_database(const char *db_name)
     else
     {
         //printf("Opened database successfully\n");
-        //registrarMensaje("Opened database successfully\n");
+        registrarMensaje("Opened database successfully\n");
     }
     return db;
 }
@@ -36,7 +38,7 @@ void ejecutarTablas(sqlite3 *db, const char *sql)
     else
     {
         //printf("Table created successfully\n");
-        //registrarMensaje("Table created successfully\n");
+        registrarMensaje("Table created successfully\n");
     }
 }
 
@@ -66,7 +68,7 @@ int comprobarCredenciales(char *email, char *contrasena)
 
     // Close database
     sqlite3_close(db);
-    //registrarMensaje("Base de datos cerrada\n");
+    registrarMensaje("Base de datos cerrada\n");
 
     return exists;
 }
@@ -96,18 +98,18 @@ int insertarUsuario(const char *nombre, const char *email, const char *telefono,
         {
             resultado = 1; // Éxito al insertar
             printf("Usuario insertado correctamente.\n");
-            //registrarMensaje("Usuario insertado correctamente.\n");
+            registrarMensaje("Usuario insertado correctamente.\n");
         }
         else
         {
             fprintf(stderr, "Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
-            //registrarMensaje("Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al insertar Usuario: %s\n", sqlite3_errmsg(db));
         }
     }
     else
     {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         return 0;
     }
 
@@ -133,14 +135,14 @@ int borrarUsuario(const char *email) {
         if (sqlite3_step(stmt) == SQLITE_DONE) {
             resultado = 1; // Éxito al borrar
             printf("Usuario con email %s eliminado correctamente.\n", email);
-            //registrarMensaje("Usuario con email %s eliminado correctamente.\n", email);
+            registrarMensaje("Usuario con email %s eliminado correctamente.\n", email);
         } else {
             fprintf(stderr, "Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
-            //registrarMensaje("Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al eliminar usuario: %s\n", sqlite3_errmsg(db));
         }
     } else {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -165,7 +167,7 @@ int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         return 0;
     }
 
@@ -177,11 +179,11 @@ int cambiarTelefonoUsuario(const char *email, const char *new_phone) {
 
     if (rc == SQLITE_DONE) {
         printf("Número de teléfono actualizado correctamente del usuario %s a %s.\n", email, new_phone);
-        //registrarMensaje("Número de teléfono actualizado correctamente del usuario %s a %s.\n", email, new_phone);
+        registrarMensaje("Número de teléfono actualizado correctamente del usuario %s a %s.\n", email, new_phone);
         return 1;
     } else {
         fprintf(stderr, "Error al actualizar el número de teléfono: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al actualizar el número de teléfono: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al actualizar el número de teléfono: %s\n", sqlite3_errmsg(db));
         return 0;
     }
 }
@@ -201,7 +203,7 @@ int cambiarNombreUsuario(const char *email, const char *new_name) {
     rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         return 0;
     }
 
@@ -213,11 +215,11 @@ int cambiarNombreUsuario(const char *email, const char *new_name) {
 
     if (rc == SQLITE_DONE) {
         printf("Nombre de usuario actualizado correctamente para %s a %s.\n", email, new_name);
-        //registrarMensaje("Nombre de usuario actualizado correctamente para %s a %s.\n", email, new_name);
+        registrarMensaje("Nombre de usuario actualizado correctamente para %s a %s.\n", email, new_name);
         return 1;
     } else {
         fprintf(stderr, "Error al actualizar el nombre de usuario: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al actualizar el nombre de usuario: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al actualizar el nombre de usuario: %s\n", sqlite3_errmsg(db));
         return 0;
     }
 }
@@ -249,7 +251,7 @@ int insert_group(Grupo *group) {
     int creator_id = get_user_id(db, group->creador->email);
     if (creator_id == -1) {
         fprintf(stderr, "Error: ningun usuario encontrado con email %s\n", group->creador->email);
-        //registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->creador->email);
+        registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->creador->email);
         sqlite3_close(db);
         return 0;
     }
@@ -260,7 +262,7 @@ int insert_group(Grupo *group) {
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -275,17 +277,17 @@ int insert_group(Grupo *group) {
 
     if (rc == SQLITE_DONE) {
         printf("Grupo '%s' creado con exito.\n", group->nombre);
-        //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
+        registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
     } else {
         fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
     }
 
     for(int i = 0; i<group->size;i++){
         int miembro_id = get_user_id(db, group->miembros[i]->email);
         if (miembro_id == -1) {
             fprintf(stderr, "Error: ningun usuario encontrado con email %s\n", group->miembros[i]->email);
-            //registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->miembros[i]->email);
+            registrarMensaje("Error: ningun usuario encontrado con email %s\n", group->miembros[i]->email);
             sqlite3_close(db);
             return 0;
         }
@@ -297,7 +299,7 @@ int insert_group(Grupo *group) {
 
         if (rc != SQLITE_OK) {
             fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-            //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
             sqlite3_close(db);
             return 0;
         }
@@ -310,10 +312,10 @@ int insert_group(Grupo *group) {
 
         if (rc == SQLITE_DONE) {
             printf("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
-            //registrarMensaje("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
+            registrarMensaje("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
         } else {
             fprintf(stderr, "Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
-            //registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+            registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
         }
     }
 
@@ -349,10 +351,10 @@ int insert_mensaje(Mensaje *mensaje) {
     
     if (rc != SQLITE_DONE) {
         fprintf(stderr, "Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
     } else {
         printf("Mensaje insertado correctamente\n");
-        //registrarMensaje("Mensaje insertado correctamente\n");
+        registrarMensaje("Mensaje insertado correctamente\n");
     }
 
     // Clean up
@@ -719,10 +721,10 @@ int insertarMensajeDesdeUpdate(char* fecha, char* hora, char* contenido, int idE
     
     if (rc != SQLITE_DONE) {
         fprintf(stderr, "Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al insertar el mensaje: %s\n", sqlite3_errmsg(db));
     } else {
         printf("Mensaje insertado correctamente\n");
-        //registrarMensaje("Mensaje insertado correctamente\n");
+        registrarMensaje("Mensaje insertado correctamente\n");
     }
 
     // Clean up
@@ -744,7 +746,7 @@ int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char*
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -762,7 +764,7 @@ int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char*
         //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
     } else {
         fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
     }
 
 
@@ -774,7 +776,7 @@ int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char*
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -791,7 +793,7 @@ int insertarGrupoDesdeUpdate(char* nombre, char* fCreacion, int idCreador, char*
         //registrarMensaje("miembro '%s' insertado correctamente.\n", group->miembros[i]->nombre);
     } else {
         fprintf(stderr, "Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al insertar el miembro: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_close(db);
@@ -828,7 +830,7 @@ int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo)
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -844,7 +846,7 @@ int insertarConversacionDesdeUpdate(int idUsuario, int idGrupo)
         //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
     } else {
         fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_close(db);
@@ -863,7 +865,7 @@ int obetenerIdConversacion(int idUsuario, int idGrupo)
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -895,7 +897,7 @@ int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo)
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al preparar la consulta: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
@@ -912,7 +914,7 @@ int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo)
         //registrarMensaje("Grupo '%s' creado con exito.\n", group->nombre);
     } else {
         fprintf(stderr, "Error al crear el grupo: %s\n", sqlite3_errmsg(db));
-        //registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
+        registrarMensaje("Error al crear el grupo: %s\n", sqlite3_errmsg(db));
     }
 
     sqlite3_close(db);
