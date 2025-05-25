@@ -24,6 +24,7 @@ void leerConfig() {
                 strcpy(con.nombreBD, valor); //copia el valor y lo mete en valor
             }else if (strncmp(clave, "loggerBD", 8)==0)
             {
+                printf("loggerBD: %s\n", valor);
                 strcpy(con.loggerBD, valor);
             }
         }

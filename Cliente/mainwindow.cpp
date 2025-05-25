@@ -250,8 +250,13 @@ void MainWindow::on_iniciarSesionBtn_clicked()
 
     if (inicioSesion(txtNom, txtCont) == 1)
     {
+        qDebug() << "Llegooooo";
         getGeneral(txtNom);
+        qDebug() << "Llegooooo2";
+
         inicialListaContactos();
+        qDebug() << "Llegooooo3";
+
         ui-> stackedWidget-> setCurrentIndex(1);
     } else if (inicioSesion(txtNom, txtCont) == 0)
     {
@@ -380,7 +385,7 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
     QString textoContraReg = ui->textEdit_ContraRegistro->toPlainText().trimmed();
     QString textoEmailReg = ui->textEdit_EmailRegistro->toPlainText().trimmed();
     QString textoFechaReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
-    QString textoNombreReg = ui->textEdit_FechaRegistro->toPlainText().trimmed();
+    QString textoNombreReg = ui->textEdit_NombreRegistro->toPlainText().trimmed();
     QString textoTlfReg = ui->textEdit_TlfRegistro->toPlainText().trimmed();
 
     if (    textoContraReg.isEmpty() || textoEmailReg.isEmpty()  || 
@@ -484,7 +489,7 @@ void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
 void MainWindow::inicializarTimer() {
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::tareaCadaMinuto);
-    timer->start(60 * 1000);  // 60 segundos = 60000 ms
+    timer->start(15 * 1000);  // 60 segundos = 60000 ms
 }
 
 void MainWindow::tareaCadaMinuto() {
