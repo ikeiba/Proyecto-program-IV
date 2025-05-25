@@ -918,3 +918,30 @@ int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo)
     sqlite3_close(db);
     return (rc == SQLITE_DONE);
 }
+
+// Metodo para sacar el id de un mensaje desde sus datos
+int get_message_id(const char *fecha, const char *hora, const char *contenido, int idEmisor, int idGrupo) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return -1;
+
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_mensaje FROM Mensaje WHERE fecha_mensaje = ? AND hora_mensaje = ? AND contenido_mensaje = ? AND id_emisor = ? AND id_grupo = ?";
+    int message_id = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, fecha, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, hora, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 3, contenido, -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 4, idEmisor);
+        sqlite3_bind_int(stmt, 5, idGrupo);
+
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            message_id = sqlite3_column_int(stmt, 0);
+        }
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    
+    return message_id;
+}

@@ -91,5 +91,8 @@ int obetenerIdConversacion(int idUsuario, int idGrupo);
 //? Añadido
 int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo);
 
+//? Añadido
+int get_message_id(const char *fecha, const char *hora, const char *contenido, int idEmisor, int idGrupo);
+
 
 #endif

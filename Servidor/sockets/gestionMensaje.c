@@ -31,6 +31,9 @@ int* idGruposCliente;
 int* idConversacionCliente;
 int numConversacionesCliente;
 
+extern Config config;
+
+
 Grupo** filtrarGruposPorEmail(char* email, Usuario** usuarios, int numUsuarios, Grupo** grupos, int numGrupos, int* idUsuarios, int* idGrupos, int numConversaciones,
     int* numGruposFiltradosC) {
     //Quiero los grupos en los que el current email es miembro
@@ -362,6 +365,23 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         //Insertar mensaje en la base de datos
         insertarMensajeDesdeUpdate(fecha, hora, contenido, idEmisor, idGrupo);
 
+        // Añadir el mensaje al array de mensajes
+        Mensaje* nuevoMensaje = (Mensaje*)malloc(sizeof(Mensaje));
+        nuevoMensaje->fecha = strdup(fecha);
+        nuevoMensaje->hora = strdup(hora);
+        nuevoMensaje->contenido = strdup(contenido);
+        nuevoMensaje->emisor = usuarioPorId(idEmisor, usuarios, numUsuarios);
+        nuevoMensaje->grupo = grupoPorId(idGrupo, grupos, numGrupos);
+
+        int idMensaje = get_message_id(fecha, hora, contenido, idEmisor, idGrupo);
+        nuevoMensaje->id = idMensaje;
+
+        mensajes = (Mensaje**)realloc(mensajes, sizeof(Mensaje*) * (numMensajes + 1));
+        mensajes[numMensajes] = nuevoMensaje;
+        numMensajes++;
+        printf("Nuevo mensaje enviado: %s con id %d, emisor: %s, grupo: %s\n", mensajes[numMensajes-1]->contenido, mensajes[numMensajes-1]->id, mensajes[numMensajes-1]->emisor->nombre, mensajes[numMensajes-1]->grupo->nombre);
+
+
         // Mandar mensaje de que todo ha ido bien
         sprintf(sendBuff, "UPDATED");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
@@ -380,6 +400,45 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         //Insertar mensaje en la base de datos
         insertarGrupoDesdeUpdate(nombre, fCreacion, idCreador, descripcion);
 
+        // Obtener el id del grupo creado
+        sqlite3 *db = open_database(config.nombreBD);
+        if (!db) return 0;
+        int idGrupo = get_group_id(db, nombre);
+        sqlite3_close(db);
+
+        // Añadir el idConversacion al array de conversaciones, teniendo en cuenta que idConversacion es un array con un tamaño predeterminado
+        int idConversacionInt = obetenerIdConversacion(idCreador, idGrupo);
+        idConversacion = (int*) realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
+        idConversacion[numConversaciones] = idConversacionInt;
+        printf("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
+        idUsuarios = (int*) realloc(idUsuarios, sizeof(int) * (numConversaciones + 1));
+        idUsuarios[numConversaciones] = idCreador;
+        printf("ID USUARIO: %d\n", idUsuarios[numConversaciones]);
+        idGrupos = (int*) realloc(idGrupos, sizeof(int) * (numConversaciones + 1));
+        idGrupos[numConversaciones] = idGrupo;
+        numConversaciones++;
+
+
+        // Crear el grupo manualmente
+        Grupo* nuevoGrupo = (Grupo*)malloc(sizeof(Grupo));
+        nuevoGrupo->id = idGrupo; 
+        nuevoGrupo->nombre = strdup(nombre);
+        nuevoGrupo->fCreacion = strdup(fCreacion);
+        nuevoGrupo->creador = usuarioPorId(idCreador, usuarios, numUsuarios);
+        nuevoGrupo->descripcion = strdup(descripcion);
+        
+        // Asignar miembros (solo el creador)
+        nuevoGrupo->miembros = (Usuario**)malloc(sizeof(Usuario*));
+        nuevoGrupo->miembros[0] = nuevoGrupo->creador;
+        nuevoGrupo->size = 1;
+
+        // Añadir el grupo al array global
+        grupos = (Grupo**)realloc(grupos, sizeof(Grupo*) * (numGrupos + 1));
+        grupos[numGrupos] = nuevoGrupo;
+        numGrupos++;
+
+        printf("Nuevo grupo creado: %s con id %d, creador: %s\n", grupos[numGrupos-1]->nombre, grupos[numGrupos-1]->id, grupos[numGrupos-1]->creador->nombre);
+        
         // Mandar mensaje de que todo ha ido bien
         sprintf(sendBuff, "UPDATED");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
@@ -397,8 +456,8 @@ int gestionarMensajeUPDATE(char* sendBuff, char* recvBuff, SOCKET* comm_socket)
         //Insertar mensaje en la base de datos
         insertarConversacionDesdeUpdate(idUsuario, idGrupo);
 
-        int idConversacionInt = obetenerIdConversacion(idUsuario, idGrupo);
         // Añadir el idConversacion al array de conversaciones, teniendo en cuenta que idConversacion es un array con un tamaño predeterminado
+        int idConversacionInt = obetenerIdConversacion(idUsuario, idGrupo);
         idConversacion = (int*) realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
         idConversacion[numConversaciones] = idConversacionInt;
         printf("ID CONVERSACION: %d\n", idConversacion[numConversaciones]);
