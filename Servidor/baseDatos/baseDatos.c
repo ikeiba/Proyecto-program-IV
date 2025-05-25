@@ -227,6 +227,7 @@ int cambiarNombreUsuario(const char *email, const char *new_name) {
 
 // Metodo para sacar el id de un usuario desde su email
 int get_user_id(sqlite3 *db, const char *email) {
+    
     sqlite3_stmt *stmt;
     const char *sql = "SELECT id_usuario FROM Usuario WHERE email_usuario = ?";
     int user_id = -1;
@@ -919,6 +920,25 @@ int abandonarGrupoDesdeUpdate(int idUsuario, int idGrupo)
 
     sqlite3_close(db);
     return (rc == SQLITE_DONE);
+}
+
+int get_user_id2(const char *email) {
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+
+    sqlite3_stmt *stmt;
+    const char *sql = "SELECT id_usuario FROM Usuario WHERE email_usuario = ?";
+    int user_id = -1;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, 0) == SQLITE_OK) {
+        sqlite3_bind_text(stmt, 1, email, -1, SQLITE_STATIC);
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            user_id = sqlite3_column_int(stmt, 0);
+        }
+    }
+    
+    sqlite3_finalize(stmt);
+    return user_id;
 }
 
 // Metodo para sacar el id de un mensaje desde sus datos

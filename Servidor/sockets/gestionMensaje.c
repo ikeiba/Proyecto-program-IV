@@ -251,6 +251,7 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         printf("Sending reply... \n");
         registrarMensaje("Sending reply... \n");
         strcpy(sendBuff, "ERROR");
+
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
         registrarMensaje("Data sent: %s \n", sendBuff);
@@ -261,6 +262,25 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     printf("Sending reply... \n");
     registrarMensaje("Sending reply... \n");
     strcpy(sendBuff, "CORRECT");
+
+    //Agregar usuario registrado
+    int idUsuario = get_user_id2(email);
+
+    Usuario* nuevoUsuario = (Usuario*)malloc(sizeof(Usuario));
+    nuevoUsuario->id = idUsuario;
+    nuevoUsuario->nombre = strdup(nombre);
+    nuevoUsuario->email = strdup(email);
+    nuevoUsuario->telefono = strdup(telefono);
+    nuevoUsuario->fNacimiento = strdup(f_nacimiento);
+    nuevoUsuario->contra = strdup(contrasenya);
+
+    // Agregar el nuevo usuario al array de usuarios
+
+    usuarios = (Usuario**)realloc(usuarios, sizeof(Usuario*) * (numUsuarios + 1));
+    usuarios[numUsuarios] = nuevoUsuario;
+    numUsuarios++;
+    printf("Nuevo usuario registrado: %s\n", usuarios[numUsuarios - 1]->nombre);
+
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
     registrarMensaje("Data sent: %s \n", sendBuff);
@@ -318,24 +338,37 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     // Obtener el tipo de dato
     char* tipo = strtok(NULL, ";");
     if(strcmp(tipo, "USUARIO") == 0){
+
         currentEmail = strtok(NULL, ";");
+
         gruposCliente = filtrarGruposPorEmail(currentEmail, usuarios, numUsuarios, grupos, numGrupos, idUsuarios, idGrupos, numConversaciones, &numGruposCliente);
+
         usuariosCliente = filtrarUsuariosPorGrupo(usuarios, numUsuarios, gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &numUsuariosCliente);
+
         strcpy(sendBuff, usuariosToString(usuariosCliente, numUsuariosCliente));
-        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        if(numUsuariosCliente == 0){
+            memset(sendBuff, 0, sizeof(sendBuff));
+        }
+        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
         return -1;
     }
     
     if(strcmp(tipo, "GRUPO") == 0){
         strcpy(sendBuff, gruposToString(gruposCliente, numGruposCliente));
-        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        if(numGruposCliente == 0){
+            memset(sendBuff, 0, sizeof(sendBuff));
+        }
+        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
         return -1;
     }
 
     if(strcmp(tipo, "MENSAJE") == 0){
         mensajesCliente = filtrarMensajesPorGrupos(gruposCliente, numGruposCliente, mensajes, numMensajes, &numMensajesCliente);
         strcpy(sendBuff, mensajeToString(mensajesCliente, numMensajesCliente));
-        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        if(numMensajesCliente == 0){
+            memset(sendBuff, 0, sizeof(sendBuff));
+        }
+        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
         return -1;
     }
 
@@ -343,7 +376,10 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         //Filtrar las conversaciones por los grupos
         filtrarConversacionesPorGrupos(gruposCliente, numGruposCliente, idUsuarios, idGrupos, idConversacion, numConversaciones, &idUsuariosCliente, &idGruposCliente, &idConversacionCliente, &numConversacionesCliente);
         strcpy(sendBuff, conversacionToString(idUsuariosCliente, idGruposCliente, idConversacionCliente, numConversacionesCliente));
-        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
+        if(numConversacionesCliente == 0){
+            memset(sendBuff, 0, sizeof(sendBuff));
+        }
+        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
         return -1;
     }
 
