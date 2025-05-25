@@ -33,12 +33,13 @@ private slots:
     void on_pushButtonEliminarContacto_clicked();
 
     void on_pushButton_ConfirmarRegistro_clicked();
-
+    void tareaCadaMinuto();
 private:
     Ui::MainWindow *ui;
     void configurarTabla();       // Método para configurar la tabla
     void limpiarCampoTexto();     // Método para limpiar el campo de texto
     void buscarEnTabla(const QString &texto); // Método para buscar en la tabla
     void inicialListaContactos();
+    void inicializarTimer();
 };
 #endif // MAINWINDOW_H

@@ -263,7 +263,7 @@ void MainWindow::on_iniciarSesionBtn_clicked()
         qDebug() << "Ocurrio un error al iniciar sesion";
         return; 
     }
-    
+    inicializarTimer();
 }
 
 void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
@@ -273,6 +273,7 @@ void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
 
 
 void MainWindow::inicialListaContactos(){
+    ui->listWidgetContactos->clear();
     for (int i = 0; i < numGrupos; i++)
     {
         ui->listWidgetContactos->addItem(grupos[i]->getNombre());
@@ -307,6 +308,7 @@ void MainWindow::on_pushButtonAadirADD_clicked()
     if (textoDescripcion.isEmpty()) {
 
         crearGrupo(textoNormalNombre, fecha, cliente->getId(), "");
+        qDebug() << "Grupo insertado.";
 
     }else{
 
@@ -314,8 +316,10 @@ void MainWindow::on_pushButtonAadirADD_clicked()
         char* textoNormalDesc = textoByte.data(); 
 
         crearGrupo(textoNormalNombre, fecha, cliente->getId(), textoNormalDesc);
+        qDebug() << "Grupo insertado.";
 
     }
+    //getGeneral(cliente->getEmail());
     actualizarDatos();
     inicialListaContactos();
     ui-> stackedWidget-> setCurrentIndex(1);
@@ -332,6 +336,37 @@ void MainWindow::on_pushButtonAadir_clicked()//Realmente es el de crear pero cam
 
 void MainWindow::on_pushButtonEliminarContacto_clicked()
 {
+
+    QString tituloChat;
+    QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
+
+    if (!chatSeleccionado) {
+        qDebug() << "Ningún chat seleccionado.";
+        return;
+    }
+
+    tituloChat = chatSeleccionado->text();
+    qDebug() << "Texto seleccionado:" << tituloChat;
+
+    Grupo* grupoSeleccionado = nullptr;
+
+    for (int i = 0; i < numGrupos; i++) {
+        QString nombreGrupo = QString::fromUtf8(grupos[i]->getNombre());
+
+        if (nombreGrupo.contains(tituloChat, Qt::CaseInsensitive)) {
+            grupoSeleccionado = grupos[i];
+            qDebug() << "Grupo seleccionado:" << nombreGrupo;
+            break;
+        }
+    }
+
+    if (!grupoSeleccionado) {
+        qDebug() << "No se encontró ningún grupo que coincida con el título.";
+        return;
+    }
+
+    abandonarGrupo(cliente->getId(), grupoSeleccionado->getId());
+
     delete ui->listWidgetContactos->currentItem();
 }
 
@@ -443,3 +478,16 @@ void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
 
 
 
+#include <QTimer>
+
+void MainWindow::inicializarTimer() {
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::tareaCadaMinuto);
+    timer->start(60 * 1000);  // 60 segundos = 60000 ms
+}
+
+void MainWindow::tareaCadaMinuto() {
+    qDebug() << "Ejecutando tarea cada minuto";
+    actualizarDatos();
+
+}
