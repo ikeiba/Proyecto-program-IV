@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButtonChatear,SIGNAL(clicked()),this,SLOT(on_pushButton_Chatear_Clicked()));
     connect(ui->pushBtnAnadirUsu,SIGNAL(clicked()),this,SLOT(on_pushBtnAnadirUsu_Clicked()));
     connect(ui->pushButtonAnadirAGrupo,SIGNAL(clicked()),this,SLOT(on_pushButtonAnadirAGrupo_Clicked()));
+    connect(ui->pushButtonRefresh,SIGNAL(clicked()),this,SLOT(on_pushButtonRefresh_Clicked()));
 
     ui->label_ErrorInicioSes->setVisible(false);
 }
@@ -268,7 +269,7 @@ void MainWindow::on_iniciarSesionBtn_clicked()
         qDebug() << "Ocurrio un error al iniciar sesion";
         return; 
     }
-    inicializarTimer();
+    //inicializarTimer();
 }
 
 void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
@@ -479,7 +480,10 @@ void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
 
 
 
-
+void MainWindow::on_pushButtonRefresh_Clicked(){
+    actualizarDatos();
+    inicialListaContactos();
+}
 
 
 
@@ -495,5 +499,5 @@ void MainWindow::inicializarTimer() {
 void MainWindow::tareaCadaMinuto() {
     qDebug() << "Ejecutando tarea cada minuto";
     actualizarDatos();
-
+    inicialListaContactos();
 }

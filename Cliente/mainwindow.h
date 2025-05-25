@@ -27,6 +27,7 @@ private slots:
     void on_iniciarSesionBtn_clicked();
     void on_registrarNuevoUsuarioBtn_clicked();
 
+    void on_pushButtonRefresh_Clicked();
     void on_pushButtonAadirADD_clicked();
 
     void on_pushButtonAadir_clicked();
