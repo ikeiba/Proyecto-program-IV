@@ -23,7 +23,7 @@ int getGeneral(const char* email);
 void actualizarDatos();
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo);
 int crearGrupo(const char* nombre, const char* fCreacion, int idCreador, const char* descripcion);
-int aniadirUsuarioAGrupo(int idUsuario, int idGrupo);
+int aniadirUsuarioAGrupo(char* email, int idGrupo);
 int abandonarGrupo(int idUsuario, int idGrupo);
 void agregarGrupo(Grupo*** grupos, int* tamanyo, Grupo* nuevoGrupo);
 void agregarUsuario(Usuario*** usuarios, int* tamanyo, Usuario* nuevoUsuario);

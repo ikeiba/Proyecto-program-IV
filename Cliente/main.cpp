@@ -14,6 +14,8 @@ extern int numMensajes;
 
 
 int main(int argc, char *argv[]) {
+	//printf("\nIasdawdawdawdawdawdawdawd..\n");
+
 	//inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
 	//getGeneral("leopoldo23@gmail.com");
@@ -29,13 +31,12 @@ int main(int argc, char *argv[]) {
 	//actualizarDatos();
 	//crearGrupo("GRUPO POR SOCKET", "2025-05-22", 500, "PRIMER GRUPO CREADO POR CLIENTE");
 	//registrarse("admin1","admin","332181961","1999-08-11","admin");
-	
+	//printf("\nawdawdawdawdWwdaiwdawdaaawdawdaswdawdawdock...\n");
 	
 	QApplication a(argc, argv);
     MainWindow w;
     w.show();
 	return a.exec();
-	
 	
 
 

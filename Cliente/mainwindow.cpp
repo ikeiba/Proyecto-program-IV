@@ -13,6 +13,7 @@ extern int numUsuarios;
 extern Usuario* cliente;
 
 Grupo* activo;
+Grupo* aAñadir;
 
 extern Grupo** grupos;
 extern int numGrupos;
@@ -282,11 +283,47 @@ void MainWindow::inicialListaContactos(){
 
 void MainWindow::on_pushButtonAadirADD_clicked()
 {
+    QString textoGrupo = ui->textEditNombreGrupo->toPlainText().trimmed();
+    QString textoDescripcion = ui->textEditDescripcionGrupo->toPlainText().trimmed();
+
+    if (textoGrupo.isEmpty()) {
+        ui-> stackedWidget-> setCurrentIndex(1);
+        return;
+    }
+
+    QByteArray textoByte = textoGrupo.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    char* textoNormalNombre = textoByte.data(); 
+
+
+    time_t ahora= time(0);
+    struct tm* local = localtime(&ahora);  // Convertir a estructura tm
+
+    char fecha[11];  // YYYY-MM-DD (10 + 1 para null terminator)
+    char hora[6];    // HH:MM (5 + 1 para null terminator)
+
+    // Formatear la fecha
+    strftime(fecha, sizeof(fecha), "%Y-%m-%d", local);
+
+    if (textoDescripcion.isEmpty()) {
+
+        crearGrupo(textoNormalNombre, fecha, cliente->getId(), "");
+
+    }else{
+
+        QByteArray textoByteDesc = textoDescripcion.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+        char* textoNormalDesc = textoByte.data(); 
+
+        crearGrupo(textoNormalNombre, fecha, cliente->getId(), textoNormalDesc);
+
+    }
+    actualizarDatos();
+    inicialListaContactos();
     ui-> stackedWidget-> setCurrentIndex(1);
+
 }
 
 
-void MainWindow::on_pushButtonAadir_clicked()
+void MainWindow::on_pushButtonAadir_clicked()//Realmente es el de crear pero cambiar nombres da mucho lio
 {
     ui-> stackedWidget-> setCurrentIndex(2);
 
@@ -348,8 +385,6 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 
 void MainWindow::on_pushBtnAnadirUsu_Clicked(){
 
-
-
     QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
     if (!chatSeleccionado) {
         qDebug() << "Ningún chat seleccionado.";
@@ -377,6 +412,7 @@ void MainWindow::on_pushBtnAnadirUsu_Clicked(){
         return;
     }
 
+    aAñadir=grupoSeleccionado;
     ui-> stackedWidget-> setCurrentIndex(4);
 
 
@@ -392,6 +428,10 @@ void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
         return;
     }
 
+    QByteArray textoByte = texto.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    char* textoNormal = textoByte.data(); 
+
+    //aniadirUsuarioAGrupo(textoNormal,aAñadir->getId());
     ui-> stackedWidget-> setCurrentIndex(1);
 
 }
