@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include <QApplication>
+//#include "mainwindow.h"
+//#include <QApplication>
 #include "sockets/socket.h"
 //g++ -I sockets -I dominio main.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
 //Sin interfaz: g++ -I sockets -I dominio main.cpp dominio/*.cpp sockets/*.cpp -o cliente.exe -lws2_32
@@ -17,7 +17,11 @@ int main(int argc, char *argv[]) {
 	//printf("\nIasdawdawdawdawdawdawdawd..\n");
 
 	//inicioSesion("iban76@gmail.com", "313m8f2p");
-	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
+	registrarse("Asier","asier@gmail.com","332181960","1998-08-11","kp9fgaar");
+
+	inicioSesion("asier@gmail.com","kp9fgaar");
+
+	getGeneral("asier@gmail.com");
 
 	//actualizarDatos();
 
@@ -32,10 +36,10 @@ int main(int argc, char *argv[]) {
 	//registrarse("admin1","admin","332181961","1999-08-11","admin");
 	//printf("\nawdawdawdawdWwdaiwdawdaaawdawdaswdawdawdock...\n");
 	
-	QApplication a(argc, argv);
+	/*QApplication a(argc, argv);
     MainWindow w;
     w.show();
-	return a.exec();
+	return a.exec();*/
 	
 
 

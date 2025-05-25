@@ -279,7 +279,61 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     usuarios = (Usuario**)realloc(usuarios, sizeof(Usuario*) * (numUsuarios + 1));
     usuarios[numUsuarios] = nuevoUsuario;
     numUsuarios++;
-    printf("Nuevo usuario registrado: %s\n", usuarios[numUsuarios - 1]->nombre);
+
+    Grupo* grupoDefault = (Grupo*)malloc(sizeof(Grupo));
+    grupoDefault->creador = nuevoUsuario;
+    grupoDefault->id = numGrupos + 1;
+    grupoDefault->nombre = strdup("Grupo Default");
+    grupoDefault->fCreacion = strdup("2023-10-01");
+    grupoDefault->descripcion = strdup("Grupo creado por defecto");
+    grupoDefault->miembros = (Usuario**)malloc(sizeof(Usuario*));
+    grupoDefault->miembros[0] = nuevoUsuario;
+    grupoDefault->size = 1;
+    grupos = (Grupo**)realloc(grupos, sizeof(Grupo*) * (numGrupos + 1));
+    grupos[numGrupos] = grupoDefault;
+    numGrupos++;
+
+    insertarGrupoDesdeUpdate(grupoDefault->nombre, grupoDefault->fCreacion, grupoDefault->creador->id, grupoDefault->descripcion);
+
+    sqlite3 *db = open_database(config.nombreBD);
+    if (!db) return 0;
+    int idGrupo = get_group_id(db, grupoDefault->nombre);
+    sqlite3_close(db);
+
+    grupoDefault->id = idGrupo;
+
+    // Agregar la conversación por defecto
+    idUsuarios = (int*)realloc(idUsuarios, sizeof(int) * (numConversaciones + 1));
+    idGrupos = (int*)realloc(idGrupos, sizeof(int) * (numConversaciones + 1));
+    idConversacion = (int*)realloc(idConversacion, sizeof(int) * (numConversaciones + 1));
+    idUsuarios[numConversaciones] = nuevoUsuario->id;
+    idGrupos[numConversaciones] = grupoDefault->id;
+
+    insertarConversacionDesdeUpdate(idUsuario, idGrupo);
+
+    int idConversacionInt = obetenerIdConversacion(idUsuario, idGrupo);
+    idConversacion[numConversaciones] = idConversacionInt;
+    numConversaciones++;
+
+
+    // Añadir el mensaje al array de mensajes
+    Mensaje* nuevoMensaje = (Mensaje*)malloc(sizeof(Mensaje));
+
+    nuevoMensaje->fecha = strdup("2023-10-01");
+    nuevoMensaje->hora = strdup("12:00:00");
+    nuevoMensaje->contenido = strdup("Bienvenido al grupo Default");
+    nuevoMensaje->emisor = usuarioPorId(nuevoUsuario->id, usuarios, numUsuarios);
+    nuevoMensaje->grupo = grupoPorId(idGrupo, grupos, numGrupos);
+
+    insertarMensajeDesdeUpdate(nuevoMensaje->fecha, nuevoMensaje->hora, nuevoMensaje->contenido, nuevoMensaje->emisor->id, nuevoMensaje->grupo->id);
+
+    
+    int idMensaje = get_message_id(nuevoMensaje->fecha, nuevoMensaje->hora, nuevoMensaje->contenido, nuevoMensaje->emisor->id, nuevoMensaje->grupo->id);
+    nuevoMensaje->id = idMensaje;
+
+    mensajes = (Mensaje**)realloc(mensajes, sizeof(Mensaje*) * (numMensajes + 1));
+    mensajes[numMensajes] = nuevoMensaje;
+    numMensajes++;
 
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
     printf("Data sent: %s \n", sendBuff);
@@ -346,29 +400,20 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         usuariosCliente = filtrarUsuariosPorGrupo(usuarios, numUsuarios, gruposCliente, numGruposCliente, idUsuarios, idGrupos, numConversaciones, &numUsuariosCliente);
 
         strcpy(sendBuff, usuariosToString(usuariosCliente, numUsuariosCliente));
-        if(numUsuariosCliente == 0){
-            memset(sendBuff, 0, sizeof(sendBuff));
-        }
-        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
     
     if(strcmp(tipo, "GRUPO") == 0){
         strcpy(sendBuff, gruposToString(gruposCliente, numGruposCliente));
-        if(numGruposCliente == 0){
-            memset(sendBuff, 0, sizeof(sendBuff));
-        }
-        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
     if(strcmp(tipo, "MENSAJE") == 0){
         mensajesCliente = filtrarMensajesPorGrupos(gruposCliente, numGruposCliente, mensajes, numMensajes, &numMensajesCliente);
         strcpy(sendBuff, mensajeToString(mensajesCliente, numMensajesCliente));
-        if(numMensajesCliente == 0){
-            memset(sendBuff, 0, sizeof(sendBuff));
-        }
-        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
@@ -376,10 +421,7 @@ int gestionarMensajeGET(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
         //Filtrar las conversaciones por los grupos
         filtrarConversacionesPorGrupos(gruposCliente, numGruposCliente, idUsuarios, idGrupos, idConversacion, numConversaciones, &idUsuariosCliente, &idGruposCliente, &idConversacionCliente, &numConversacionesCliente);
         strcpy(sendBuff, conversacionToString(idUsuariosCliente, idGruposCliente, idConversacionCliente, numConversacionesCliente));
-        if(numConversacionesCliente == 0){
-            memset(sendBuff, 0, sizeof(sendBuff));
-        }
-        send(*comm_socket, sendBuff, sizeof(sendBuff), 0);
+        send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         return -1;
     }
 
