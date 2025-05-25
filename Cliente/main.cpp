@@ -16,9 +16,8 @@ extern int numMensajes;
 int main(int argc, char *argv[]) {
 	//printf("\nIasdawdawdawdawdawdawdawd..\n");
 
-	//inicioSesion("leopoldo23@gmail.com", "t8vjp18a");
+	//inicioSesion("iban76@gmail.com", "313m8f2p");
 	//registrarse("amayamanuela","amayamanuela@gmail.com","332181960","1998-08-11","kp9fgaar");
-	//getGeneral("leopoldo23@gmail.com");
 
 	//actualizarDatos();
 
