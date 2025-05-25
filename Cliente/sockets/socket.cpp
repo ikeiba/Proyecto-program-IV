@@ -127,15 +127,17 @@ int contarElementos(char* recvBuffOriginal) {
 }
 
 void leerUsuarios(Usuario*** usuarios, int* numUsuarios, char* recvBuff) {
+    printf("LLEGA1??");
     char copia[32768];
     strcpy(copia, recvBuff);
-
+    printf("LLEGA1??");
     *numUsuarios = contarElementos(copia);
+    printf("LLEGA2??");
     *usuarios = new Usuario*[*numUsuarios];
-
+    printf("LLEGA3??");
     char* token = strtok(copia, ";");
     int i = 0;
-
+    printf("LLEGA4??");
     while (token != NULL) {
 
         std::string linea(token);
@@ -312,12 +314,15 @@ int getUsuario(const char* email) {
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
 	printf("Mensaje mandado: %s\n", sendBuff);
+    printf("LLEGA1??");
 	recv(s, recvBuff, sizeof(recvBuff), 0);
+    
+    printf("LLEGA1??");
 	leerUsuarios(&usuarios, &numUsuarios, recvBuff);
+    printf("LLEGA??");
     cliente = obtenerUsuarioPorEmail(email, usuarios, numUsuarios);
 	printf("Usuario recibido: %s\n", usuarios[0]->getNombre());
 	return 0;
-	
 }
 
 int getGrupos() {
@@ -354,13 +359,16 @@ int getConversaciones() {
 
 int getGeneral(const char* email) {
 	inicializarSocket();
-	
+	printf("USUARIO\n\n");
     memset(recvBuff, 0, sizeof(recvBuff));
 	getUsuario(email);
+    printf("GRUPOS\n\n");
     memset(recvBuff, 0, sizeof(recvBuff));
     getGrupos();
+    printf("MENSAJES\n\n");
     memset(recvBuff, 0, sizeof(recvBuff));
 	getMensajes();
+    printf("CONVERSACIONES\n\n");
     memset(recvBuff, 0, sizeof(recvBuff));
 	getConversaciones();
     printf("ULTIMO ID CONVERSACION: %d\n",ultimoIdConversacion);
