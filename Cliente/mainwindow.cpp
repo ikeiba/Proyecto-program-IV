@@ -2,12 +2,18 @@
 #include "./ui_mainwindow.h"
 #include <iostream>
 #include <iomanip>
+#include <cstdio>
 #include <ctime>
 #include <sstream>
 #include "sockets/socket.h"
 
 extern Usuario** usuarios;
 extern int numUsuarios;
+
+extern Usuario* cliente;
+
+Grupo* activo;
+Grupo* aAñadir;
 
 extern Grupo** grupos;
 extern int numGrupos;
@@ -22,8 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui-> stackedWidget-> setCurrentIndex(0);
     connect(ui->botonEnviar,SIGNAL(clicked()),this,SLOT(on_botonEnviar_Clicked()));
-    connect(ui->botonBuscar,SIGNAL(clicked()),this,SLOT(on_botonBuscar_Clicked()));
     connect(ui->pushButtonChatear,SIGNAL(clicked()),this,SLOT(on_pushButton_Chatear_Clicked()));
+    connect(ui->pushBtnAnadirUsu,SIGNAL(clicked()),this,SLOT(on_pushBtnAnadirUsu_Clicked()));
+    connect(ui->pushButtonAnadirAGrupo,SIGNAL(clicked()),this,SLOT(on_pushButtonAnadirAGrupo_Clicked()));
+
     ui->label_ErrorInicioSes->setVisible(false);
 }
 
@@ -94,7 +102,16 @@ void MainWindow::on_botonEnviar_Clicked()
     }
 
     time_t ahora= time(0);
-    char* fecha= ctime(&ahora);
+    struct tm* local = localtime(&ahora);  // Convertir a estructura tm
+
+    char fecha[11];  // YYYY-MM-DD (10 + 1 para null terminator)
+    char hora[6];    // HH:MM (5 + 1 para null terminator)
+
+    // Formatear la fecha
+    strftime(fecha, sizeof(fecha), "%Y-%m-%d", local);
+
+    // Formatear la hora
+    strftime(hora, sizeof(hora), "%H:%M", local);
 
     // Insertar texto en las celdas
     ui->tableWidget->item(rowCount, 0)->setText(fecha);
@@ -102,7 +119,10 @@ void MainWindow::on_botonEnviar_Clicked()
     ui->tableWidget->item(rowCount, 2)->setText(texto);
 
     qDebug() << "Texto añadido correctamente a la tabla.";
+    QByteArray textoByte = texto.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    const char* textoNormal = textoByte.data(); 
 
+    enviarMensaje(fecha, hora, textoNormal, cliente->getId(), activo->getId());
     // Forzar la actualización visual
     ui->tableWidget->scrollToBottom();
     ui->tableWidget->viewport()->update();
@@ -150,7 +170,7 @@ void MainWindow::on_pushButton_Chatear_Clicked()
         qDebug() << "No se encontró ningún grupo que coincida con el título.";
         return;
     }
-
+    activo=grupoSeleccionado;
     int rowCount = 0;
    for (int i = 0; i < numMensajes; i++) {
     QString nombreMensajeGrupo = QString::fromLatin1(mensajes[i]->getGrupo()->getNombre());
@@ -186,19 +206,6 @@ void MainWindow::on_pushButton_Chatear_Clicked()
     ui->textEnviar->clear();
 }
 
-
-
-// Método para buscar en la tabla
-void MainWindow::on_botonBuscar_Clicked()
-{
-    QString textoBusqueda = ui->textEdit_2->toPlainText().trimmed();
-    if (textoBusqueda.isEmpty()) {
-        qDebug() << "No se ha ingresado texto para buscar.";
-        return;
-    }
-
-
-}
 
 // Método que realiza la búsqueda en la tabla
 void MainWindow::buscarEnTabla(const QString &texto)
@@ -256,7 +263,7 @@ void MainWindow::on_iniciarSesionBtn_clicked()
         qDebug() << "Ocurrio un error al iniciar sesion";
         return; 
     }
-    
+    inicializarTimer();
 }
 
 void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
@@ -266,6 +273,7 @@ void MainWindow::on_registrarNuevoUsuarioBtn_clicked()
 
 
 void MainWindow::inicialListaContactos(){
+    ui->listWidgetContactos->clear();
     for (int i = 0; i < numGrupos; i++)
     {
         ui->listWidgetContactos->addItem(grupos[i]->getNombre());
@@ -276,11 +284,50 @@ void MainWindow::inicialListaContactos(){
 
 void MainWindow::on_pushButtonAadirADD_clicked()
 {
+    QString textoGrupo = ui->textEditNombreGrupo->toPlainText().trimmed();
+    QString textoDescripcion = ui->textEditDescripcionGrupo->toPlainText().trimmed();
+
+    if (textoGrupo.isEmpty()) {
+        ui-> stackedWidget-> setCurrentIndex(1);
+        return;
+    }
+
+    QByteArray textoByte = textoGrupo.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    char* textoNormalNombre = textoByte.data(); 
+
+
+    time_t ahora= time(0);
+    struct tm* local = localtime(&ahora);  // Convertir a estructura tm
+
+    char fecha[11];  // YYYY-MM-DD (10 + 1 para null terminator)
+    char hora[6];    // HH:MM (5 + 1 para null terminator)
+
+    // Formatear la fecha
+    strftime(fecha, sizeof(fecha), "%Y-%m-%d", local);
+
+    if (textoDescripcion.isEmpty()) {
+
+        crearGrupo(textoNormalNombre, fecha, cliente->getId(), "");
+        qDebug() << "Grupo insertado.";
+
+    }else{
+
+        QByteArray textoByteDesc = textoDescripcion.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+        char* textoNormalDesc = textoByte.data(); 
+
+        crearGrupo(textoNormalNombre, fecha, cliente->getId(), textoNormalDesc);
+        qDebug() << "Grupo insertado.";
+
+    }
+    //getGeneral(cliente->getEmail());
+    actualizarDatos();
+    inicialListaContactos();
     ui-> stackedWidget-> setCurrentIndex(1);
+
 }
 
 
-void MainWindow::on_pushButtonAadir_clicked()
+void MainWindow::on_pushButtonAadir_clicked()//Realmente es el de crear pero cambiar nombres da mucho lio
 {
     ui-> stackedWidget-> setCurrentIndex(2);
 
@@ -289,6 +336,37 @@ void MainWindow::on_pushButtonAadir_clicked()
 
 void MainWindow::on_pushButtonEliminarContacto_clicked()
 {
+
+    QString tituloChat;
+    QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
+
+    if (!chatSeleccionado) {
+        qDebug() << "Ningún chat seleccionado.";
+        return;
+    }
+
+    tituloChat = chatSeleccionado->text();
+    qDebug() << "Texto seleccionado:" << tituloChat;
+
+    Grupo* grupoSeleccionado = nullptr;
+
+    for (int i = 0; i < numGrupos; i++) {
+        QString nombreGrupo = QString::fromUtf8(grupos[i]->getNombre());
+
+        if (nombreGrupo.contains(tituloChat, Qt::CaseInsensitive)) {
+            grupoSeleccionado = grupos[i];
+            qDebug() << "Grupo seleccionado:" << nombreGrupo;
+            break;
+        }
+    }
+
+    if (!grupoSeleccionado) {
+        qDebug() << "No se encontró ningún grupo que coincida con el título.";
+        return;
+    }
+
+    abandonarGrupo(cliente->getId(), grupoSeleccionado->getId());
+
     delete ui->listWidgetContactos->currentItem();
 }
 
@@ -340,6 +418,58 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 }
 
 
+void MainWindow::on_pushBtnAnadirUsu_Clicked(){
+
+    QListWidgetItem* chatSeleccionado = ui->listWidgetContactos->currentItem();
+    if (!chatSeleccionado) {
+        qDebug() << "Ningún chat seleccionado.";
+        return;
+    }
+    QString tituloChat;
+    tituloChat = chatSeleccionado->text();
+    qDebug() << "Texto seleccionado:" << tituloChat;
+
+
+    Grupo* grupoSeleccionado = nullptr;
+
+    for (int i = 0; i < numGrupos; i++) {
+        QString nombreGrupo = QString::fromUtf8(grupos[i]->getNombre());
+
+        if (nombreGrupo.contains(tituloChat, Qt::CaseInsensitive)) {
+            grupoSeleccionado = grupos[i];
+            qDebug() << "Grupo seleccionado:" << nombreGrupo;
+            break;
+        }
+    }
+
+    if (!grupoSeleccionado) {
+        qDebug() << "No se encontró ningún grupo que coincida con el título.";
+        return;
+    }
+
+    aAñadir=grupoSeleccionado;
+    ui-> stackedWidget-> setCurrentIndex(4);
+
+
+
+}
+
+void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
+
+    QString texto = ui->textEditEmailUsu->toPlainText().trimmed();
+
+    if (texto.isEmpty()) {
+        ui-> stackedWidget-> setCurrentIndex(1);
+        return;
+    }
+
+    QByteArray textoByte = texto.toLocal8Bit();  // convierte QString a QByteArray con codificación local
+    char* textoNormal = textoByte.data(); 
+
+    //aniadirUsuarioAGrupo(textoNormal,aAñadir->getId());
+    ui-> stackedWidget-> setCurrentIndex(1);
+
+}
 
 
 
@@ -348,10 +478,16 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 
 
 
+#include <QTimer>
 
+void MainWindow::inicializarTimer() {
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::tareaCadaMinuto);
+    timer->start(60 * 1000);  // 60 segundos = 60000 ms
+}
 
+void MainWindow::tareaCadaMinuto() {
+    qDebug() << "Ejecutando tarea cada minuto";
+    actualizarDatos();
 
-
-
-
-
+}
