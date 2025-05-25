@@ -113,9 +113,6 @@ Usuario** filtrarUsuariosPorGrupo(Usuario** usuarios, int numUsuarios, Grupo** g
             
         }
     }
-
-    printf("numUsuariosFiltrados: %d\n", *numUsuariosFiltrados);
-
     // Redimensionar al tamaño exacto
     usuariosFiltrados = (Usuario**)realloc(usuariosFiltrados, sizeof(Usuario*) * (*numUsuariosFiltrados));
     return usuariosFiltrados;
@@ -235,7 +232,6 @@ int gestionarMesajeINI(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     printf("Sending reply... \n");
     strcpy(sendBuff, "ERROR");
     send(*comm_socket, sendBuff, strlen(sendBuff), 0);
-    printf("Data sent: %s \n", sendBuff);
     return 0;
 }
 
@@ -249,7 +245,6 @@ int gestionarMensajeREG(char* sendBuff, char* recvBuff, SOCKET* comm_socket){
     if(insertarUsuario(nombre, email, telefono, f_nacimiento, contrasenya) == 0){
         printf("Sending reply... \n");
         strcpy(sendBuff, "ERROR");
-        borrarUsuario("amayamanuela@gmail.com");
         send(*comm_socket, sendBuff, strlen(sendBuff), 0);
         printf("Data sent: %s \n", sendBuff);
         return -1;
