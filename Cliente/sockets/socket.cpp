@@ -492,7 +492,7 @@ void actualizarDatosMensaje(){
     if (strcmp(recvBuff, "NOTHING") == 0) {
         printf("Sin Mensajes nuevos.\n");
     } else {
-        leerMensajes(&mensajes, &numMensajes, recvBuff);
+        leerNuevosMensajes(&mensajes, &numMensajes, recvBuff);
     }
 }
 
@@ -510,6 +510,68 @@ void actualizarDatos() {
 	
 	closesocket(s);
     WSACleanup();
+}
+
+void leerNuevosMensajes(Mensaje*** mensajes, int* numMensajes, char* recvBuff) {
+    // Copia del buffer para no modificar el original
+    char copia[32768];
+    strcpy(copia, recvBuff);
+
+    int nuevos = contarElementos(copia);
+    int total = *numMensajes + nuevos;
+
+    // Crear nuevo array
+    Mensaje** nuevoArray = new Mensaje*[total];
+
+    // Copiar mensajes existentes
+    for (int i = 0; i < *numMensajes; ++i) {
+        nuevoArray[i] = (*mensajes)[i];
+    }
+
+    // Procesar nuevos mensajes
+    char* token = strtok(copia, ";");
+    int j = *numMensajes;  // comenzamos donde termina el anterior
+
+    while (token != NULL && j < total) {
+        std::string linea(token);
+        std::stringstream ss(linea);
+        std::string campo;
+
+        int idMensaje;
+        std::string contenido, hora, fecha;
+        int idUsuario, idGrupo;
+
+        std::getline(ss, campo, '*');
+        idMensaje = std::stoi(campo);
+        std::getline(ss, fecha, '*');
+        std::getline(ss, hora, '*');
+        std::getline(ss, contenido, '*');
+        std::getline(ss, campo, '*');
+        idUsuario = std::stoi(campo);
+        std::getline(ss, campo, '*');
+        idGrupo = std::stoi(campo);
+
+        if (idMensaje > ultimoIdMensaje) {
+            ultimoIdMensaje = idMensaje;
+        }
+
+        Usuario* usuario = obtenerUsuarioPorId(idUsuario, usuarios, numUsuarios);
+        Grupo* grupo = obtenerGrupoPorId(idGrupo, grupos, numGrupos);
+
+        nuevoArray[j] = new Mensaje(idMensaje, fecha.c_str(), hora.c_str(), contenido.c_str(), usuario, grupo);
+
+        token = strtok(NULL, ";");
+        j++;
+    }
+
+    // Liberar array antiguo
+    delete[] *mensajes;
+
+    // Actualizar punteros
+    *mensajes = nuevoArray;
+    *numMensajes = total;
+
+    printf("Total mensajes añadidos: %d (Total: %d)\n", nuevos, total);
 }
 
 int enviarMensaje(const char* fecha, const char* hora, const char* contenido, int idEmisor, int idGrupo) {
