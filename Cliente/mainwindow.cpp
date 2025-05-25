@@ -115,7 +115,7 @@ void MainWindow::on_botonEnviar_Clicked()
 
     // Insertar texto en las celdas
     ui->tableWidget->item(rowCount, 0)->setText(fecha);
-    ui->tableWidget->item(rowCount, 1)->setText("Usuario");
+    ui->tableWidget->item(rowCount, 1)->setText(cliente->getNombre());
     ui->tableWidget->item(rowCount, 2)->setText(texto);
 
     qDebug() << "Texto añadido correctamente a la tabla.";
@@ -366,7 +366,8 @@ void MainWindow::on_pushButtonEliminarContacto_clicked()
     }
 
     abandonarGrupo(cliente->getId(), grupoSeleccionado->getId());
-
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0); // También limpiar las filas
     delete ui->listWidgetContactos->currentItem();
 }
 
@@ -406,7 +407,7 @@ void MainWindow::on_pushButton_ConfirmarRegistro_clicked()
 
     if (registrarse(txtNomReg, txtEmailReg, txtTlfReg, txtFechaReg, txtContReg) == 1)
     {
-        ui-> stackedWidget-> setCurrentIndex(1);
+        ui-> stackedWidget-> setCurrentIndex(0);
         return;
 
     } else if (registrarse(txtNomReg, txtEmailReg, txtTlfReg, txtFechaReg, txtContReg) == -1)
@@ -466,7 +467,7 @@ void MainWindow::on_pushButtonAnadirAGrupo_Clicked(){
     QByteArray textoByte = texto.toLocal8Bit();  // convierte QString a QByteArray con codificación local
     char* textoNormal = textoByte.data(); 
 
-    //aniadirUsuarioAGrupo(textoNormal,aAñadir->getId());
+    aniadirUsuarioAGrupo(textoNormal,aAñadir->getId());
     ui-> stackedWidget-> setCurrentIndex(1);
 
 }
