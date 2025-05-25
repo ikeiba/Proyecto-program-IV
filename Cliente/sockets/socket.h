@@ -28,6 +28,7 @@ int abandonarGrupo(int idUsuario, int idGrupo);
 void agregarGrupo(Grupo*** grupos, int* tamanyo, Grupo* nuevoGrupo);
 void agregarUsuario(Usuario*** usuarios, int* tamanyo, Usuario* nuevoUsuario);
 void leerConversacionNuevas(char* recvBuff);
+void leerNuevosMensajes(Mensaje*** mensajes, int* numMensajes, char* recvBuff);
 void actualizarDatosConversacion();
 void actualizarDatosMensaje();
 void actualizarDatos();
